@@ -1,7 +1,4 @@
---show search_path;
---create schema lbaw2311;
---set search_path to lbaw2311;
-
+-- DROP TABLES FROM LBAW2311 SCHEMA
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS moderator CASCADE;
 DROP TABLE IF EXISTS userbadge;
@@ -12,20 +9,22 @@ DROP TABLE IF EXISTS badgenotification;
 DROP TABLE IF EXISTS notification;
 DROP TABLE IF EXISTS answer CASCADE;
 DROP TABLE IF EXISTS question CASCADE;
-DROP TABLE IF EXISTS comment;
-DROP TABLE IF EXISTS content CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+--DROP TABLE IF EXISTS content CASCADE;
 DROP TABLE IF EXISTS member CASCADE;
 DROP TABLE IF EXISTS badge;
-
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS vote;
 DROP TABLE IF EXISTS report;
 DROP TABLE IF EXISTS userfollowquestion;
+
+-- DROP TYPES FROM LBAW2311 SCHEMA
 DROP TYPE IF EXISTS voteType;
 DROP TYPE IF EXISTS entityType;
 DROP TYPE IF EXISTS reportReasonType;
+DROP TYPE IF EXISTS notificationType;
 
-
+-- CREATE TYPES/DOMAINS FOR LBAW2311 SCHEMA
 CREATE TYPE voteType AS ENUM ('up', 'down', 'out');
 CREATE TYPE entityType AS ENUM ('question', 'answer', 'comment');
 CREATE TYPE reportReasonType AS ENUM ('spam', 'offensive', 'Rules Violation', 'Innapropriate tag');
@@ -95,20 +94,17 @@ CREATE TABLE notification (
     FOREIGN KEY (notification_user) REFERENCES member(user_id)
 );
 
--- Create the Content table (R11)
-CREATE TABLE content (
-    content_id INT PRIMARY KEY,
-    content_author INT,
-    content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content_text VARCHAR(255) NOT NULL,
-    content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
-    content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES member(user_id)
-);
 
 -- Create the Answer table (R13)
 CREATE TABLE answer (
                         content_id INT PRIMARY KEY,
+                    --Common to content
+                        content_author INT,
+                        content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        content_text VARCHAR(255) NOT NULL,
+                        content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+                        content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+                        FOREIGN KEY (content_author) REFERENCES member(user_id),
                         question_id INT
 );
 
@@ -117,14 +113,17 @@ CREATE TABLE question (
                           content_id INT PRIMARY KEY,
                           question_title VARCHAR(255) NOT NULL,
                           question_tag INT,
-                          correct_answer INT
+                          correct_answer INT,
+                        --Common to content
+                          content_author INT,
+                          content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          content_text VARCHAR(255) NOT NULL,
+                          content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+                          content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+                          FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 
 
--- Create a foreign key for content_id in the question table
-ALTER TABLE question
-    ADD CONSTRAINT FK_Content_Question
-        FOREIGN KEY (content_id) REFERENCES content(content_id);
 
 -- Create a foreign key for question_tag in the question table
 ALTER TABLE question
@@ -136,10 +135,6 @@ ALTER TABLE question
     ADD CONSTRAINT FK_Correct_Answer
         FOREIGN KEY (correct_answer) REFERENCES answer(content_id);
 
--- Add foreign keys to the Answer table
-ALTER TABLE answer
-    ADD CONSTRAINT fk_content
-        FOREIGN KEY (content_id) REFERENCES content(content_id);
 
 ALTER TABLE answer
     ADD CONSTRAINT fk_question
@@ -150,7 +145,14 @@ ALTER TABLE answer
 CREATE TABLE comment (
     content_id INT PRIMARY KEY,
     answer_id INT,
-    FOREIGN KEY (content_id) REFERENCES content(content_id),
+    --Common to content
+    content_author INT,
+    content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content_text VARCHAR(255) NOT NULL,
+    content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+    content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (content_author) REFERENCES member(user_id),
+    --FOREIGN KEY (content_id) REFERENCES content(content_id),
     FOREIGN KEY (answer_id) REFERENCES answer(content_id)
 );
 
@@ -165,7 +167,9 @@ CREATE TABLE vote (
     entity_voted entityType NOT NULL,
     vote_content INT,
     FOREIGN KEY (vote_author) REFERENCES member(user_id),
-    FOREIGN KEY (vote_content) REFERENCES content(content_id)
+    FOREIGN KEY (vote_content) REFERENCES question(content_id),
+    FOREIGN KEY (vote_content) REFERENCES answer(content_id),
+    FOREIGN KEY (vote_content) REFERENCES comment(content_id)
 );
 
 -- Create the Report table (R17)
@@ -181,7 +185,9 @@ CREATE TABLE report (
     report_answer VARCHAR(255),
     FOREIGN KEY (report_creator) REFERENCES member(user_id),
     FOREIGN KEY (report_handler) REFERENCES moderator(user_id),
-    FOREIGN KEY (content_reported) REFERENCES content(content_id)
+    FOREIGN KEY (content_reported) REFERENCES question(content_id),
+    FOREIGN KEY (content_reported) REFERENCES answer(content_id),
+    FOREIGN KEY (content_reported) REFERENCES comment(content_id)
     --FOREIGN KEY (report_answer) REFERENCES answer(content_id)
 );
 
