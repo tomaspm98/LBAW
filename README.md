@@ -2,6 +2,60 @@
 
 
 
+
+
+
+
+
+
+This repository defines a **docker-compose.yaml file**, which is a configuration file used to define and run multi-container Docker applications.
+
+This file configures two services, each represented by a container. The 'postgres' container is based on PostgreSQL 11 and includes the definition of an administrator user. Additionally, the 'pgadmin' container is built using pgAdmin 4 version 7. These container images are obtained from [Docker Hub](https://hub.docker.com), an official repository of container images.
+
+The following image depicts our infrastructure. It is also an example of GitLab's support for [Mermaid](https://docs.gitlab.com/ee/user/markdown.html#mermaid), a tool that renders diagrams from markdown specifications.
+
+```mermaid
+flowchart LR
+    subgraph Docker
+    subgraph postgres[postgres container]
+    end
+    subgraph pgadmin[pgadmin container]
+    end
+    end
+```
+
+To **start the containers**, from the project root run the following command:
+
+```bash
+docker compose up -d
+```
+
+This will download and start the two containers. The `-d` flag stands for "detached" mode and runs the containers in the background. This allows you to continue using your terminal without the containers' output flooding your screen.
+
+You can open Docker Desktop dashboard to see if the containers are running as expected. You can also **check the status of the containers** from the command line with the following command:
+
+```bash
+docker ps
+```
+
+To **stop the containers**, just run the command:
+
+```bash
+docker compose down
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
