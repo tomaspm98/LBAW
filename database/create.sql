@@ -1,3 +1,7 @@
+--show search_path;
+--create schema lbaw2311;
+--set search_path to lbaw2311;
+
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS moderator;
@@ -33,9 +37,17 @@ CREATE TABLE member (
     user_email VARCHAR(25) UNIQUE NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     picture VARCHAR(255),
-    user_birthdate TIMESTAMP NOT NULL CHECK((user_creation_date - user_birthdate) > 12),
+    user_birthdate TIMESTAMP NOT NULL,
     user_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_score INT DEFAULT 0
+    user_score INT DEFAULT 0,
+	CONSTRAINT check_time CHECK (EXTRACT(YEAR FROM user_birthdate)- EXTRACT(YEAR FROM user_creation_date)=12 )
+);
+
+-- Create the Tag table (R15)
+CREATE TABLE tag (
+    tag_id INT PRIMARY KEY,
+    tag_name VARCHAR(255) UNIQUE NOT NULL,
+    tag_description VARCHAR(255)
 );
 
 -- Create the Admin table (R02)
@@ -142,12 +154,7 @@ CREATE TABLE comment (
     FOREIGN KEY (answer_id) REFERENCES answer(content_id)
 );
 
--- Create the Tag table (R15)
-CREATE TABLE tag (
-    tag_id INT PRIMARY KEY,
-    tag_name VARCHAR(255) UNIQUE NOT NULL,
-    tag_description VARCHAR(255)
-);
+
 
 -- Create the Vote table (R16)
 CREATE TABLE vote (
