@@ -27,7 +27,7 @@ DROP TYPE IF EXISTS notificationType;
 -- CREATE TYPES/DOMAINS FOR LBAW2311 SCHEMA
 CREATE TYPE voteType AS ENUM ('up', 'down', 'out');
 CREATE TYPE entityType AS ENUM ('question', 'answer', 'comment');
-CREATE TYPE reportReasonType AS ENUM ('spam', 'offensive', 'Rules Violation', 'Innapropriate tag');
+CREATE TYPE reportReasonType AS ENUM ('spam', 'offensive', 'Rules Violation', 'Inappropriate tag');
 CREATE TYPE notificationType AS ENUM ('question', 'answer', 'comment', 'badge');
 
 
@@ -97,30 +97,30 @@ CREATE TABLE notification (
 
 -- Create the Answer table (R13)
 CREATE TABLE answer (
-                        content_id INT PRIMARY KEY,
-                    --Common to content
-                        content_author INT,
-                        content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        content_text VARCHAR(255) NOT NULL,
-                        content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
-                        content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-                        FOREIGN KEY (content_author) REFERENCES member(user_id),
-                        question_id INT
+    content_id INT PRIMARY KEY,
+    question_id INT,
+        --Common to content
+    content_author INT,
+    content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content_text VARCHAR(255) NOT NULL,
+    content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+    content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 
 -- Create the Question table (R12)
 CREATE TABLE question (
-                          content_id INT PRIMARY KEY,
-                          question_title VARCHAR(255) NOT NULL,
-                          question_tag INT,
-                          correct_answer INT,
-                        --Common to content
-                          content_author INT,
-                          content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                          content_text VARCHAR(255) NOT NULL,
-                          content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
-                          content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-                          FOREIGN KEY (content_author) REFERENCES member(user_id)
+    content_id INT PRIMARY KEY,
+    question_title VARCHAR(255) NOT NULL,
+    question_tag INT,
+    correct_answer INT,
+    --Common to content
+    content_author INT,
+    content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content_text VARCHAR(255) NOT NULL,
+    content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+    content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 
 
@@ -180,7 +180,7 @@ CREATE TABLE report (
     content_reported INT,
     report_reason reportReasonType NOT NULL,
     report_text VARCHAR(255),
-    report_dealed BOOLEAN NOT NULL DEFAULT FALSE,
+    report_dealt BOOLEAN NOT NULL DEFAULT FALSE,
     report_accepted BOOLEAN,
     report_answer VARCHAR(255),
     FOREIGN KEY (report_creator) REFERENCES member(user_id),
