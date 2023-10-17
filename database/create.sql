@@ -2,20 +2,21 @@
 --create schema lbaw2311;
 --set search_path to lbaw2311;
 
-DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS admin;
-DROP TABLE IF EXISTS moderator;
-DROP TABLE IF EXISTS badge;
+DROP TABLE IF EXISTS moderator CASCADE;
 DROP TABLE IF EXISTS userbadge;
-DROP TABLE IF EXISTS notification;
 DROP TABLE IF EXISTS questionnotification;
 DROP TABLE IF EXISTS answernotification;
 DROP TABLE IF EXISTS commentnotification;
 DROP TABLE IF EXISTS badgenotification;
-DROP TABLE IF EXISTS content;
-DROP TABLE IF EXISTS question;
-DROP TABLE IF EXISTS answer;
+DROP TABLE IF EXISTS notification;
+DROP TABLE IF EXISTS answer CASCADE;
+DROP TABLE IF EXISTS question CASCADE;
 DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS content CASCADE;
+DROP TABLE IF EXISTS member CASCADE;
+DROP TABLE IF EXISTS badge;
+
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS vote;
 DROP TABLE IF EXISTS report;
@@ -28,6 +29,7 @@ DROP TYPE IF EXISTS reportReasonType;
 CREATE TYPE voteType AS ENUM ('up', 'down', 'out');
 CREATE TYPE entityType AS ENUM ('question', 'answer', 'comment');
 CREATE TYPE reportReasonType AS ENUM ('spam', 'offensive', 'Rules Violation', 'Innapropriate tag');
+CREATE TYPE notificationType AS ENUM ('question', 'answer', 'comment', 'badge');
 
 
 -- Create the User table (R01)
@@ -89,31 +91,8 @@ CREATE TABLE notification (
     notification_content VARCHAR(255) NOT NULL,
     notification_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     notification_is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    notification_type notificationType NOT NULL,
     FOREIGN KEY (notification_user) REFERENCES member(user_id)
-);
-
--- Create the QuestionNotification table (R07)
-CREATE TABLE questionnotification (
-    notification_id INT,
-    FOREIGN KEY (notification_id) REFERENCES notification(notification_id)
-);
-
--- Create the AnswerNotification table (R08)
-CREATE TABLE answernotification (
-    notification_id INT,
-    FOREIGN KEY (notification_id) REFERENCES notification(notification_id)
-);
-
--- Create the CommentNotification table (R09)
-CREATE TABLE commentnotification (
-    notification_id INT,
-    FOREIGN KEY (notification_id) REFERENCES notification(notification_id)
-);
-
--- Create the BadgeNotification table (R10)
-CREATE TABLE badgenotification (
-    notification_id INT,
-    FOREIGN KEY (notification_id) REFERENCES notification(notification_id)
 );
 
 -- Create the Content table (R11)
@@ -127,24 +106,45 @@ CREATE TABLE content (
     FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 
--- Create the Question table (R12)
-CREATE TABLE question (
-    content_id INT,
-    question_title VARCHAR(255) NOT NULL,
-    question_tag INT,
-    correct_answer INT,
-    FOREIGN KEY (content_id) REFERENCES content(content_id),
-    FOREIGN KEY (question_tag) REFERENCES tag(tag_id),
-    FOREIGN KEY (correct_answer) REFERENCES answer(content_id)
-);
-
 -- Create the Answer table (R13)
 CREATE TABLE answer (
-    content_id INT PRIMARY KEY,
-    question_id INT,
-    FOREIGN KEY (content_id) REFERENCES content(content_id),
-    FOREIGN KEY (question_id) REFERENCES question(content_id)
+                        content_id INT PRIMARY KEY,
+                        question_id INT
 );
+
+-- Create the Question table (R12)
+CREATE TABLE question (
+                          content_id INT PRIMARY KEY,
+                          question_title VARCHAR(255) NOT NULL,
+                          question_tag INT,
+                          correct_answer INT
+);
+
+
+-- Create a foreign key for content_id in the question table
+ALTER TABLE question
+    ADD CONSTRAINT FK_Content_Question
+        FOREIGN KEY (content_id) REFERENCES content(content_id);
+
+-- Create a foreign key for question_tag in the question table
+ALTER TABLE question
+    ADD CONSTRAINT FK_Tag_Question
+        FOREIGN KEY (question_tag) REFERENCES tag(tag_id);
+
+-- Create a foreign key for correct_answer in the question table
+ALTER TABLE question
+    ADD CONSTRAINT FK_Correct_Answer
+        FOREIGN KEY (correct_answer) REFERENCES answer(content_id);
+
+-- Add foreign keys to the Answer table
+ALTER TABLE answer
+    ADD CONSTRAINT fk_content
+        FOREIGN KEY (content_id) REFERENCES content(content_id);
+
+ALTER TABLE answer
+    ADD CONSTRAINT fk_question
+        FOREIGN KEY (question_id) REFERENCES question(content_id);
+
 
 -- Create the Comment table (R14)
 CREATE TABLE comment (
@@ -181,8 +181,8 @@ CREATE TABLE report (
     report_answer VARCHAR(255),
     FOREIGN KEY (report_creator) REFERENCES member(user_id),
     FOREIGN KEY (report_handler) REFERENCES moderator(user_id),
-    FOREIGN KEY (content_reported) REFERENCES content(content_id),
-    FOREIGN KEY (report_answer) REFERENCES answer(content_id)
+    FOREIGN KEY (content_reported) REFERENCES content(content_id)
+    --FOREIGN KEY (report_answer) REFERENCES answer(content_id)
 );
 
 -- Create the UserFollowQuestion table (R18)
