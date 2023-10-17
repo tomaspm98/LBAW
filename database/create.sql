@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS moderator;
 DROP TABLE IF EXISTS badge;
@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS userfollowquestion;
 
 
 -- Create the User table (R01)
-CREATE TABLE user (
+CREATE TABLE users (
     user_id INT PRIMARY KEY,
     username VARCHAR(25) UNIQUE NOT NULL,
     user_email VARCHAR(25) UNIQUE NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE user (
 -- Create the Admin table (R02)
 CREATE TABLE admin (
     user_id INT PRIMARY KEY,
-    FOREIGN KEY (user_id) REFERENCES user(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Create the Moderator table (R03)
@@ -43,7 +43,7 @@ CREATE TABLE moderator (
     user_id INT PRIMARY KEY,
     tag_id INT NOT NULL,
     assignment TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
 );
 
@@ -59,7 +59,7 @@ CREATE TABLE userbadge (
     user_id INT PRIMARY KEY,
     badge_id INT PRIMARY KEY,
     user_badge_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (badge_id) REFERENCES badge(badge_id)
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE notification (
     notification_content VARCHAR(255) NOT NULL,
     notification_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     notification_is_read BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (notification_user) REFERENCES user(user_id)
+    FOREIGN KEY (notification_user) REFERENCES users(user_id)
 );
 
 -- Create the QuestionNotification table (R07)
@@ -105,7 +105,7 @@ CREATE TABLE content (
     content_text VARCHAR(255) NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES user(user_id)
+    FOREIGN KEY (content_author) REFERENCES users(user_id)
 );
 
 -- Create the Question table (R12)
@@ -150,7 +150,7 @@ CREATE TABLE vote (
     upvote VARCHAR(25) ,
     entity_voted VARCHAR(25),
     vote_content INT,
-    FOREIGN KEY (vote_author) REFERENCES user(user_id),
+    FOREIGN KEY (vote_author) REFERENCES users(user_id),
     FOREIGN KEY (vote_content) REFERENCES content(content_id),
     CONSTRAINT upvote CHECK ((upvote = ANY (ARRAY ['up'::text, 'down'::text, 'out'::text]))),
     CONSTRAINT entity_voted CHECK ((entity_voted = ANY (ARRAY ['question'::text, 'answer'::text, 'comment'::text])))
@@ -167,7 +167,7 @@ CREATE TABLE report (
     report_dealed BOOLEAN NOT NULL DEFAULT FALSE,
     report_accepted BOOLEAN,
     report_answer VARCHAR(255),
-    FOREIGN KEY (report_creator) REFERENCES user(user_id),
+    FOREIGN KEY (report_creator) REFERENCES users(user_id),
     FOREIGN KEY (report_handler) REFERENCES moderator(user_id),
     FOREIGN KEY (content_reported) REFERENCES content(content_id),
     FOREIGN KEY (report_answer) REFERENCES answer(content_id),
@@ -179,6 +179,6 @@ CREATE TABLE userfollowquestion (
     user_id INT,
     question_id INT,
     follow BOOLEAN NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (question_id) REFERENCES question(content_id)
 );

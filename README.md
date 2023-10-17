@@ -50,7 +50,22 @@ docker compose down
 
 
 
+### Using pgAdmin 4
 
+Open your browser and navigate to http://localhost:4321. If you encounter any issues with 'localhost,' you may need to use the IP address provided by the virtual machine running Docker. Refer to your installation documentation for guidance on this.
+
+Use the following credentials to login:
+
+    Email: postgres@lbaw.com
+    Password: pg!password
+
+In the first use of the development database, you will need to add a new server using the following settings:
+
+    hostname: postgres
+    username: postgres
+    password: pg!password
+
+Note: We use 'postgres' as the hostname instead of 'localhost' because Docker creates an internal DNS entry to facilitate connections between linked containers.
 
 
 
