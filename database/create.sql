@@ -228,8 +228,52 @@ CREATE TABLE userfollowquestion (
 );
 
 
+------------------------------------------------------------------------------------------------------------------------
 
+-- INDEXES
 
+-- CREATE INDEX..........
+
+------------------------------------------------------------------------------------------------------------------------
+
+-- Full-text Search Index
+/*
+ALTER TABLE question
+ADD COLUMN tsvectors TSVECTOR;
+
+CREATE FUNCTION question_search_update() RETURNS TRIGGER AS $$
+BEGIN
+ IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = (
+         setweight(to_tsvector('english', NEW.question_title), 'A') ||
+         setweight(to_tsvector('english', NEW.content_text), 'B')
+        );
+ END IF;
+
+ IF TG_OP = 'UPDATE' THEN
+         IF (NEW.question_title <> OLD.question_title OR NEW.content_text <> OLD.content_text) THEN
+           NEW.tsvectors = (
+             setweight(to_tsvector('english', NEW.question_title), 'A') ||
+             setweight(to_tsvector('english', NEW.content_text), 'B')
+           );
+         END IF;
+    END IF;
+RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+-- Trigger before insert or update on question table.
+CREATE TRIGGER question_search_update
+ BEFORE INSERT OR UPDATE ON pergunta
+ FOR EACH ROW
+ EXECUTE PROCEDURE pregunta_search_update();
+
+-- GIN index for ts_vectors.
+CREATE INDEX search_idx ON pergunta USING GIN (tsvectors); 
+*/
+------------------------------------------------------------------------------------------------------------------------
+
+-- TRIGGERS
 
 
 
