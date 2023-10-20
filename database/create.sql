@@ -50,6 +50,31 @@ DROP TYPE IF EXISTS entityType;
 DROP TYPE IF EXISTS reportReasonType;
 DROP TYPE IF EXISTS notificationType;
 
+
+-- Drop triggers
+DROP TRIGGER IF EXISTS award_user_point_vote ON vote;
+DROP TRIGGER IF EXISTS award_user_point_question ON question;
+DROP TRIGGER IF EXISTS award_user_point_answer ON answer;
+DROP TRIGGER IF EXISTS award_user_point_comment ON comment;
+DROP TRIGGER IF EXISTS member_deletion_trigger ON member;
+DROP TRIGGER IF EXISTS question_search_update on question;
+DROP TRIGGER IF EXISTS notification_answers on answer;
+DROP TRIGGER IF EXISTS notification_comment on comment;
+DROP TRIGGER IF EXISTS notification_badges on user_badge;
+DROP TRIGGER IF EXISTS member_answer_own_question ON answer;
+DROP FUNCTION IF EXISTS member_answer_own_question();
+DROP FUNCTION IF EXISTS notification_comments();
+DROP FUNCTION IF EXISTS notification_badges();
+DROP FUNCTION IF EXISTS notification_answers();
+DROP FUNCTION IF EXISTS member_answer_own_question();
+DROP FUNCTION IF EXISTS award_user_point_vote();
+DROP FUNCTION IF EXISTS award_user_point();
+DROP FUNCTION IF EXISTS anonymize_content();
+DROP FUNCTION IF EXISTS question_search_update();
+
+
+
+
 ------------------------------------------------------------------------------------------------------------------------
 -- CREATE TYPES/DOMAINS FOR LBAW2311 SCHEMA
 ------------------------------------------------------------------------------------------------------------------------
@@ -63,7 +88,7 @@ CREATE TYPE notificationType AS ENUM ('question', 'answer', 'comment', 'badge');
 ------------------------------------------------------------------------------------------------------------------------
 -- Create the User table (R01)
 CREATE TABLE member (
-    user_id INT PRIMARY KEY,
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(25) UNIQUE NOT NULL,
     user_email VARCHAR(25) UNIQUE NOT NULL,
     user_password VARCHAR(255) NOT NULL,
@@ -76,7 +101,7 @@ CREATE TABLE member (
 
 -- Create the Tag table (R15)
 CREATE TABLE tag (
-    tag_id INT PRIMARY KEY,
+    tag_id SERIAL PRIMARY KEY,
     tag_name VARCHAR(255) UNIQUE NOT NULL,
     tag_description VARCHAR(255)
 );
@@ -98,14 +123,14 @@ CREATE TABLE moderator (
 
 -- Create the Badge table (R04)
 CREATE TABLE badge (
-    badge_id INT PRIMARY KEY,
+    badge_id SERIAL PRIMARY KEY,
     badge_name VARCHAR(25) UNIQUE NOT NULL,
     badge_description VARCHAR(255) NOT NULL
 );
 
 -- Create the UserBadge table (R05)
 CREATE TABLE userbadge (
-    userbadge_id INT PRIMARY KEY,
+    userbadge_id SERIAL PRIMARY KEY,
     user_id INT,
     badge_id INT,
     user_badge_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -115,7 +140,7 @@ CREATE TABLE userbadge (
 
 -- Create the Notification table (R06)
 CREATE TABLE notification (
-    notification_id INT PRIMARY KEY,
+    notification_id SERIAL PRIMARY KEY,
     notification_user INT,
     notification_content VARCHAR(255) NOT NULL,
     notification_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -183,7 +208,7 @@ CREATE TABLE comment (
 
 -- Create the Vote table (R16)
 CREATE TABLE vote (
-    vote_id INT PRIMARY KEY,
+    vote_id SERIAL PRIMARY KEY,
     vote_author INT,
     vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     upvote voteType NOT NULL,
@@ -199,7 +224,7 @@ CREATE TABLE vote (
 
 -- Create the Report table (R17)
 CREATE TABLE report (
-    report_id INT PRIMARY KEY,
+    report_id SERIAL PRIMARY KEY,
     report_creator INT,
     report_handler INT,
     content_reported_question INT,
@@ -228,6 +253,7 @@ CREATE TABLE userfollowquestion (
 );
 
 
+
 ------------------------------------------------------------------------------------------------------------------------
 
 -- INDEXES
@@ -237,7 +263,8 @@ CREATE TABLE userfollowquestion (
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Full-text Search Index
-/*
+
+
 ALTER TABLE question
 ADD COLUMN tsvectors TSVECTOR;
 
@@ -264,17 +291,182 @@ LANGUAGE plpgsql;
 
 -- Trigger before insert or update on question table.
 CREATE TRIGGER question_search_update
- BEFORE INSERT OR UPDATE ON pergunta
+ BEFORE INSERT OR UPDATE ON question
  FOR EACH ROW
- EXECUTE PROCEDURE pregunta_search_update();
+ EXECUTE PROCEDURE question_search_update();
 
 -- GIN index for ts_vectors.
-CREATE INDEX search_idx ON pergunta USING GIN (tsvectors); 
-*/
+CREATE INDEX search_idx ON question USING GIN (tsvectors); 
+
+
+--- Performance indexes
+CREATE INDEX idx_author_question ON question USING hash (content_author);
+CREATE INDEX idx_answer_question ON answer USING hash (question_id);
+CREATE INDEX idx_question_date ON question USING btree (content_creation_date);
 ------------------------------------------------------------------------------------------------------------------------
 
 -- TRIGGERS
 
+
+	
+
+--- Delete user, his content appears as deleted user
+CREATE FUNCTION anonymize_content()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update content authored by the deleted member to "anonymous"
+    UPDATE question
+    SET content_author = -1
+    WHERE content_author = OLD.user_id;
+    
+    UPDATE answer
+    SET content_author = -1
+    WHERE content_author = OLD.user_id;
+    
+    UPDATE comment
+    SET content_author = -1
+    WHERE content_author = OLD.user_id;
+    
+    -- Update vote records by the deleted member to "anonymous"
+    UPDATE vote
+    SET vote_author = -1
+    WHERE vote_author = OLD.user_id;
+    
+    -- Update report records by the deleted member to "anonymous"
+    UPDATE report
+    SET report_creator = -1
+    WHERE report_creator = OLD.user_id;
+    
+    -- Update userfollowquestion records by the deleted member to "anonymous"
+    DELETE FROM userfollowquestion
+    WHERE user_id = OLD.user_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+-- Create the trigger to add poins to vote, new question, new comment, new answer, new vote
+CREATE TRIGGER member_deletion_trigger
+BEFORE DELETE ON member
+FOR EACH ROW
+EXECUTE FUNCTION anonymize_content();
+
+
+
+
+CREATE FUNCTION award_user_point()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Increment user's score by one for any action (question, answer, comment)
+    UPDATE member
+    SET user_score = user_score + 1
+    WHERE user_id = NEW.content_author;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger for different tables (question, answer, comment)
+
+CREATE TRIGGER award_user_point_question
+AFTER INSERT ON question
+FOR EACH ROW
+EXECUTE FUNCTION award_user_point();
+
+CREATE TRIGGER award_user_point_answer
+AFTER INSERT ON answer
+FOR EACH ROW
+EXECUTE FUNCTION award_user_point();
+
+CREATE TRIGGER award_user_point_comment
+AFTER INSERT ON comment
+FOR EACH ROW
+EXECUTE FUNCTION award_user_point();
+
+
+-- Create a trigger to award users one point for each vote
+CREATE FUNCTION award_user_point_vote()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE member
+    SET user_score = user_score + 1
+    WHERE user_id = NEW.vote_author;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER award_user_point_vote
+AFTER INSERT ON vote
+FOR EACH ROW
+EXECUTE FUNCTION award_user_point_vote();
+
+
+CREATE FUNCTION member_answer_own_question() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.content_author = (SELECT question.content_author FROM question WHERE question.content_id= NEW.question_id) THEN
+      RAISE EXCEPTION 'A member cant answer his own question';
+  END IF;
+  RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER member_answer_own_question
+    BEFORE INSERT OR UPDATE OF content_author, question_id ON answer
+    FOR EACH ROW
+      EXECUTE PROCEDURE member_answer_own_question();
+
+
+
+CREATE FUNCTION notification_answers() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.question_id = (SELECT question.content_id from question where question.content_id = NEW.question_id) THEN
+    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
+    VALUES (2, (SELECT question.content_author FROM question WHERE question.content_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.content_id = NEW.content_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.content_id = NEW.question_id)), 'answer');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_answers
+AFTER INSERT ON answer
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_answers();
+
+
+
+CREATE FUNCTION notification_comments() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.answer_id = (SELECT answer.content_id from answer where answer.content_id = NEW.answer_id) THEN
+    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
+    VALUES (3, (SELECT answer.content_author FROM answer WHERE answer.content_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.content_id = NEW.content_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.content_id=comment.answer_id INNER JOIN question ON answer.question_id = question.content_id WHERE comment.content_id = NEW.content_id)), 'comment');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_comments
+AFTER INSERT ON comment
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_comments();
+
+
+CREATE FUNCTION notification_badges() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
+    VALUES (4, NEW.user_id, 'You just won the badge ' || (SELECT badge_name FROM badge WHERE badge.badge_id = NEW.badge_id), 'badge');
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_badges
+AFTER INSERT ON userbadge
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_badges();
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -288,25 +480,29 @@ CREATE INDEX search_idx ON pergunta USING GIN (tsvectors);
 ------------------------------------------------------------------------------------------------------------------------
 -- Populate the User table (R01)
 --  The user_creation_date is automatically generated by the database
+
 INSERT INTO member (user_id, username, user_email, user_password, picture, user_birthdate, user_score)
-VALUES (1, 'admin', 'admin@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 4 ),
-       (2, 'moderator', 'moderator@example.com', 'pass', '/picture/avatar2.jpg', '1990-01-15',  1 ),
-       (3, 'member1', 'member1@example.com', 'pass','/picture/avatar3.jpg', '1990-01-21', 3 );
+VALUES (-1, 'deleted', 'deleted@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 );
+
+INSERT INTO member (username, user_email, user_password, picture, user_birthdate, user_score)
+VALUES ('admin', 'admin@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 4 ),
+       ('moderator', 'moderator@example.com', 'pass', '/picture/avatar2.jpg', '1990-01-15',  1 ),
+       ('member1', 'member1@example.com', 'pass','/picture/avatar3.jpg', '1990-01-21', 3 );
 
 
 
 -- Populate the Tag table (R15)
-INSERT INTO tag (tag_id, tag_name, tag_description)
-VALUES (1, 'programming', 'Programming-related questions'),
-       (2, 'database', 'Database management topics'),
-       (3, 'web', 'Web development questions'),
-       (4, 'networking', 'Networking-related questions'),
-       (5, 'security', 'Security-related questions'),
-       (6, 'hardware', 'Hardware-related questions'),
-       (7, 'software', 'Software-related questions'),
-       (8, 'mobile', 'Mobile development questions'),
-       (9, 'game', 'Game development questions'),
-       (10, 'other', 'Other questions');
+INSERT INTO tag (tag_name, tag_description)
+VALUES ('programming', 'Programming-related questions'),
+       ('database', 'Database management topics'),
+       ('web', 'Web development questions'),
+       ('networking', 'Networking-related questions'),
+       ('security', 'Security-related questions'),
+       ('hardware', 'Hardware-related questions'),
+       ('software', 'Software-related questions'),
+       ('mobile', 'Mobile development questions'),
+       ('game', 'Game development questions'),
+       ('other', 'Other questions');
 
 -- Populate the Admin table (R02)
 INSERT INTO admin (user_id)
@@ -318,18 +514,18 @@ INSERT INTO moderator (user_id, tag_id)
 VALUES (2, 1);
 
 -- Populate the Badge table (R04)
-INSERT INTO badge (badge_id, badge_name, badge_description)
-VALUES (1, 'Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
-       (2, 'Silver', 'Silver-level badge'), -- Assigned when you gained 100 points
-       (3, 'Gold', 'Gold-level badge'), -- Assigned when you gained 1000 points
-       (4, 'Reliable', 'One of your answers was accepted as the correct answer'), -- Assigned when you have an answer accepted as the correct answer
-       (5, 'Notable Question', 'Your question was upvoted 100 times'), -- Assigned when you have a question with 100 upvotes
-       (6, 'Good Question', 'Your question was upvoted 25 times'), -- Assigned when you have a question with 25 upvotes
-       (7, 'Nice Question', 'Your question was upvoted 10 times'), -- Assigned when you have a question with 10 upvotes
-       (8, 'Notable Answer', 'Your answer was upvoted 100 times'), -- Assigned when you have an answer with 100 upvotes
-       (9, 'Good Answer', 'Your answer was upvoted 25 times'), -- Assigned when you have an answer with 25 upvotes
-       (10, 'Nice Answer', 'Your answer was upvoted 10 times'), -- Assigned when you have an answer with 10 upvotes
-       (11, 'Welcome', 'You have joined the community'); -- Assigned when you create your account
+INSERT INTO badge (badge_name, badge_description)
+VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
+       ('Silver', 'Silver-level badge'), -- Assigned when you gained 100 points
+       ('Gold', 'Gold-level badge'), -- Assigned when you gained 1000 points
+       ('Reliable', 'One of your answers was accepted as the correct answer'), -- Assigned when you have an answer accepted as the correct answer
+       ('Notable Question', 'Your question was upvoted 100 times'), -- Assigned when you have a question with 100 upvotes
+       ('Good Question', 'Your question was upvoted 25 times'), -- Assigned when you have a question with 25 upvotes
+       ('Nice Question', 'Your question was upvoted 10 times'), -- Assigned when you have a question with 10 upvotes
+       ('Notable Answer', 'Your answer was upvoted 100 times'), -- Assigned when you have an answer with 100 upvotes
+       ('Good Answer', 'Your answer was upvoted 25 times'), -- Assigned when you have an answer with 25 upvotes
+       ('Nice Answer', 'Your answer was upvoted 10 times'), -- Assigned when you have an answer with 10 upvotes
+       ('Welcome', 'You have joined the community'); -- Assigned when you create your account
 
 -- Populate the UserBadge table (R05)
 -- The user_badge_date is automatically generated by the database
@@ -399,12 +595,12 @@ VALUES (9, 3, 3, 'Great advice! Thanks for sharing.'), -- Comment on answer 3  o
 
 -- Populate the Vote table (R16)
 -- The vote_date is automatically generated by the database
-INSERT INTO vote (vote_id, vote_author, upvote, entity_voted, vote_content_question, vote_content_answer, vote_content_comment)
-VALUES (1, 2, 'up', 'answer',NULL ,3, NULL ), -- Upvote answer 3 (belongs to admin) of question 1 from moderator
-       (2, 1, 'up', 'answer',NULL, 7, NULL), -- Upvote answer 7 (belongs to member1) of question 2 from admin
-       (3, 1, 'down', 'question', 2, NULL, NULL), -- Downvote question 2 (belongs to moderator) from admin
-       (4, 3, 'up', 'question', 2, NULL, NULL ), -- Upvote question 2 (belongs to moderator) from member1
-       (5, 3, 'up', 'answer', NULL , 3, NULL); -- Upvote answer 3 (belongs to admin) from member1
+INSERT INTO vote (vote_author, upvote, entity_voted, vote_content_question, vote_content_answer, vote_content_comment)
+VALUES (2, 'up', 'answer',NULL ,3, NULL ), -- Upvote answer 3 (belongs to admin) of question 1 from moderator
+       (1, 'up', 'answer',NULL, 7, NULL), -- Upvote answer 7 (belongs to member1) of question 2 from admin
+       (1, 'down', 'question', 2, NULL, NULL), -- Downvote question 2 (belongs to moderator) from admin
+       (3, 'up', 'question', 2, NULL, NULL ), -- Upvote question 2 (belongs to moderator) from member1
+       (3, 'up', 'answer', NULL , 3, NULL); -- Upvote answer 3 (belongs to admin) from member1
 
 --Points accumulated from votes
 -- Organized by vote_id
@@ -422,10 +618,10 @@ VALUES (1, 2, 'up', 'answer',NULL ,3, NULL ), -- Upvote answer 3 (belongs to adm
 
 -- Populate the Report table (R17)
 -- The report_dealt is automatically set to false by the database
-INSERT INTO report (report_id, report_creator, report_handler, content_reported_question, 
+INSERT INTO report (report_creator, report_handler, content_reported_question, 
             content_reported_answer, content_reported_comment , report_reason, report_text)
-VALUES (1, 3, NULL, NULL, 4, NULL, 'spam', 'Inappropriate content'), -- Report on answer 4 from member1
-       (2, 1, NULL, 2, NULL, NULL, 'offensive', 'Offensive language'); -- Report on question 2 from admin
+VALUES (3, NULL, NULL, 4, NULL, 'spam', 'Inappropriate content'), -- Report on answer 4 from member1
+       (1, NULL, 2, NULL, NULL, 'offensive', 'Offensive language'); -- Report on question 2 from admin
 
 -- THESE REPORTS ARE TO BE ASSIGNED A HANDLER AND BE REFUSED
 -- FOR TEST PURPOSES AFTER THE FEATURES ARE IMPLEMENTED
@@ -436,3 +632,12 @@ VALUES (1, 1, true),  -- Follow question 1 from admin. He wants to be notified o
        (2, 2, false), -- Unfollow question 2 from moderator. It's his own question but he does not want any more notifications about it
        (3, 1, true),  -- Follow question 1 from member1. A user must follow his own questions by default
        (3, 2, true);  -- Follow question 2 from member1. He wants to be notified of any new activity
+	   
+	
+	
+	
+	
+	
+	
+	
+	
