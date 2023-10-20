@@ -425,8 +425,8 @@ CREATE TRIGGER member_answer_own_question
 CREATE FUNCTION notification_answers() RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.question_id = (SELECT question.content_id from question where question.content_id = NEW.question_id) THEN
-    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
-    VALUES (2, (SELECT question.content_author FROM question WHERE question.content_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.content_id = NEW.content_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.content_id = NEW.question_id)), 'answer');
+    INSERT INTO notification (notification_user, notification_content,notification_type) 
+    VALUES ((SELECT question.content_author FROM question WHERE question.content_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.content_id = NEW.content_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.content_id = NEW.question_id)), 'answer');
   END IF;
   RETURN NEW;
 END;
@@ -442,8 +442,8 @@ FOR EACH ROW
 CREATE FUNCTION notification_comments() RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.answer_id = (SELECT answer.content_id from answer where answer.content_id = NEW.answer_id) THEN
-    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
-    VALUES (3, (SELECT answer.content_author FROM answer WHERE answer.content_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.content_id = NEW.content_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.content_id=comment.answer_id INNER JOIN question ON answer.question_id = question.content_id WHERE comment.content_id = NEW.content_id)), 'comment');
+    INSERT INTO notification (notification_user, notification_content,notification_type) 
+    VALUES ((SELECT answer.content_author FROM answer WHERE answer.content_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.content_id = NEW.content_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.content_id=comment.answer_id INNER JOIN question ON answer.question_id = question.content_id WHERE comment.content_id = NEW.content_id)), 'comment');
   END IF;
   RETURN NEW;
 END;
@@ -457,8 +457,8 @@ FOR EACH ROW
 
 CREATE FUNCTION notification_badges() RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO notification (notification_id, notification_user, notification_content,notification_type) 
-    VALUES (4, NEW.user_id, 'You just won the badge ' || (SELECT badge_name FROM badge WHERE badge.badge_id = NEW.badge_id), 'badge');
+    INSERT INTO notification (notification_user, notification_content,notification_type) 
+    VALUES (NEW.user_id, 'You just won the badge ' || (SELECT badge_name FROM badge WHERE badge.badge_id = NEW.badge_id), 'badge');
   RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
@@ -633,11 +633,5 @@ VALUES (1, 1, true),  -- Follow question 1 from admin. He wants to be notified o
        (3, 1, true),  -- Follow question 1 from member1. A user must follow his own questions by default
        (3, 2, true);  -- Follow question 2 from member1. He wants to be notified of any new activity
 	   
-	
-	
-	
-	
-	
-	
 	
 	
