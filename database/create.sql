@@ -62,6 +62,10 @@ DROP TRIGGER IF EXISTS notification_answers on answer;
 DROP TRIGGER IF EXISTS notification_comment on comment;
 DROP TRIGGER IF EXISTS notification_badges on user_badge;
 DROP TRIGGER IF EXISTS member_answer_own_question ON answer;
+DROP TRIGGER IF EXISTS register_badge ON member;
+DROP TRIGGER IF EXISTS bronze_badge ON member;
+DROP TRIGGER IF EXISTS silver_badge ON member;
+DROP TRIGGER IF EXISTS gold_badge ON member;
 DROP FUNCTION IF EXISTS member_answer_own_question();
 DROP FUNCTION IF EXISTS notification_comments();
 DROP FUNCTION IF EXISTS notification_badges();
@@ -71,6 +75,10 @@ DROP FUNCTION IF EXISTS award_user_point_vote();
 DROP FUNCTION IF EXISTS award_user_point();
 DROP FUNCTION IF EXISTS anonymize_content();
 DROP FUNCTION IF EXISTS question_search_update();
+DROP FUNCTION IF EXISTS register_badge();
+DROP FUNCTION IF EXISTS bronze_badge();
+DROP FUNCTION IF EXISTS silver_badge();
+DROP FUNCTION IF EXISTS gold_badge();
 
 
 
