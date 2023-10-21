@@ -20,7 +20,10 @@
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
-
+--DROP SCHEMA IF EXISTS lbaw2311 CASCADE;
+--CREATE SCHEMA IF NOT EXISTS lbaw2311;
+--SET search_path TO lbaw2311;
+--SHOW search_path;
 
 ------------------------------------------------------------------------------------------------------------------------
 -- DROP ALL FROM LBAW2311 SCHEMA
@@ -60,7 +63,7 @@ DROP TRIGGER IF EXISTS member_deletion_trigger ON member;
 DROP TRIGGER IF EXISTS question_search_update on question;
 DROP TRIGGER IF EXISTS notification_answers on answer;
 DROP TRIGGER IF EXISTS notification_comment on comment;
-DROP TRIGGER IF EXISTS notification_badges on user_badge;
+DROP TRIGGER IF EXISTS notification_badges on userbadge;
 DROP TRIGGER IF EXISTS member_answer_own_question ON answer;
 DROP TRIGGER IF EXISTS register_badge ON member;
 DROP TRIGGER IF EXISTS bronze_badge ON member;
@@ -107,7 +110,7 @@ CREATE TABLE member (
 	CONSTRAINT check_time CHECK (EXTRACT(YEAR FROM user_creation_date) - EXTRACT(YEAR FROM user_birthdate) > 12 )
 );
 
--- Create the Tag table (R15)
+-- Create the Tag table (R10)
 CREATE TABLE tag (
     tag_id SERIAL PRIMARY KEY,
     tag_name VARCHAR(255) UNIQUE NOT NULL,
@@ -157,7 +160,7 @@ CREATE TABLE notification (
     FOREIGN KEY (notification_user) REFERENCES member(user_id)
 );
 
--- Create the Answer table (R13)
+-- Create the Answer table (R08)
 CREATE TABLE answer (
     answer_id SERIAL PRIMARY KEY,
     question_id INT,
@@ -170,7 +173,7 @@ CREATE TABLE answer (
     FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 
--- Create the Question table (R12)
+-- Create the Question table (R07)
 CREATE TABLE question (
     question_id SERIAL PRIMARY KEY,
     question_title VARCHAR(255) NOT NULL,
@@ -195,22 +198,18 @@ ALTER TABLE question
     ADD CONSTRAINT FK_Correct_Answer
         FOREIGN KEY (correct_answer) REFERENCES answer(answer_id);
 
+--
 ALTER TABLE answer
     ADD CONSTRAINT fk_question
         FOREIGN KEY (question_id) REFERENCES question(question_id);
 
-
-
-ALTER TABLE userbadge
-DROP CONSTRAINT userbadge_user_id_fkey;
+ALTER TABLE userbadge DROP CONSTRAINT userbadge_user_id_fkey;
 
 ALTER TABLE userbadge
 ADD CONSTRAINT userbadge_user_id_fkey
 FOREIGN KEY (user_id)
 REFERENCES member(user_id)
-ON DELETE CASCADE; 
-
-
+ON DELETE CASCADE;
 
 ALTER TABLE notification
 DROP CONSTRAINT notification_notification_user_fkey;
@@ -222,7 +221,7 @@ REFERENCES member(user_id)
 ON DELETE CASCADE; 
 
 
--- Create the Comment table (R14)
+-- Create the Comment table (R09)
 CREATE TABLE comment (
     comment_id SERIAL PRIMARY KEY,
     answer_id INT,
@@ -236,7 +235,7 @@ CREATE TABLE comment (
     FOREIGN KEY (answer_id) REFERENCES answer(answer_id)
 );
 
--- Create the Vote table (R16)
+-- Create the Vote table (R11)
 CREATE TABLE vote (
     vote_id SERIAL PRIMARY KEY,
     vote_author INT,
@@ -252,7 +251,7 @@ CREATE TABLE vote (
     FOREIGN KEY (vote_content_comment) REFERENCES comment(comment_id)
 );
 
--- Create the Report table (R17)
+-- Create the Report table (R12)
 CREATE TABLE report (
     report_id SERIAL PRIMARY KEY,
     report_creator INT,
@@ -272,7 +271,7 @@ CREATE TABLE report (
     FOREIGN KEY (content_reported_comment) REFERENCES comment(comment_id)
 );
 
--- Create the UserFollowQuestion table (R18)
+-- Create the UserFollowQuestion table (R13)
 CREATE TABLE userfollowquestion (
     user_id INT,
     question_id INT,
@@ -282,30 +281,32 @@ CREATE TABLE userfollowquestion (
 );
 
 
-
 ------------------------------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------------------------------
 -- INDEXES
-
--- CREATE INDEX..........
-
 ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Performance indexes
+CREATE INDEX idx_author_question ON question USING hash (content_author);
+CREATE INDEX idx_answer_question ON answer USING hash (question_id);
+CREATE INDEX idx_question_date ON question USING btree (content_creation_date);
 
 -- Full-text Search Index
-
-
+-- Create a ts_vector column for the question table
 ALTER TABLE question
 ADD COLUMN tsvectors TSVECTOR;
-
+-- Create a function to update the ts_vector column
+-- This function is called by the trigger below
 CREATE FUNCTION question_search_update() RETURNS TRIGGER AS $$
 BEGIN
+-- Update the ts_vector column only if the question is inserted
  IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = (
          setweight(to_tsvector('english', NEW.question_title), 'A') ||
          setweight(to_tsvector('english', NEW.content_text), 'B')
         );
  END IF;
-
+-- Update the ts_vector column only if the question title or content text is changed
  IF TG_OP = 'UPDATE' THEN
          IF (NEW.question_title <> OLD.question_title OR NEW.content_text <> OLD.content_text) THEN
            NEW.tsvectors = (
@@ -319,27 +320,27 @@ END $$
 LANGUAGE plpgsql;
 
 -- Trigger before insert or update on question table.
+-- This trigger calls the function above to update the ts_vector column
 CREATE TRIGGER question_search_update
  BEFORE INSERT OR UPDATE ON question
  FOR EACH ROW
  EXECUTE PROCEDURE question_search_update();
 
 -- GIN index for ts_vectors.
-CREATE INDEX search_idx ON question USING GIN (tsvectors); 
+-- This index is used to perform full-text search on the ts_vector column
+CREATE INDEX search_idx ON question USING GIN (tsvectors);
 
 
---- Performance indexes
-CREATE INDEX idx_author_question ON question USING hash (content_author);
-CREATE INDEX idx_answer_question ON answer USING hash (question_id);
-CREATE INDEX idx_question_date ON question USING btree (content_creation_date);
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- TRIGGERS AND FUNCTIONS
+------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
--- TRIGGERS
+-- TRIGGER 01 - Making data anonymous upon a user account deletion (BR12)
 
-
-	
-
---- Delete user, his content appears as deleted user
+-- Delete user, his content appears as deleted user
 CREATE FUNCTION anonymize_content()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -347,7 +348,7 @@ BEGIN
     UPDATE question
     SET content_author = -1
     WHERE content_author = OLD.user_id;
-    
+
     UPDATE answer
     SET content_author = -1
     WHERE content_author = OLD.user_id;
@@ -374,18 +375,82 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
-
--- Create the trigger to add poins to vote, new question, new comment, new answer, new vote
+-- Create the trigger for the member delete
 CREATE TRIGGER member_deletion_trigger
 BEFORE DELETE ON member
 FOR EACH ROW
 EXECUTE FUNCTION anonymize_content();
 
+-- TRIGGER 02 - An user cannot answer his own question (BR05)
+
+CREATE FUNCTION member_answer_own_question() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.content_author = (SELECT question.content_author FROM question WHERE question.question_id= NEW.question_id) THEN
+      RAISE EXCEPTION 'A member cant answer his own question';
+  END IF;
+  RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER member_answer_own_question
+    BEFORE INSERT OR UPDATE OF content_author, question_id ON answer
+    FOR EACH ROW
+      EXECUTE PROCEDURE member_answer_own_question();
 
 
+-- TRIGGER 03 - An user receives a notification when someone answers his question.
+
+CREATE FUNCTION notification_answers() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.question_id = (SELECT question.question_id from question where question.question_id = NEW.question_id) THEN
+    INSERT INTO notification (notification_user, notification_content,notification_type)
+    VALUES ((SELECT question.content_author FROM question WHERE question.question_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.answer_id = NEW.answer_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.question_id = NEW.question_id)), 'answer');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_answers
+AFTER INSERT ON answer
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_answers();
+
+
+-- TRIGGER 04 - An user receives a notification when someone comments his answer.
+
+CREATE FUNCTION notification_comments() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.answer_id = (SELECT answer.answer_id from answer where answer.answer_id = NEW.answer_id) THEN
+    INSERT INTO notification (notification_user, notification_content,notification_type)
+    VALUES ((SELECT answer.content_author FROM answer WHERE answer.answer_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.comment_id = NEW.comment_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.answer_id=comment.answer_id INNER JOIN question ON answer.question_id = question.question_id WHERE comment.comment_id = NEW.comment_id)), 'comment');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_comments
+AFTER INSERT ON comment
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_comments();
+
+
+-- TRIGGER 05 - An user receives a notification when he wins a new badge.
+
+CREATE FUNCTION notification_badges() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO notification (notification_user, notification_content,notification_type)
+    VALUES (NEW.user_id, 'You just won the badge ' || (SELECT badge_name FROM badge WHERE badge.badge_id = NEW.badge_id), 'badge');
+  RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER notification_badges
+AFTER INSERT ON userbadge
+FOR EACH ROW
+  EXECUTE PROCEDURE notification_badges();
+
+
+-- TRIGGER 06 - An user gets one more point for every new comment, answer, question or vote.
 
 CREATE FUNCTION award_user_point()
 RETURNS TRIGGER AS $$
@@ -400,7 +465,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create the trigger for different tables (question, answer, comment)
-
 CREATE TRIGGER award_user_point_question
 AFTER INSERT ON question
 FOR EACH ROW
@@ -415,7 +479,6 @@ CREATE TRIGGER award_user_point_comment
 AFTER INSERT ON comment
 FOR EACH ROW
 EXECUTE FUNCTION award_user_point();
-
 
 -- Create a trigger to award users one point for each vote
 CREATE FUNCTION award_user_point_vote()
@@ -435,69 +498,72 @@ FOR EACH ROW
 EXECUTE FUNCTION award_user_point_vote();
 
 
+-- TRIGGER 07 - An user gets a badge when he registers a new account in the system.
 
-
-CREATE FUNCTION member_answer_own_question() RETURNS TRIGGER AS $$
+CREATE FUNCTION register_badge() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.content_author = (SELECT question.content_author FROM question WHERE question.question_id= NEW.question_id) THEN
-      RAISE EXCEPTION 'A member cant answer his own question';
-  END IF;
+     INSERT INTO userbadge (user_id, badge_id)
+     VALUES (NEW.user_id, 11);
   RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER member_answer_own_question
-    BEFORE INSERT OR UPDATE OF content_author, question_id ON answer
-    FOR EACH ROW
-      EXECUTE PROCEDURE member_answer_own_question();
+CREATE TRIGGER register_badge
+  AFTER INSERT ON member
+  FOR EACH ROW
+    EXECUTE PROCEDURE register_badge();
 
+-- TRIGGER 08 - An user gets a badge when he obtains 10 points by interacting with the platform.
 
-
-CREATE FUNCTION notification_answers() RETURNS TRIGGER AS $$
+CREATE FUNCTION bronze_badge() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.question_id = (SELECT question.question_id from question where question.question_id = NEW.question_id) THEN
-    INSERT INTO notification (notification_user, notification_content,notification_type) 
-    VALUES ((SELECT question.content_author FROM question WHERE question.question_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.answer_id = NEW.answer_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.question_id = NEW.question_id)), 'answer');
-  END IF;
-  RETURN NEW;
+    IF NEW.user_score = 10 THEN
+      INSERT INTO userbadge (user_id, badge_id) VALUES
+      (NEW.user_id, 1);
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER notification_answers
-AFTER INSERT ON answer
+CREATE TRIGGER bronze_badge
+AFTER INSERT OR UPDATE OF user_score ON member
 FOR EACH ROW
-  EXECUTE PROCEDURE notification_answers();
+    EXECUTE PROCEDURE bronze_badge();
 
-
-
-CREATE FUNCTION notification_comments() RETURNS TRIGGER AS $$
+-- TRIGGER 09 - An user gets a badge when he obtains 100 points by interacting with the platform.
+CREATE FUNCTION silver_badge() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.answer_id = (SELECT answer.answer_id from answer where answer.answer_id = NEW.answer_id) THEN
-    INSERT INTO notification (notification_user, notification_content,notification_type) 
-    VALUES ((SELECT answer.content_author FROM answer WHERE answer.answer_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.comment_id = NEW.comment_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.answer_id=comment.answer_id INNER JOIN question ON answer.question_id = question.question_id WHERE comment.comment_id = NEW.comment_id)), 'comment');
-  END IF;
-  RETURN NEW;
+    IF NEW.user_score = 100 THEN
+      INSERT INTO userbadge (user_id, badge_id) VALUES
+      (NEW.user_id, 2);
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER notification_comments
-AFTER INSERT ON comment
+CREATE TRIGGER silver_badge
+AFTER INSERT OR UPDATE OF user_score ON member
 FOR EACH ROW
-  EXECUTE PROCEDURE notification_comments();
+  EXECUTE PROCEDURE silver_badge();
 
 
-CREATE FUNCTION notification_badges() RETURNS TRIGGER AS $$
+-- TRIGGER 10 - An user gets a badge when he obtains 1000 points by interacting with the platform.
+
+CREATE FUNCTION gold_badge() RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO notification (notification_user, notification_content,notification_type) 
-    VALUES (NEW.user_id, 'You just won the badge ' || (SELECT badge_name FROM badge WHERE badge.badge_id = NEW.badge_id), 'badge');
-  RETURN NEW;
+    IF NEW.user_score = 1000 THEN
+      INSERT INTO userbadge (user_id, badge_id) VALUES
+      (NEW.user_id, 3);
+    END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER notification_badges
-AFTER INSERT ON userbadge
+CREATE TRIGGER gold_badge
+AFTER INSERT OR UPDATE OF user_score ON member
 FOR EACH ROW
-  EXECUTE PROCEDURE notification_badges();
+  EXECUTE PROCEDURE gold_badge();
+
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -509,6 +575,20 @@ FOR EACH ROW
 ------------------------------------------------------------------------------------------------------------------------
 -- POPULATE TABLES FOR LBAW2311 SCHEMA
 ------------------------------------------------------------------------------------------------------------------------
+-- Populate the Badge table (R04)
+INSERT INTO badge (badge_name, badge_description)
+VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
+       ('Silver', 'Silver-level badge'), -- Assigned when you gained 100 points
+       ('Gold', 'Gold-level badge'), -- Assigned when you gained 1000 points
+       ('Reliable', 'One of your answers was accepted as the correct answer'), -- Assigned when you have an answer accepted as the correct answer
+       ('Notable Question', 'Your question was upvoted 100 times'), -- Assigned when you have a question with 100 upvotes
+       ('Good Question', 'Your question was upvoted 25 times'), -- Assigned when you have a question with 25 upvotes
+       ('Nice Question', 'Your question was upvoted 10 times'), -- Assigned when you have a question with 10 upvotes
+       ('Notable Answer', 'Your answer was upvoted 100 times'), -- Assigned when you have an answer with 100 upvotes
+       ('Good Answer', 'Your answer was upvoted 25 times'), -- Assigned when you have an answer with 25 upvotes
+       ('Nice Answer', 'Your answer was upvoted 10 times'), -- Assigned when you have an answer with 10 upvotes
+       ('Welcome', 'You have joined the community'); -- Assigned when you create your account
+
 -- Populate the User table (R01)
 --  The user_creation_date is automatically generated by the database
 
@@ -544,19 +624,6 @@ VALUES (1);
 INSERT INTO moderator (user_id, tag_id)
 VALUES (2, 1);
 
--- Populate the Badge table (R04)
-INSERT INTO badge (badge_name, badge_description)
-VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
-       ('Silver', 'Silver-level badge'), -- Assigned when you gained 100 points
-       ('Gold', 'Gold-level badge'), -- Assigned when you gained 1000 points
-       ('Reliable', 'One of your answers was accepted as the correct answer'), -- Assigned when you have an answer accepted as the correct answer
-       ('Notable Question', 'Your question was upvoted 100 times'), -- Assigned when you have a question with 100 upvotes
-       ('Good Question', 'Your question was upvoted 25 times'), -- Assigned when you have a question with 25 upvotes
-       ('Nice Question', 'Your question was upvoted 10 times'), -- Assigned when you have a question with 10 upvotes
-       ('Notable Answer', 'Your answer was upvoted 100 times'), -- Assigned when you have an answer with 100 upvotes
-       ('Good Answer', 'Your answer was upvoted 25 times'), -- Assigned when you have an answer with 25 upvotes
-       ('Nice Answer', 'Your answer was upvoted 10 times'), -- Assigned when you have an answer with 10 upvotes
-       ('Welcome', 'You have joined the community'); -- Assigned when you create your account
 
 -- Populate the UserBadge table (R05)
 -- The user_badge_date is automatically generated by the database
