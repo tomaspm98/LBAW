@@ -200,17 +200,15 @@ ALTER TABLE answer
         FOREIGN KEY (question_id) REFERENCES question(question_id);
 
 
--- Modify the foreign key constraint in the userbadge table
--- Drop the existing foreign key constraint
+
 ALTER TABLE userbadge
 DROP CONSTRAINT userbadge_user_id_fkey;
 
--- Create a new foreign key constraint with the desired configuration
 ALTER TABLE userbadge
 ADD CONSTRAINT userbadge_user_id_fkey
 FOREIGN KEY (user_id)
 REFERENCES member(user_id)
-ON DELETE CASCADE; -- This example uses cascade delete as an example
+ON DELETE CASCADE; 
 
 
 
@@ -221,7 +219,7 @@ ALTER TABLE notification
 ADD CONSTRAINT notification_notification_user_fkey
 FOREIGN KEY (notification_user)
 REFERENCES member(user_id)
-ON DELETE CASCADE; -- This example uses cascade delete as an example
+ON DELETE CASCADE; 
 
 
 -- Create the Comment table (R14)
