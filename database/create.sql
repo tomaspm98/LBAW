@@ -431,9 +431,9 @@ CREATE TRIGGER member_answer_own_question
 
 CREATE FUNCTION notification_answers() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.question_id = (SELECT question.content_id from question where question.content_id = NEW.question_id) THEN
+  IF NEW.question_id = (SELECT question.question_id from question where question.question_id = NEW.question_id) THEN
     INSERT INTO notification (notification_user, notification_content,notification_type) 
-    VALUES ((SELECT question.content_author FROM question WHERE question.content_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.content_id = NEW.content_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.content_id = NEW.question_id)), 'answer');
+    VALUES ((SELECT question.content_author FROM question WHERE question.question_id = NEW.question_id), ((SELECT username from answer INNER JOIN member ON content_author = member.user_id where answer.answer_id = NEW.answer_id) || ' answered your question ' || (SELECT question_title FROM question WHERE question.question_id = NEW.question_id)), 'answer');
   END IF;
   RETURN NEW;
 END;
@@ -448,9 +448,9 @@ FOR EACH ROW
 
 CREATE FUNCTION notification_comments() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.answer_id = (SELECT answer.content_id from answer where answer.content_id = NEW.answer_id) THEN
+  IF NEW.answer_id = (SELECT answer.answer_id from answer where answer.answer_id = NEW.answer_id) THEN
     INSERT INTO notification (notification_user, notification_content,notification_type) 
-    VALUES ((SELECT answer.content_author FROM answer WHERE answer.content_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.content_id = NEW.content_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.content_id=comment.answer_id INNER JOIN question ON answer.question_id = question.content_id WHERE comment.content_id = NEW.content_id)), 'comment');
+    VALUES ((SELECT answer.content_author FROM answer WHERE answer.answer_id = NEW.answer_id), ((SELECT username from comment INNER JOIN member ON content_author = member.user_id where comment.comment_id = NEW.comment_id) || ' commented your answer to question ' || (SELECT question_title FROM answer INNER JOIN comment ON answer.answer_id=comment.answer_id INNER JOIN question ON answer.question_id = question.question_id WHERE comment.comment_id = NEW.comment_id)), 'comment');
   END IF;
   RETURN NEW;
 END;
@@ -639,5 +639,3 @@ VALUES (1, 1, true),  -- Follow question 1 from admin. He wants to be notified o
        (2, 2, false), -- Unfollow question 2 from moderator. It's his own question but he does not want any more notifications about it
        (3, 1, true),  -- Follow question 1 from member1. A user must follow his own questions by default
        (3, 2, true);  -- Follow question 2 from member1. He wants to be notified of any new activity
-	   
-	
