@@ -167,7 +167,7 @@ CREATE TABLE answer (
     --Common to content
     content_author INT,
     content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content_text VARCHAR(255) NOT NULL,
+    content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (content_author) REFERENCES member(user_id)
@@ -182,7 +182,7 @@ CREATE TABLE question (
     --Common to content
     content_author INT,
     content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content_text VARCHAR(255) NOT NULL,
+    content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (content_author) REFERENCES member(user_id)
@@ -228,7 +228,7 @@ CREATE TABLE comment (
     --Common to content
     content_author INT,
     content_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content_text VARCHAR(255) NOT NULL,
+    content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (content_author) REFERENCES member(user_id),
