@@ -23,7 +23,9 @@ use App\Http\Controllers\QuestionController;
 // Home
 Route::redirect('/', '/login');
 
-Route::get('questions/{question_id}', [QuestionController::class, 'show']);
+Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
+Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
+Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
 
 
 // Cards
