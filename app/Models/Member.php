@@ -41,17 +41,17 @@ class Member extends Model
 
     public function questions()
     {
-        return $this->hasMany(Question::class, 'user_id');
+        return $this->hasMany(Question::class, 'content_author');
     }
 
     public function answers()
     {
-        return $this->hasMany(Answer::class, 'user_id');
+        return $this->hasMany(Answer::class, 'content_author');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'user_id');
+        return $this->hasMany(Comment::class, 'content_author');
     }
 
 }

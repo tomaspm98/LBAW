@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,12 @@ Route::redirect('/', '/login');
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
+
+Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
+Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
+Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
+Route::get('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
+
 
 
 // Cards
