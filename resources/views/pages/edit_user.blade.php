@@ -37,5 +37,11 @@
 
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
+        <form action="{{ route('user.delete', $member->user_id) }}" method="post">
+            @csrf
+            @method('delete')
+        
+            <button type="submit" onclick="return confirm('Are you sure you want to delete your profile?')">Delete Profile</button>
+        </form>
     </div>
 @endsection

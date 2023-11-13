@@ -31,7 +31,7 @@ Route::put('questions/{question_id}', [QuestionController::class, 'update'])->na
 Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
 Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
 Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
-Route::get('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
+Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
 
 
