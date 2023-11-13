@@ -41,7 +41,7 @@ class Answer extends Model
 
     public function votes()
     {
-        return $this->hasMany(Vote::class, 'answer_id');
+        return $this->hasMany(Vote::class, 'vote_content_answer');
     }
 
     public function getVoteCountAttribute()
@@ -61,7 +61,7 @@ class Answer extends Model
 
     public function reports()
     {
-        return $this->hasMany(Report::class, 'answer_id');
+        return $this->hasMany(Report::class, 'content_reported_answer');
     }
 
     public function getReportCountAttribute()

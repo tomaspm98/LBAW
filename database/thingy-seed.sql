@@ -177,7 +177,7 @@ CREATE TABLE answer (
     content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES member(user_id)
+    FOREIGN KEY (content_author) REFERENCES member(user_id) ON DELETE CASCADE
 );
 
 -- Create the Question table (R07)
@@ -192,7 +192,7 @@ CREATE TABLE question (
     content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES member(user_id)
+    FOREIGN KEY (content_author) REFERENCES member(user_id) ON DELETE CASCADE
 );
 
 -- Create a foreign key for question_tag in the question table
@@ -208,7 +208,7 @@ ALTER TABLE question
 --
 ALTER TABLE answer
     ADD CONSTRAINT fk_question
-        FOREIGN KEY (question_id) REFERENCES question(question_id);
+        FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE;
 
 ALTER TABLE userbadge DROP CONSTRAINT userbadge_user_id_fkey;
 
@@ -239,7 +239,7 @@ CREATE TABLE comment (
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (content_author) REFERENCES member(user_id),
-    FOREIGN KEY (answer_id) REFERENCES answer(answer_id)
+    FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE
 );
 
 -- Create the Vote table (R11)
@@ -253,9 +253,9 @@ CREATE TABLE vote (
     vote_content_answer INT,
     vote_content_comment INT,
     FOREIGN KEY (vote_author) REFERENCES member(user_id),
-    FOREIGN KEY (vote_content_question) REFERENCES question(question_id),
-    FOREIGN KEY (vote_content_answer) REFERENCES answer(answer_id),
-    FOREIGN KEY (vote_content_comment) REFERENCES comment(comment_id)
+    FOREIGN KEY (vote_content_question) REFERENCES question(question_id) ON DELETE CASCADE,
+    FOREIGN KEY (vote_content_answer) REFERENCES answer(answer_id) ON DELETE CASCADE,
+    FOREIGN KEY (vote_content_comment) REFERENCES comment(comment_id) ON DELETE CASCADE
 );
 
 -- Create the Report table (R12)
@@ -273,9 +273,9 @@ CREATE TABLE report (
     report_answer VARCHAR(255),
     FOREIGN KEY (report_creator) REFERENCES member(user_id),
     FOREIGN KEY (report_handler) REFERENCES moderator(user_id),
-    FOREIGN KEY (content_reported_question) REFERENCES question(question_id),
-    FOREIGN KEY (content_reported_answer) REFERENCES answer(answer_id),
-    FOREIGN KEY (content_reported_comment) REFERENCES comment(comment_id)
+    FOREIGN KEY (content_reported_question) REFERENCES question(question_id) ON DELETE CASCADE,
+    FOREIGN KEY (content_reported_answer) REFERENCES answer(answer_id) ON DELETE CASCADE,
+    FOREIGN KEY (content_reported_comment) REFERENCES comment(comment_id) ON DELETE CASCADE
 );
 
 -- Create the UserFollowQuestion table (R13)
