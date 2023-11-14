@@ -78,6 +78,7 @@
 }
 
 .comment_container{
+    /* background-color: RED ; */
     width: 90%;
     margin-left: auto;
     box-shadow: 2px 2px 3px rgb(160, 160, 160);    
