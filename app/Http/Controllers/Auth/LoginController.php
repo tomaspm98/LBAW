@@ -13,21 +13,18 @@ use Illuminate\View\View;
 class LoginController extends Controller
 {
 
-    /**
-     * Display a login form.
-     */
+    
+    // Display a login form.
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards');
+            return redirect('/home');
         } else {
             return view('auth.login');
         }
     }
 
-    /**
-     * Handle an authentication attempt.
-     */
+    // Handle an authentication attempt.
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -38,7 +35,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/cards');
+            return redirect()->intended('/home');
         }
  
         return back()->withErrors([
@@ -46,9 +43,7 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Log out the user from application.
-     */
+    // Log out the user from application.
     public function logout(Request $request)
     {
         Auth::logout();

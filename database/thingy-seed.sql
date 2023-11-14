@@ -29,7 +29,7 @@ SET search_path TO lbaw2311;
 
 --DROP SCHEMA IF EXISTS lbaw2311 CASCADE;
 --CREATE SCHEMA IF NOT EXISTS lbaw2311;
---SET search_path TO lbaw2311;
+SET search_path TO lbaw2311;
 --SHOW search_path;
 
 ------------------------------------------------------------------------------------------------------------------------

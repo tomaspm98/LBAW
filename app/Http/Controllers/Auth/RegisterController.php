@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 use Illuminate\View\View;
 
@@ -27,22 +29,30 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+        Validator::make($request->all(), [
+            'profile_photo' => 'nullable|image|max:1024',
+            'username' => 'required|string|max:25',
+            'user_email' => 'required|email|max:25|unique:member',
+            'user_birthdate' => [
+                'required',
+                'date',
+                'before:' . \Carbon\Carbon::now()->subYears(12)->format('Y-m-d')
+            ],
+            'password' => 'required|min:8|confirmed',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'username' => $request->username,
+            'user_email' => $request->email,
+            'user_password' => Hash::make($request->password),
+            'picture' => $request-> picture,
+            'user_birthdate' => $request->birthdate
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'user_password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('cards')
+        return redirect()->route('/home')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

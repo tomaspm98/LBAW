@@ -3,12 +3,19 @@
 @section('content')
 <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
-
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
+    <label for="picture">Profile Picture</label>
+    <input id="picture" type="file" name="picture" value="{{ old('picture') }}" required>
+    @if ($errors->has('picture'))
       <span class="error">
-          {{ $errors->first('name') }}
+          {{ $errors->first('picture') }}
+      </span>
+    @endif
+
+    <label for="name">Username</label>
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+    @if ($errors->has('username'))
+      <span class="error">
+          {{ $errors->first('username') }}
       </span>
     @endif
 
@@ -17,6 +24,17 @@
     @if ($errors->has('email'))
       <span class="error">
           {{ $errors->first('email') }}
+      </span>
+    @endif
+
+    <label for="birthdate">Birthdate</label>
+    <input id="birthdate" type="date" name="birthdate" value="{{ old('birthdate') }}" required>
+    <script>
+
+    </script>
+    @if ($errors->has('birthdate'))
+      <span class="error">
+          {{ $errors->first('birthdate') }}
       </span>
     @endif
 

@@ -23,6 +23,29 @@ use App\Http\Controllers\QuestionController;
 // Home
 Route::redirect('/', '/login');
 
+// AUTHENTICATION
+Route::controller(LoginController::class)->group(function () {
+
+    // Provide login form. Access: PUB
+    Route::get('/login', 'showLoginForm')->name('login');
+
+    // Login form submission. Access: PUB
+    Route::post('/login', 'authenticate');
+
+    // Logout the authenticated user. Access: MEM, ADM, MOD
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+
+// REGISTRATION
+Route::controller(RegisterController::class)->group(function () {
+    // Provide new user registration form. Access: PUB
+    Route::get('/register','showRegistrationForm')->name('register');
+    // Processes the new user registration form submission. Access: PUB
+    Route::post('/register', 'register');
+});
+
+
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
