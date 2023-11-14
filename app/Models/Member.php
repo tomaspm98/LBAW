@@ -44,14 +44,29 @@ class Member extends Model
         return $this->hasMany(Question::class, 'content_author');
     }
 
+    public function getQuestionsCountAttribute()
+    {
+        return $this->questions()->count();
+    }
+
     public function answers()
     {
         return $this->hasMany(Answer::class, 'content_author');
     }
 
+    public function getAnswerCountAttribute()
+    {
+        return $this->answers()->count();
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'content_author');
+    }
+
+    public function getCommentsCountAttribute()
+    {
+        return $this->comments()->count();
     }
 
 }

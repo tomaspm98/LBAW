@@ -9,7 +9,7 @@
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your new username"> 
+                <input type="text" class="form-control" id="username" name="username" value="{{$member->username}}"> 
             </div>
 
             <div class="form-group">
@@ -32,7 +32,7 @@
 
             <div class="form-group">
                 <label for="user_birthdate">Birthdate</label>
-                <input class="form-control datepicker" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
+                <input type="date" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
             </div>
 
             <button type="submit" class="btn btn-primary">Update Profile</button>

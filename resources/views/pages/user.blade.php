@@ -8,6 +8,7 @@
             <br><h3>Email: {{ $member->user_email }} </h3>
             <br><h3>picture: {{ $member->picture }} </h3>
             <br><h3>score: {{ $member->user_score }} </h3>
+            <br><h3>score: {{ $member->user_birthdate }} </h3>
 
             <br><h3>{{$member->questions_count}}  Questions: </h3>
             @foreach ($member->questions as $question)

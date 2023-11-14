@@ -7,6 +7,8 @@ use App\Models\Member;
 use App\Models\Question;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 
 
 class UserController extends Controller
@@ -32,31 +34,18 @@ class UserController extends Controller
     
     public function update(Request $request, $user_id)
     {
+        $validatedData = $request->validate([
+            'username' => 'nullable|string|max:255|unique:member,username,' . $user_id . ',user_id',
+            'user_email' => 'nullable|email|unique:member,user_email,' . $user_id . ',user_email',
+            'user_password' => 'nullable|string|max:255|confirmed',
+            'user_birthdate' => 'nullable|date',
+        ]);
 
-        $rules = [];
+        $member = Member::findOrFail($user_id);        
+        $attributes = array_filter($request->all());
+        $member->update($attributes);
 
-
-        if ($request->has('username')) {
-            $rules['username'] = 'string|max:255|unique:member,username,' . $user_id . ',user_id';
-        }
-
-        if ($request->has('user_email')) {
-            $rules['user_email'] = 'email|unique:member,user_email,' . $user_id . ',user_email';
-        }
-
-        if ($request->has('user_password')) {
-            $rules['user_password'] = 'string|max:255|confirmed';
-        }
-
-
-        $validatedData = $request->validate($rules);
-        
-
-        $member = Member::findOrFail($user_id);
-
-        $member->update($validatedData);
-
-        return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'Question updated successfully');
+        return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
     }
 
 
