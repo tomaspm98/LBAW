@@ -1,0 +1,90 @@
+/*
+     The term content refers to any of the following three entities: 
+     questions, answers or comments
+*/
+
+.content_container button, .comment_container button{
+    width: 90%;
+}
+
+.content_top_container{
+    /* background-color: rebeccapurple; */
+    justify-content: space-between;
+    display:flex;
+    padding: 10px;
+    flex-direction: row;
+}
+
+.question_tittle_container{
+   /* background-color: #ececff;  */
+   display: flex;
+   flex-direction: column;
+   border-bottom: 1px solid gray;
+   padding: 2px;
+   width: 100%;
+   margin-left: 10px;
+   margin-right: 10px;
+}
+
+.content_left_container{
+    /* background-color: blue; */
+    text-align: center;
+    width: 15%;
+
+}
+
+.content_user_profile_photo {
+    background-color: rgb(204, 202, 202);
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.content_user_profile_photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content_right_container{
+    /* background-color: yellow; */
+    width: 12%;
+    text-align: center;
+}
+
+.content_top_container div button{
+    top: 50%;
+}
+
+.content_bottom_container{
+    /* background-color: rebeccapurple; */
+    justify-content: space-between;
+    display:flex;
+    padding: 10px;
+    flex-direction: row;
+    border-bottom: solid black 2px;
+}
+
+.content_text_container{
+/* background-color: #ececff;  */
+   padding: 2px;
+   padding-bottom: 0px;
+   width: 100%;
+   margin-left: 10px;
+   margin-right: 10px;
+}
+
+.comment_container{
+    /* background-color: RED ; */
+    width: 90%;
+    margin-left: auto;
+    box-shadow: 2px 2px 3px rgb(160, 160, 160);    
+}
+
+.comment_container .content_user_profile_photo{
+    width: 80px;
+    height: 80px;
+}

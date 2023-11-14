@@ -26,7 +26,7 @@ class Comment extends Model
 
     public function votes()
     {
-        return $this->hasMany(Vote::class, 'comment_id');
+        return $this->hasMany(Vote::class, 'vote_content_comment');
     }
 
     public function getVoteCountAttribute()
@@ -36,7 +36,7 @@ class Comment extends Model
 
     public function reports()
     {
-        return $this->hasMany(Report::class, 'answer_id');
+        return $this->hasMany(Report::class, 'content_reported_comment');
     }
 
     public function getReportCountAttribute()
