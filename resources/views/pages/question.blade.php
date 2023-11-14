@@ -7,9 +7,11 @@
             <div class="content_top_container">
 
                 <div class="content_left_container">
-                    <div class="content_user_profile_photo">
-                        <img src="" alt="Profile Photo">
-                    </div>
+                    <a href=""> <!-- route('member.show', $question->author) -->
+                        <div class="content_user_profile_photo">
+                            <img src="" alt="Profile Photo">
+                        </div>
+                    </a>
                     <p><b>{{ $question->author->username }}</b></p>
                 </div>
                 
@@ -57,7 +59,7 @@
                     <button> 
                         DISLIKE
                     </button>
-                    <p><b>999</b></p>
+                    <p><b>{{$question->vote_count}}</b></p>
                 </div>
             </div>
         </div>
@@ -92,9 +94,11 @@
             <div class="content_top_container">
 
                 <div class="content_left_container">
-                    <div class="content_user_profile_photo">
-                        <img src="" alt="Profile Photo">
-                    </div>
+                    <a href="">
+                        <div class="content_user_profile_photo">
+                            <img src="" alt="Profile Photo">
+                        </div>
+                    </a>
                     <p><b>{{$answer->author->username }}</b></p>
                 </div>
                 
@@ -121,7 +125,7 @@
                     <button> 
                         DISLIKE
                     </button>
-                    <p><b>88</b></p>
+                    <p><b>{{$answer->vote_count}}</b></p>
                 </div>
                 @endif
             </div>
@@ -131,9 +135,11 @@
         <div class="comment_container">
             <div class="content_top_container">
                 <div class="content_left_container">
-                    <div class="content_user_profile_photo">
-                        <img src="" alt="Profile Photo">
-                    </div>
+                    <a href="">
+                      <div class="content_user_profile_photo">
+                            <img src="" alt="Profile Photo">
+                        </div>
+                    </a>
                     <p><b>{{$comment->author->username }}</b></p>
                 </div>
                 
@@ -160,7 +166,7 @@
                     <button> 
                         DISLIKE
                     </button>
-                    <p><b>77</b></p>
+                    <p><b>{{$comment->vote_count}}</b></p>
                 </div>
                 @endif
             </div>
