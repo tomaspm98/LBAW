@@ -8,7 +8,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,21 +25,22 @@ use App\Http\Controllers\AnswerController;
 // Home
 Route::redirect('/', '/login');
 
-Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
-Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
-Route::delete('questions/{question_id}', [QuestionController::class, 'delete'])->name('questions.delete');
-Route::get('questions', [QuestionController::class, 'list'])->name('questions.list');
-Route::post('questions/{question_id}/answers', [AnswerController::class, 'createAnswer'])->name('answers.create');
-Route::get('questions/{question_id}/answers/{answer_id}/edit', [AnswerController::class, 'editShow'])->name('answers.edit');
-Route::put('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'update'])->name('answers.update');
-Route::delete('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'delete'])->name('answers.delete');
+
+Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
+Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
+Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
+Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
 
+Route::get('/admin/assign', [AdminController::class, 'showAllUsers'])->name('admin.users');
+Route::get('/admin/remove', [AdminController::class, 'showAllModerators'])->name('admin.moderators');
 
 
+Route::post('add/{userId}', [AdminController::class, 'addModerator'])->name('moderator.add');
+Route::delete('remove/{userId}', [AdminController::class, 'removeModerator'])->name('moderator.remove');
 
 
 
