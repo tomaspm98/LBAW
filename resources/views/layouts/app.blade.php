@@ -13,6 +13,7 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link href="{{ url('css/navbar.css') }}" rel="stylesheet">
         <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -24,10 +25,14 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
+                <!-- <h1><a href="{{ url('/cards') }}">QueryStack</a></h1>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif
+                -->
+
+                @include ('layouts.navbar')
+
             </header>
             <section id="content">
                 @yield('content')

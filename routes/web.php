@@ -24,6 +24,8 @@ use App\Http\Controllers\AnswerController;
 // Home
 Route::redirect('/', '/login');
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'] )->name('home') ;
+
 Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
 Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
