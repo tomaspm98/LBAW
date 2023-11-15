@@ -37,6 +37,7 @@ class QuestionController extends Controller
         ]);
 
         $question = Question::findOrFail($question_id);
+        $validatedData['content_is_edited'] = 'true';
 
         $question->update($validatedData);
 
@@ -47,27 +48,8 @@ class QuestionController extends Controller
     {
         $question = Question::findOrFail($question_id);
 
-        foreach ($question->answers as $answer) {
-            $answer->comments()->delete();
-            if ($answer->reports()->exists()) {  // Check if there are reports
-                $answer->reports()->delete();
-            }
-            if ($answer->votes()->exists()) {  // Check if there are reports
-                $answer->votes()->delete();
-            }
-            $answer->delete();
-        }
-
-        if ($question->reports()->exists()) {  // Check if there are reports
-            $question->reports()->delete();
-        }
-        if ($question->votes()->exists()) {  // Check if there are reports
-            $question->votes()->delete();
-        }
-        if ($question->follows()->exists()) {  // Check if there are reports
-            $question->follows()->delete();
-        }
-        $question->delete();
+        $validatedData['content_is_visible'] = 'false';
+        $question->update($validatedData);
 
         return redirect()->route('home')->with('success', 'Question deleted successfully');
     }

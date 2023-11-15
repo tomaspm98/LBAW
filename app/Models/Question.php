@@ -48,7 +48,7 @@ class Question extends Model
 
     public function getAnswerCountAttribute()
     {
-        return $this->answers()->count();
+        return $this->answers()->where('content_is_visible', true)->count();
     }
 
     public function votes()
