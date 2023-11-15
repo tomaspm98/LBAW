@@ -33,6 +33,10 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
+        if ($this->isSpecialUser($credentials['user_email'])) {
+            return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
+        }
+
         if (Auth::attempt($credentials, $request->filled('remember'))) { // , $request->filled('remember'))
             $request->session()->regenerate();
  
@@ -42,6 +46,12 @@ class LoginController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+    }
+
+    private function isSpecialUser($email)
+    {
+        // Add logic to check if the user with the given email is the special user
+        return $email === 'deleted@example.com';
     }
 
     // Log out the user from application.
