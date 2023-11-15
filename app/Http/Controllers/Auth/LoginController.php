@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -28,11 +29,11 @@ class LoginController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'user_email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+
+        if (Auth::attempt($credentials, $request->filled('remember'))) { // , $request->filled('remember'))
             $request->session()->regenerate();
  
             return redirect()->intended('/home');
