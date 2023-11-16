@@ -1,2 +1,6 @@
+# Ignore everything in the public directory
 *
+
+# Except these files and folders
 !.gitignore
+!pictures/default/

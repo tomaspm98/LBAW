@@ -24,14 +24,39 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
+                <h1>
+                    <a href="{{ url('/login') }}">Query Stack!</a>
+                </h1>
+                <div class="search-bar">
+                    <form action="/search" method="get">
+                        <input type="text" name="query" placeholder="Search...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="header-buttons">
+                @if (Auth::guest())
+                    <a class="button" class="login-button" href="{{ url('/login') }}"> Login </a> 
+                    <a class="button" class="register-button" href="{{ url('/register') }}"> Register </a>
                 @endif
+                @if (Auth::check())
+                    <a class="button" href="{{ url('/logout') }}"> Logout </a>
+                    <a class="button" href="{{ url('') }}"> Notifications </a>
+                    <a class="button" href="{{ url('') }}"> User Profile </a> 
+                    <span>{{ Auth::user()->name }}</span>
+                @endif
+                </div>
             </header>
             <section id="content">
                 @yield('content')
             </section>
         </main>
+        <footer>
+            <p class="site-moto">The best Q&A Platform for thechnology questions</p>
+            <p>&copy; Query Stack!</p>
+            <div class="site-map">
+                <a class="button" href="{{ url('/about') }}"> About </a>
+                <a class="button" href="{{ url('/contact.platform-contacts') }}"> Contact </a>
+            </div>
+        </footer>
     </body>
 </html>

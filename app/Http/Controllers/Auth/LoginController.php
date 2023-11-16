@@ -9,36 +9,38 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
 
-    /**
-     * Display a login form.
-     */
+    
+    // Display a login form.
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards');
+            return redirect('/home');
         } else {
             return view('auth.login');
         }
     }
 
-    /**
-     * Handle an authentication attempt.
-     */
+    // Handle an authentication attempt.
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'user_email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+
+        if ($this->isSpecialUser($credentials['user_email'])) {
+            return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
+        }
+
+        if (Auth::attempt($credentials, $request->filled('remember'))) { // , $request->filled('remember'))
             $request->session()->regenerate();
  
-            return redirect()->intended('/cards');
+            return redirect()->intended('/home');
         }
  
         return back()->withErrors([
@@ -46,9 +48,13 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Log out the user from application.
-     */
+    private function isSpecialUser($email)
+    {
+        // Add logic to check if the user with the given email is the special user
+        return $email === 'deleted@example.com';
+    }
+
+    // Log out the user from application.
     public function logout(Request $request)
     {
         Auth::logout();
