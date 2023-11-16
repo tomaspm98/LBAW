@@ -46,6 +46,10 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+// STATIC PAGES
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
 
 Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
 Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
