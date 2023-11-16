@@ -26,10 +26,15 @@ class Member extends Authenticatable
 
     public $timestamps = false;
 
+    protected $casts = [
+        'user_birthdate' => 'timestamp',
+        'user_creation_date' => 'timestamp',
+    ];
+
     protected $fillable = [
         'username',
         'user_email',
-        'user_password',
+        'password',
         'picture',
         'user_birthdate',
         'user_creation_date',

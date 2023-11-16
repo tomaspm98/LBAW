@@ -595,12 +595,12 @@ VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
 
 INSERT INTO member (user_id, username, user_email, password, picture, user_birthdate, user_score)
 --VALUES (-1, 'deleted', 'deleted@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 );
-VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar1.jpg', '1990-01-15', 0);
+VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0);
 
 INSERT INTO member (username, user_email, password, picture, user_birthdate, user_score)
-VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar1.jpg', '1990-01-15', 0),
-       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar2.jpg', '1990-01-15',  0),
-       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar3.jpg', '1990-01-21', 0);
+VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0),
+       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-21', 0);
 --('admin', 'admin@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 ),
 --       ('moderator', 'moderator@example.com', 'pass', '/picture/avatar2.jpg', '1990-01-15',  0 ),
 --       ('member1', 'member1@example.com', 'pass','/picture/avatar3.jpg', '1990-01-21', 0 );

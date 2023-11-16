@@ -37,7 +37,7 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
-
+ 
 // REGISTRATION
 Route::controller(RegisterController::class)->group(function () {
     // Provide new user registration form. Access: PUB
