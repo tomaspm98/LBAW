@@ -43,9 +43,7 @@
         <div class="team-members">
             <div class="team-member">
                 <div class="team-member-image">
-                    <!--
-                        Add an image here
-                    -->
+                    <img src="{{ url('/pictures/about/team_member_ricardo.png') }}" alt="Ricardo Peralta">
                 </div>
                 <div class="team-member-description">
                     <h3>Ricardo Peralta</h3>
@@ -56,9 +54,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!--
-                        Add an image here
-                    -->
+                    <img src="{{ url('/pictures/about/team_member_goncalo.png') }}" alt="Gonçalo">
                 </div>
                 <div class="team-member-description">
                     <h3>Gonçalo</h3>
@@ -69,9 +65,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!--
-                        Add an image here
-                    -->
+                    <img src="{{ url('/pictures/about/team_member_tomas.png') }}" alt="Tomas">
                 </div>
                 <div class="team-member-description">
                     <h3>Tomas</h3>
@@ -82,9 +76,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!--
-                        Add an image here
-                    -->
+                    <img src="{{ url('/pictures/about/team_member_antonio.png') }}" alt="António">
                 </div>
                 <div class="team-member-description">
                     <h3>António</h3>
@@ -95,9 +87,9 @@
             </div>
         </div>
     </div>
-    <div class="platform-contacts  main-containers" >
+    <div class="platform-contacts  main-containers" id="contacts">
         <h2>Contact Us</h2>
-        <p class="contacts">If you have any questions or feedback, feel free to reach out to us:</p>
+        <p class="contacts">If you have any questions or feedback, feel free to reach out to us.</p>
         <ul class="contacts">
             <li>Email: up202206392@up.pt</li>
             <li>Email: info@example.com</li>
@@ -105,11 +97,6 @@
             <li>Email: info@example.com</li>
             <li>Physical support: FEUP - Porto, Portugal </li>
         </ul>
-    </div>
-    <div class="platform-features main-containers" >
-        <!--
-            See wiki to add features
-        -->
     </div>
 </section>
 @endsection

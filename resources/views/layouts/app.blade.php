@@ -21,6 +21,20 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.location.pathname === '/about' && window.location.hash === '#platform-contacts') {
+                    const contactsSection = document.getElementById('contacts');
+    
+                    if (contactsSection) {
+                        // Scroll to the "Contacts" section with smooth behavior
+                        contactsSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        </script>
     </head>
     <body>
         <main>
@@ -55,8 +69,9 @@
             <p class="site-moto">The best Q&A Platform for thechnology questions</p>
             <p>&copy; Query Stack!</p>
             <div class="site-map">
-                <a class="button" href="{{ url('/about') }}"> About </a>
-                <a class="button" href="{{ url('/contact.platform-contacts') }}"> Contact </a>
+                <a class="button" href="{{ route('about') }}"> About </a>
+                <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
+                
             </div>
         </footer>
     </body>
