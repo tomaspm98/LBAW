@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,16 +53,28 @@ Route::get('/about', function () {
     return view('pages.about');
 })->name('about');
 
-Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
-Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
-Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
-Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
-Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
 
-Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
-Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
-Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
-Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
+
+Route::controller(QuestionController::class)->group(function(){
+
+    Route::get('questions/create', 'createShow')->name('questions.create');
+    Route::post('questions', 'create')->name('questions.create');
+    Route::get('questions/{question_id}', 'show')->name('questions.show');
+    Route::get('questions/{question_id}/edit', 'editShow')->name('questions.edit');
+    Route::put('questions/{question_id}', 'update')->name('questions.update');
+    Route::delete('questions/{question_id}', 'delete')->name('questions.delete');
+    Route::get('questions', 'list')->name('questions.list');
+
+});
+
+Route::controller(AnswerController::class)->group(function(){
+    Route::post('questions/{question_id}/answers', 'createAnswer')->name('answers.create');
+    Route::get('questions/{question_id}/answers/{answer_id}/edit', 'editShow')->name('answers.edit');
+    Route::put('questions/{question_id}/answers/{answer_id}', 'update')->name('answers.update');
+    Route::delete('questions/{question_id}/answers/{answer_id}', 'delete')->name('answers.delete');
+});
+
+
 
 Route::controller(AdminController::class)->group(function(){
 
@@ -77,42 +90,4 @@ Route::controller(UserController::class)->group(function(){
     Route::put('member/{user_id}', 'update')->name('user.update');
     Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
 });
-
-
-
-
-
-
-// Cards
-/*Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
-
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
-
-// Authentication
-Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
-});
-
-Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
-});*/
-
 
