@@ -13,24 +13,66 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link href="{{ url('css/about.css') }}" rel="stylesheet">
+        <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.location.pathname === '/about' && window.location.hash === '#platform-contacts') {
+                    const contactsSection = document.getElementById('contacts');
+    
+                    if (contactsSection) {
+                        // Scroll to the "Contacts" section with smooth behavior
+                        contactsSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        </script>
     </head>
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
+                <h1>
+                    <a href="{{ url('/login') }}">Query Stack!</a>
+                </h1>
+                <div class="search-bar">
+                    <form action="/search" method="get">
+                        <input type="text" name="query" placeholder="Search...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="header-buttons">
+                @if (Auth::guest())
+                    <a class="button" class="login-button" href="{{ url('/login') }}"> Login </a> 
+                    <a class="button" class="register-button" href="{{ url('/register') }}"> Register </a>
                 @endif
+                @if (Auth::check())
+                    <a class="button" href="{{ url('/logout') }}"> Logout </a>
+                    <a class="button" href="{{ url('') }}"> Notifications </a>
+                    <a class="button" href="{{ url('') }}"> User Profile </a> 
+                    <span>{{ Auth::user()->name }}</span>
+                @endif
+                </div>
             </header>
             <section id="content">
                 @yield('content')
             </section>
         </main>
+        <footer>
+            <p class="site-moto">The best Q&A Platform for thechnology questions</p>
+            <p>&copy; Query Stack!</p>
+            <div class="site-map">
+                <a class="button" href="{{ route('about') }}"> About </a>
+                <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
+                
+            </div>
+        </footer>
     </body>
 </html>

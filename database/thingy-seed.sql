@@ -27,9 +27,9 @@ SET search_path TO lbaw2311;
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
---DROP SCHEMA IF EXISTS lbaw2311 CASCADE;
---CREATE SCHEMA IF NOT EXISTS lbaw2311;
---SET search_path TO lbaw2311;
+DROP SCHEMA IF EXISTS lbaw2311 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw2311;
+SET search_path TO lbaw2311;
 --SHOW search_path;
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ CREATE TABLE member (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(25) UNIQUE NOT NULL,
     user_email VARCHAR(25) UNIQUE NOT NULL,
-    user_password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     picture VARCHAR(255),
     user_birthdate TIMESTAMP NOT NULL,
     user_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -177,7 +177,7 @@ CREATE TABLE answer (
     content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES member(user_id)
+    FOREIGN KEY (content_author) REFERENCES member(user_id) ON DELETE CASCADE
 );
 
 -- Create the Question table (R07)
@@ -192,7 +192,7 @@ CREATE TABLE question (
     content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (content_author) REFERENCES member(user_id)
+    FOREIGN KEY (content_author) REFERENCES member(user_id) ON DELETE CASCADE
 );
 
 -- Create a foreign key for question_tag in the question table
@@ -208,7 +208,7 @@ ALTER TABLE question
 --
 ALTER TABLE answer
     ADD CONSTRAINT fk_question
-        FOREIGN KEY (question_id) REFERENCES question(question_id);
+        FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE;
 
 ALTER TABLE userbadge DROP CONSTRAINT userbadge_user_id_fkey;
 
@@ -239,7 +239,7 @@ CREATE TABLE comment (
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (content_author) REFERENCES member(user_id),
-    FOREIGN KEY (answer_id) REFERENCES answer(answer_id)
+    FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE
 );
 
 -- Create the Vote table (R11)
@@ -253,9 +253,9 @@ CREATE TABLE vote (
     vote_content_answer INT,
     vote_content_comment INT,
     FOREIGN KEY (vote_author) REFERENCES member(user_id),
-    FOREIGN KEY (vote_content_question) REFERENCES question(question_id),
-    FOREIGN KEY (vote_content_answer) REFERENCES answer(answer_id),
-    FOREIGN KEY (vote_content_comment) REFERENCES comment(comment_id)
+    FOREIGN KEY (vote_content_question) REFERENCES question(question_id) ON DELETE CASCADE,
+    FOREIGN KEY (vote_content_answer) REFERENCES answer(answer_id) ON DELETE CASCADE,
+    FOREIGN KEY (vote_content_comment) REFERENCES comment(comment_id) ON DELETE CASCADE
 );
 
 -- Create the Report table (R12)
@@ -273,9 +273,9 @@ CREATE TABLE report (
     report_answer VARCHAR(255),
     FOREIGN KEY (report_creator) REFERENCES member(user_id),
     FOREIGN KEY (report_handler) REFERENCES moderator(user_id),
-    FOREIGN KEY (content_reported_question) REFERENCES question(question_id),
-    FOREIGN KEY (content_reported_answer) REFERENCES answer(answer_id),
-    FOREIGN KEY (content_reported_comment) REFERENCES comment(comment_id)
+    FOREIGN KEY (content_reported_question) REFERENCES question(question_id) ON DELETE CASCADE,
+    FOREIGN KEY (content_reported_answer) REFERENCES answer(answer_id) ON DELETE CASCADE,
+    FOREIGN KEY (content_reported_comment) REFERENCES comment(comment_id) ON DELETE CASCADE
 );
 
 -- Create the UserFollowQuestion table (R13)
@@ -587,7 +587,7 @@ INSERT INTO badge (badge_name, badge_description)
 VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
        ('Silver', 'Silver-level badge'), -- Assigned when you gained 100 points
        ('Gold', 'Gold-level badge'), -- Assigned when you gained 1000 points
-       ('Reliable', 'One of your answers was accepted as the correct answer'), -- Assigned when you have an answer accepted as the correct answer
+       ('Reliable', 'One of your answers was accepted as the correct anUndefined array key "password"swer'), -- Assigned when you have an answer accepted as the correct answer
        ('Notable Question', 'Your question was upvoted 100 times'), -- Assigned when you have a question with 100 upvotes
        ('Good Question', 'Your question was upvoted 25 times'), -- Assigned when you have a question with 25 upvotes
        ('Nice Question', 'Your question was upvoted 10 times'), -- Assigned when you have a question with 10 upvotes
@@ -599,13 +599,17 @@ VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
 -- Populate the User table (R01)
 --  The user_creation_date is automatically generated by the database
 
-INSERT INTO member (user_id, username, user_email, user_password, picture, user_birthdate, user_score)
-VALUES (-1, 'deleted', 'deleted@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 );
+INSERT INTO member (user_id, username, user_email, password, picture, user_birthdate, user_score)
+--VALUES (-1, 'deleted', 'deleted@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 );
+VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar1.jpg', '1990-01-15', 0);
 
-INSERT INTO member (username, user_email, user_password, picture, user_birthdate, user_score)
-VALUES ('admin', 'admin@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 ),
-       ('moderator', 'moderator@example.com', 'pass', '/picture/avatar2.jpg', '1990-01-15',  0 ),
-       ('member1', 'member1@example.com', 'pass','/picture/avatar3.jpg', '1990-01-21', 0 );
+INSERT INTO member (username, user_email, password, picture, user_birthdate, user_score)
+VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar1.jpg', '1990-01-15', 0),
+       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar2.jpg', '1990-01-15',  0),
+       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', '/picture/avatar3.jpg', '1990-01-21', 0);
+--('admin', 'admin@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 ),
+--       ('moderator', 'moderator@example.com', 'pass', '/picture/avatar2.jpg', '1990-01-15',  0 ),
+--       ('member1', 'member1@example.com', 'pass','/picture/avatar3.jpg', '1990-01-21', 0 );
 
 
 

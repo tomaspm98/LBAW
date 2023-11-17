@@ -1,39 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('register') }}">
-    {{ csrf_field() }}
+<form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+  {{ csrf_field() }}
+      
 
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
-      <span class="error">
-          {{ $errors->first('name') }}
-      </span>
-    @endif
+  <label for="name">Username</label>
+  <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
 
-    <label for="email">E-Mail Address</label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required>
-    @if ($errors->has('email'))
-      <span class="error">
-          {{ $errors->first('email') }}
-      </span>
-    @endif
+  <label for="email">E-Mail Address</label>
+  <input id="email" type="email" name="user_email" value="{{ old('user_email') }}" required>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password" required>
-    @if ($errors->has('password'))
-      <span class="error">
-          {{ $errors->first('password') }}
-      </span>
-    @endif
+  <label for="birthdate">Birthdate</label>
+  <input id="birthdate" type="date" name="user_birthdate" value="{{ old('user_birthdate') }}" required>
 
-    <label for="password-confirm">Confirm Password</label>
-    <input id="password-confirm" type="password" name="password_confirmation" required>
+  <label for="password">Password</label>
+  <input id="password" type="password" name="password" required>
 
-    <button type="submit">
-      Register
-    </button>
-    <a class="button button-outline" href="{{ route('login') }}">Login</a>
+  <label for="password-confirm">Confirm Password</label>
+  <input id="password-confirm" type="password" name="password_confirmation" required>
+    
+  <label for="picture">Profile Picture</label>
+  <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png, image/jpeg, image/svg+xml">
+  <p>Acepted formats: png, jpeg, svg</p>
+
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <ol> {{ $error }}</ol>
+            @endforeach
+        </ul>
+    </div>
+  @endif
+
+  <button type="submit">
+    Register
+  </button>
+  <a class="button button-outline" href="{{ route('login') }}">Login</a>
 </form>
 @endsection

@@ -53,7 +53,7 @@ class Question extends Model
 
     public function votes()
     {
-        return $this->hasMany(Vote::class, 'question_id');
+        return $this->hasMany(Vote::class, 'vote_content_question');
     }
 
     public function getVoteCountAttribute()
@@ -63,12 +63,17 @@ class Question extends Model
 
     public function reports()
     {
-        return $this->hasMany(Report::class, 'question_id');
+        return $this->hasMany(Report::class, 'content_reported_question');
     }
 
     public function getReportCountAttribute()
     {
         return $this->reports()->count();
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(UserFollowQuestion::class, 'question_id');
     }
 
 

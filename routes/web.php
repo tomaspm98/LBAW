@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,49 @@ use App\Http\Controllers\UserController;
 // Home
 Route::redirect('/', '/login');
 
+// AUTHENTICATION
+Route::controller(LoginController::class)->group(function () {
+
+    // Provide login form. Access: PUB
+    Route::get('/login', 'showLoginForm')->name('login');
+
+    // Login form submission. Access: PUB
+    Route::post('/login', 'authenticate');
+
+    // Logout the authenticated user. Access: MEM, ADM, MOD
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+ 
+// REGISTRATION
+Route::controller(RegisterController::class)->group(function () {
+    // Provide new user registration form. Access: PUB
+    Route::get('/register','showRegistrationForm')->name('register');
+    // Processes the new user registration form submission. Access: PUB
+    Route::post('/register', 'register');
+});
+
+// STATIC PAGES
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
+Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
+Route::delete('questions/{question_id}', [QuestionController::class, 'delete'])->name('questions.delete');
+Route::get('questions', [QuestionController::class, 'list'])->name('questions.list');
+Route::post('questions/{question_id}/answers', [AnswerController::class, 'createAnswer'])->name('answers.create');
+Route::get('questions/{question_id}/answers/{answer_id}/edit', [AnswerController::class, 'editShow'])->name('answers.edit');
+Route::put('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'update'])->name('answers.update');
+Route::delete('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'delete'])->name('answers.delete');
+
+
+
+
+
 
 Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
 Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
