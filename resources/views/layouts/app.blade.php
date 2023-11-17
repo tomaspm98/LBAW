@@ -54,8 +54,11 @@
                     <a class="button" class="register-button" href="{{ url('/register') }}"> Register </a>
                 @endif
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}">Logout</a>
-                    <a class="button" href="{{ url('') }}">Notifications</a>
+                    <form action="{{ url('/logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="button">Logout</button>
+                    </form>
+                    <a class="button" href="">Notifications</a>
                     @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
                         <a class="button" href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
                     @else
