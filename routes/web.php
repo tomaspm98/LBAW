@@ -80,7 +80,7 @@ Route::controller(AdminController::class)->group(function(){
 
     Route::get('/admin/assign', 'showAllUsers')->name('admin.users');
     Route::get('/admin/remove', 'showAllModerators')->name('admin.moderators');
-    Route::post('add/{userId}', 'addModerator')->name('moderator.add');
+    Route::get('add/{userId}', 'addModerator')->name('moderator.add');
     Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
 });
 

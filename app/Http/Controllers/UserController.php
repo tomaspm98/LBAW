@@ -16,10 +16,15 @@ class UserController extends Controller
 {
     public function show($user_id): View|RedirectResponse
     {
-        $member = Member::findOrFail($user_id);
-        return view('pages.user', [
-            'member' => $member,
-        ]);
+        if (Auth::user()){
+            $member = Member::findOrFail($user_id);
+            return view('pages.user', [
+                'member' => $member,
+            ]);
+        }
+        else{
+            return redirect()->route('home');
+        }
         
     }
 
