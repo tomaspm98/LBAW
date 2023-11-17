@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +70,14 @@ Route::controller(AdminController::class)->group(function(){
     Route::post('add/{userId}', 'addModerator')->name('moderator.add');
     Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
 });
+
+Route::controller(UserController::class)->group(function(){
+    Route::get('member/{user_id}', 'show')->name('member.show');
+    Route::get('member/{user_id}/edit', 'editShow')->name('member.edit');
+    Route::put('member/{user_id}', 'update')->name('user.update');
+    Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
+});
+
 
 
 
