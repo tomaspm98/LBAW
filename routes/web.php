@@ -66,13 +66,15 @@ Route::delete('questions/{question_id}/answers/{answer_id}', [AnswerController::
 
 
 
+Route::controller(UserController::class)->group(function(){
+    Route::get('member/{user_id}', 'show')->name('member.show');
+    Route::get('member/{user_id}/edit', 'editShow')->name('member.edit');
+    Route::put('member/{user_id}', 'update')->name('user.update');
+    Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
+});
 
 
 
-Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
-Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
-Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
-Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
 
 

@@ -17,19 +17,10 @@ class UserController extends Controller
     public function show($user_id): View|RedirectResponse
     {
         $member = Member::findOrFail($user_id);
-        $check = Auth::user();
-    
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-        elseif ($check->user_id === $member->user_id) {
-            return view('pages.user', [
-                'member' => $member,
-            ]);
-        }
-        else {
-            return redirect()->route('home');
-        }
+        return view('pages.user', [
+            'member' => $member,
+        ]);
+        
     }
 
     public function editShow($user_id): View

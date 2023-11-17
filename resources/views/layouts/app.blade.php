@@ -54,11 +54,16 @@
                     <a class="button" class="register-button" href="{{ url('/register') }}"> Register </a>
                 @endif
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a>
-                    <a class="button" href="{{ url('') }}"> Notifications </a>
-                    <a class="button" href="{{ url('') }}"> User Profile </a> 
+                    <a class="button" href="{{ url('/logout') }}">Logout</a>
+                    <a class="button" href="{{ url('') }}">Notifications</a>
+                    @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
+                        <a class="button" href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
+                    @else
+                        <a class="button" href="{{ route('member.show', ['user_id' => Auth::user()->user_id]) }}">User Profile</a>
+                    @endif
                     <span>{{ Auth::user()->name }}</span>
                 @endif
+            
                 </div>
             </header>
             <section id="content">
