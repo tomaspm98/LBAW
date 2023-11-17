@@ -5,19 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+// Added to define Eloquent relationships.
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Member extends Authenticatable 
 {
-    use HasFactory;
+
+    use HasApiTokens, HasFactory, Notifiable, AuthenticatableTrait;
 
     protected $table = 'member';
     protected $primaryKey = 'user_id';
 
     public $timestamps = false;
 
+    protected $casts = [
+        'user_birthdate' => 'timestamp',
+        'user_creation_date' => 'timestamp',
+    ];
+
     protected $fillable = [
         'username',
         'user_email',
-        'user_password',
+        'password',
         'picture',
         'user_birthdate',
         'user_creation_date',

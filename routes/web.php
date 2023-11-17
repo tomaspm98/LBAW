@@ -25,6 +25,35 @@ use App\Http\Controllers\AdminController;
 // Home
 Route::redirect('/', '/login');
 
+// AUTHENTICATION
+Route::controller(LoginController::class)->group(function () {
+
+    // Provide login form. Access: PUB
+    Route::get('/login', 'showLoginForm')->name('login');
+
+    // Login form submission. Access: PUB
+    Route::post('/login', 'authenticate');
+
+    // Logout the authenticated user. Access: MEM, ADM, MOD
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+ 
+// REGISTRATION
+Route::controller(RegisterController::class)->group(function () {
+    // Provide new user registration form. Access: PUB
+    Route::get('/register','showRegistrationForm')->name('register');
+    // Processes the new user registration form submission. Access: PUB
+    Route::post('/register', 'register');
+});
+
+// STATIC PAGES
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('questions/create', [QuestionController::class, 'createShow'])->name('questions.create');
+Route::post('questions', [QuestionController::class, 'create'])->name('questions.create');
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
@@ -34,13 +63,15 @@ Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('
 Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
 Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
+Route::controller(AdminController::class)->group(function(){
 
-Route::get('/admin/assign', [AdminController::class, 'showAllUsers'])->name('admin.users');
-Route::get('/admin/remove', [AdminController::class, 'showAllModerators'])->name('admin.moderators');
+    Route::get('/admin/assign', 'showAllUsers')->name('admin.users');
+    Route::get('/admin/remove', 'showAllModerators')->name('admin.moderators');
+    Route::post('add/{userId}', 'addModerator')->name('moderator.add');
+    Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
+});
 
 
-Route::post('add/{userId}', [AdminController::class, 'addModerator'])->name('moderator.add');
-Route::delete('remove/{userId}', [AdminController::class, 'removeModerator'])->name('moderator.remove');
 
 
 
