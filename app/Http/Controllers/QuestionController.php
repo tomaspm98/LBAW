@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
 {
-    public function show($question_id): View
+    public function show($question_id)
     {
 
         $question = Question::findOrFail($question_id);
@@ -19,7 +19,7 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function editShow($question_id): View
+    public function editShow($question_id)
     {
         $question = Question::findOrFail($question_id);
         $check = Auth::user();
@@ -75,7 +75,7 @@ class QuestionController extends Controller
         }
     }
 
-    public function list(): View
+    public function list()
     {
         $questions = Question::all();
 
@@ -84,7 +84,7 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function createShow(): View
+    public function createShow()
     {
         return view('pages.create_question');
     }
