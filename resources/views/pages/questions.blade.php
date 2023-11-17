@@ -7,10 +7,12 @@
         <h1>Questions List</h1>
         <ul>
             @foreach ($questions as $question)
+             @if ($question->content_is_visible)
                 <li>
                     <a href="{{ route('questions.show', $question->question_id) }}">{{ $question->question_title }}</a>
                     - <small>Asked by {{ $question->author->username ?? 'Unknown' }}</small>
                 </li>
+             @endif    
             @endforeach
         </ul>
     </div>

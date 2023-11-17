@@ -41,6 +41,7 @@ class AnswerController extends Controller
 
         $answer = Answer::findOrFail($answer_id);
 
+        $validatedData['content_is_edited'] = 'true';
         $answer->update($validatedData);
 
         return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer updated successfully');
@@ -50,14 +51,8 @@ class AnswerController extends Controller
     {
         $answer = Answer::findOrFail($answer_id);
 
-        $answer->comments()->delete();
-        if ($answer->reports()->exists()) {  // Check if there are reports
-            $answer->reports()->delete();
-        }
-        if ($answer->votes()->exists()) {  // Check if there are reports
-            $answer->votes()->delete();
-        }
-        $answer->delete();
+        $validatedData['content_is_visible'] = 'false';
+        $answer->update($validatedData);
 
         return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer deleted successfully');
     }
