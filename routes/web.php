@@ -57,14 +57,19 @@ Route::post('questions', [QuestionController::class, 'create'])->name('questions
 Route::get('questions/{question_id}', [QuestionController::class, 'show'])->name('questions.show');
 Route::get('questions/{question_id}/edit', [QuestionController::class, 'editShow'])->name('questions.edit');
 Route::put('questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
-Route::delete('questions/{question_id}', [QuestionController::class, 'delete'])->name('questions.delete');
-Route::get('questions', [QuestionController::class, 'list'])->name('questions.list');
-Route::post('questions/{question_id}/answers', [AnswerController::class, 'createAnswer'])->name('answers.create');
-Route::get('questions/{question_id}/answers/{answer_id}/edit', [AnswerController::class, 'editShow'])->name('answers.edit');
-Route::put('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'update'])->name('answers.update');
-Route::delete('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'delete'])->name('answers.delete');
 
+Route::get('member/{user_id}', [UserController::class, 'show'])->name('member.show');
+Route::get('member/{user_id}/edit', [UserController::class, 'editShow'])->name('member.edit');
+Route::put('member/{user_id}', [UserController::class, 'update'])->name('user.update');
+Route::delete('member/{user_id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
+Route::controller(AdminController::class)->group(function(){
+
+    Route::get('/admin/assign', 'showAllUsers')->name('admin.users');
+    Route::get('/admin/remove', 'showAllModerators')->name('admin.moderators');
+    Route::post('add/{userId}', 'addModerator')->name('moderator.add');
+    Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
+});
 
 Route::controller(UserController::class)->group(function(){
     Route::get('member/{user_id}', 'show')->name('member.show');

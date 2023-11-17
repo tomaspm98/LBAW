@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Moderator extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id',
+        'tag_id'
+    ];
 
     protected $table = 'moderator';
     public $timestamps = false;
