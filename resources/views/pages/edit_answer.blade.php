@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if($answer->content_is_visible)
     <div class="container">
         <h1>Edit Answer</h1>
         <form action="{{ route('answers.update', ['question_id' => $answer->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to update this answer?')">
@@ -20,4 +21,7 @@
                 <button type="submit" class="btn btn-danger">Delete Answer</button>
             </form>
     </div>
+@else 
+    <?php abort(404); ?>
+@endif
 @endsection

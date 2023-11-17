@@ -1,7 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-@if ($question->content_is_visible) 
+@if ($question->content_is_visible)
+    @if (session('error'))
+        <div id="errorPopup" class="popup-message">
+            {{ session('error') }}
+        </div>
+
+        <script>
+            // Show the popup
+            let popup = document.getElementById('errorPopup');
+            popup.style.display = 'block';
+
+            // Hide the popup after 5 seconds (5000 milliseconds)
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 5000);
+        </script>
+    @endif
     <div class="container">
         <div class="content_container"> <!--Question-->
             <div class="content_top_container">

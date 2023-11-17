@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Answer;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class AnswerController extends Controller
 {
     public function createAnswer(Request $request, $question_id)
     {
+
+       try{ 
         $validatedData = $request->validate([
             'content_text' => 'required|string',
         ]);
@@ -21,15 +24,25 @@ class AnswerController extends Controller
         $answer->save();
 
         return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('questions.show', ['question_id' => $question_id])->with('error', 'Cannot answer own question');
+        }
     }
 
     public function editShow($question_id, $answer_id): View
     {
         $answer = Answer::findOrFail($answer_id);
+        $check=Auth::user();
 
-        return view('pages.edit_answer', [
-            'answer' => $answer
-        ]);
+        if(!auth()->check()){
+            return redirect()->route('login');
+        } elseif ($check->user_id === $answer->content_author) {
+            return view('pages.edit_answer', [
+                'answer' => $answer
+            ]);
+        } else {
+            return redirect()->route('home');
+        }
     }
 
     public function update(Request $request, $question_id, $answer_id)
@@ -40,20 +53,32 @@ class AnswerController extends Controller
         ]);
 
         $answer = Answer::findOrFail($answer_id);
+        $check=Auth::user();
 
-        $validatedData['content_is_edited'] = 'true';
-        $answer->update($validatedData);
-
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer updated successfully');
+        if(!auth()->check()){
+            return redirect()->route('login');
+        } elseif ($check->user_id === $answer->content_author) {
+            $validatedData['content_is_edited'] = 'true';
+            $answer->update($validatedData);
+            return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer updated successfully');
+        } else {
+            return redirect()->route('home');
+        }
     }
 
     public function delete($question_id, $answer_id)
     {
         $answer = Answer::findOrFail($answer_id);
+        $check=Auth::user();
 
-        $validatedData['content_is_visible'] = 'false';
-        $answer->update($validatedData);
-
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer deleted successfully');
+        if(!auth()->check()){
+            return redirect()->route('login');
+        } elseif ($check->user_id === $answer->content_author) {
+            $validatedData['content_is_visible'] = 'false';
+            $answer->update($validatedData);
+            return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer deleted successfully');
+        } else {
+            return redirect()->route('home');
+        }
     }
 }
