@@ -9,7 +9,7 @@
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="{{$member->username}}"> 
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your new username"> 
             </div>
 
             <div class="form-group">
@@ -35,6 +35,15 @@
                 <input type="date" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
             </div>
 
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <ol> {{ $error }}</ol>
+                    @endforeach
+                </ul>
+            </div>
+          @endif
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
         <form action="{{ route('user.delete', $member->user_id) }}" method="post">

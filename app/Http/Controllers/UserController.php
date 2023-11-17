@@ -8,30 +8,50 @@ use App\Models\Question;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-
-
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 
 class UserController extends Controller
 {
-    public function show($user_id): View
+    public function show($user_id): View|RedirectResponse
     {
-
         $member = Member::findOrFail($user_id);
-
-        return view('pages.user', [
-            'member' => $member,
-        ]);
+        $check = Auth::user();
+    
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        elseif ($check->user_id === $member->user_id) {
+            return view('pages.user', [
+                'member' => $member,
+            ]);
+        }
+        else {
+            return redirect()->route('home');
+        }
     }
 
     public function editShow($user_id): View
     {
         $member = Member::findOrFail($user_id);
+        $check = Auth::user();
 
-        return view('pages.edit_user', [
-            'member' => $member,
-        ]);
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        elseif ($check->user_id === $member->user_id) {
+            return view('pages.edit_user', [
+                'member' => $member,
+            ]);
+        }
+        else {
+            return redirect()->route('home');
+        }
+
+        // return view('pages.edit_user', [
+        //     'member' => $member,
+        // ]);
     }
     
     public function update(Request $request, $user_id)
@@ -66,11 +86,20 @@ class UserController extends Controller
         ]);
 
 
-        $member = Member::findOrFail($user_id);        
+        $member = Member::findOrFail($user_id);
+        $check = Auth::user();        
         $attributes = array_filter($request->all());
-        $member->update($attributes);
-
-
+        
+        
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        elseif ($check->user_id === $member->user_id) {
+            $member->update($attributes);
+        }
+        else {
+            return redirect()->route('home');
+        }
         return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
     }
 
@@ -78,9 +107,17 @@ class UserController extends Controller
     public function delete($user_id)
     {
         $member = Member::findOrFail($user_id);
+        $check = Auth::user();
 
-        $member->delete();
-        
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        elseif ($check->user_id === $member->user_id) {
+            $member->delete();
+        }
+        else {
+            return redirect()->route('home');
+        }        
         // To change, there is no home yet
         // I will leave it like this for now
         return redirect()->route('home')->with('success', 'User deleted successfully');
