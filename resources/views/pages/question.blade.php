@@ -1,7 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($question->content_is_visible)
+    @if (session('error'))
+        <div id="errorPopup" class="popup-message">
+            {{ session('error') }}
+        </div>
 
+        <script>
+            // Show the popup
+            let popup = document.getElementById('errorPopup');
+            popup.style.display = 'block';
+
+            // Hide the popup after 5 seconds (5000 milliseconds)
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 5000);
+        </script>
+    @endif
     <div class="container">
         <div class="content_container"> <!--Question-->
             <div class="content_top_container">
@@ -17,9 +33,9 @@
                 
                 <div class="question_tittle_container">
                     @if ($question->tag)
-                    <strong>Tag:</strong> {{ $question->tag->tag_name }}
+                    <p><strong>Tag:</strong> {{ $question->tag->tag_name }}</p>
                     @else
-                    <strong>Tag:</strong> Not specified
+                    <p><strong>Tag:</strong> Not specified</p>
                     @endif
                     <h1>{{ $question->question_title }}</h1>
                     <p>
@@ -29,12 +45,18 @@
 
                 @if(true) <!-- TODO: restrict access only for owner -->
                 <div class="content_right_container"> 
-                    <button> 
-                        delete
-                    </button>
-                    <button> 
-                        Edit
-                    </button>
+                <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+                </form>
+                    <form method="GET" action="{{ route('questions.edit', $question->question_id) }}">
+                        @csrf
+                        @method('GET')
+                        <button> 
+                            Edit
+                        </button>
+                    </form>    
                 </div>
                 @endif
             </div>
@@ -66,7 +88,7 @@
 
         =======
         {{-- Delete Button --}}
-        <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
+        <form method="DELETE" action="{{ route('questions.delete', $question->question_id) }}">
             @csrf
             @method('DELETE')
             <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete Question</button>
@@ -88,8 +110,13 @@
         @else
         <br><h3>{{ $question->answer_count }} Answer: </h3>
         @endif
-
         @foreach ($question->answers as $answer)
+        @if ($answer->content_is_visible)
+        <div class="content_text_container">
+                    @if($answer->content_is_edited)
+                    <p>edited</p>
+                    @endif
+        </div>
         <div class="content_container">
             <div class="content_top_container">
 
@@ -113,12 +140,17 @@
 
                 @if(true) <!-- TODO: restrict access only for owner -->
                 <div class="content_right_container"> 
-                    <button> 
-                        delete
-                    </button>
-                    <button> 
-                        Edit
-                    </button>
+                    <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form method="GET" action="{{ route('answers.edit', [$question->question_id, $answer->answer_id]) }}">
+                        @csrf
+                        <button> 
+                            Edit
+                        </button>
+                    </form>  
                     <button> 
                         LIKE
                     </button>
@@ -173,8 +205,12 @@
         </div>
         @endforeach
         <hr>
+        @endif
         @endforeach    
     </div>
+    @else
+     <?php abort(404); ?>
+  @endif    
 @endsection
 
 <!--
