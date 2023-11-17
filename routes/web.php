@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AnswerController;
 
 /*
@@ -63,6 +64,14 @@ Route::get('questions/{question_id}/answers/{answer_id}/edit', [AnswerController
 Route::put('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'update'])->name('answers.update');
 Route::delete('questions/{question_id}/answers/{answer_id}', [AnswerController::class, 'delete'])->name('answers.delete');
 
+
+
+Route::controller(UserController::class)->group(function(){
+    Route::get('member/{user_id}', 'show')->name('member.show');
+    Route::get('member/{user_id}/edit', 'editShow')->name('member.edit');
+    Route::put('member/{user_id}', 'update')->name('user.update');
+    Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
+});
 
 
 
