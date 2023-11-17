@@ -43,7 +43,7 @@
                     </p>
                 </div>
 
-                @if(true) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
                 <div class="content_right_container"> 
                 <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
                     @csrf
@@ -85,15 +85,6 @@
                 </div>
             </div>
         </div>
-
-        =======
-        {{-- Delete Button --}}
-        <form method="DELETE" action="{{ route('questions.delete', $question->question_id) }}">
-            @csrf
-            @method('DELETE')
-            <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete Question</button>
-        </form>
-        >>>>>>> US201_202_31_32_33_34
 
         <div>
             <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
@@ -138,7 +129,7 @@
                     </p>
                 </div>
 
-                @if(true) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$answer->content_author) <!-- TODO: restrict access only for owner -->
                 <div class="content_right_container"> 
                     <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
                         @csrf
@@ -151,15 +142,17 @@
                             Edit
                         </button>
                     </form>  
-                    <button> 
-                        LIKE
-                    </button>
-                    <button> 
-                        DISLIKE
-                    </button>
+                @endif    
+                    <div>
+                        <button class="button_like_dislike"> 
+                            LIKE
+                        </button>
+                        <button class="button_like_dislike"> 
+                            DISLIKE
+                        </button>
+                    </div>
                     <p><b>{{$answer->vote_count}}</b></p>
                 </div>
-                @endif
             </div>
         </div>
 
@@ -184,23 +177,26 @@
                     </p>
                 </div>
 
-                @if(true) <!-- TODO: restrict access only for owner -->
-                <div class="content_right_container"> 
-                    <button> 
-                        delete
-                    </button>
-                    <button> 
-                        Edit
-                    </button>
-                    <button> 
-                        LIKE
-                    </button>
-                    <button> 
-                        DISLIKE
-                    </button>
+                @if(Auth::check() && Auth::id()===$comment->content_author) <!-- TODO: restrict access only for owner -->
+                    <div class="content_right_container"> 
+                        <button> 
+                            delete
+                        </button>
+                        <button> 
+                            Edit
+                        </button>
+                    </div>    
+                @endif    
+                    <div>
+                        <button class="button_like_dislike"> 
+                            LIKE
+                        </button>
+                        <button class="button_like_dislike"> 
+                            DISLIKE
+                        </button>
+                    </div>
                     <p><b>{{$comment->vote_count}}</b></p>
                 </div>
-                @endif
             </div>
         </div>
         @endforeach

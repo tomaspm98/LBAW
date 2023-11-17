@@ -29,7 +29,7 @@ class AnswerController extends Controller
         }
     }
 
-    public function editShow($question_id, $answer_id): View
+    public function editShow($question_id, $answer_id)
     {
         $answer = Answer::findOrFail($answer_id);
         $check=Auth::user();
