@@ -1,3 +1,6 @@
+<?php 
+use App\Models\Admin; // Add this line at the top with other use statements
+?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -58,6 +61,13 @@
                         @csrf
                         <button type="submit" class="button">Logout</button>
                     </form>
+                    @if (Auth::check() && Admin::where('user_id', Auth::user()->user_id)->exists() )
+                    <div class="admin-area">
+                        <div class="admin-buttons">
+                            <a class="button" href="{{ route('admin.users') }}">Assign Moderator</a>
+                            <a class="button" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
+                        </div>
+                    </div>                    @endif  
                     <a class="button" href="">Notifications</a>
                     @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
                         <a class="button" href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
