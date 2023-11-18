@@ -1,5 +1,5 @@
 <?php 
-use App\Models\Admin; // Add this line at the top with other use statements
+use App\Models\Admin; 
 ?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
