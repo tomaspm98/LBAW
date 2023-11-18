@@ -1,3 +1,7 @@
+<?php 
+use App\Models\Admin; 
+?>
+
 <nav class="">
 
     <div class="nav_logo">
