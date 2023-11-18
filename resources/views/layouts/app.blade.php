@@ -17,7 +17,6 @@ use App\Models\Admin;
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <link href="{{ url('css/about.css') }}" rel="stylesheet">
-        <link href="{{ url('css/navbar.css') }}" rel="stylesheet">
         <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
         <link href="{{ url('/css/home-page.css') }}" rel="stylesheet">
         <script type="text/javascript">
