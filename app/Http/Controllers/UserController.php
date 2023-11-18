@@ -28,7 +28,7 @@ class UserController extends Controller
         
     }
 
-    public function editShow($user_id): View
+    public function editShow($user_id): View|RedirectResponse
     {
         $member = Member::findOrFail($user_id);
         $check = Auth::user();
