@@ -24,7 +24,9 @@ use App\Http\Controllers\AdminController;
 */
 
 // Home
-Route::redirect('/', '/login');
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'] )->name('home') ;
+// Route::redirect('/login', '/login');
 
 // AUTHENTICATION
 Route::controller(LoginController::class)->group(function () {

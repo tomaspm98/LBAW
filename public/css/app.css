@@ -1,26 +1,17 @@
 body {
-    background-color: #ffffff;
-    color: blue;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-  }
 
-
-main > header {
-  display: flex;
-  justify-content: space-around;
+  background-color: #ffffff;
+  color: #000000;
+  margin: 0px;
+}
+/* main > header {
+  display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  /*background-color: rgb(178, 178, 241);*/
+  background-color: #d2afe7;
   padding: 1em;
   margin: 1em;
-  align-items: baseline;
-
-}
-.search-bar, h1, .header-buttons{
-  text-align: center;
+>>>>>>> home-page
 }
 main > header h1 {
   margin: 0;
@@ -39,6 +30,67 @@ main > header span {
   align-items: center;
 }
 
+
+} */
+
+#cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+#cards article.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #d3edc3;
+  padding: 1em;
+  margin: 1em;
+}
+#cards article.card header {
+  display: flex;
+  align-items: center;
+}
+#cards article.card header h2 {
+  flex-grow: 1;
+}
+#cards article.card header a.delete {
+  display: none;
+  font-size: 2.6rem;
+  margin-top: .5rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.25;
+}
+#cards article.card header:hover a.delete {
+  display: inline;
+}
+#cards article.card li {
+  list-style-type: none;
+}
+#cards article.card li label {
+  display: flex;
+  align-items: baseline;
+}
+#cards article.card li label span {
+  margin-left: .5em;
+  flex-grow: 1;
+}
+#cards article.card li label a {
+  display: none;
+}
+#cards article.card li label:hover a {
+  display: inline;
+}
+#cards article.card input:checked + span {
+  text-decoration: var(--primary-color) solid line-through;
+}
+#cards article.card ul {
+  margin: 0;
+}
+#cards article.card form {
+  margin: 0;
+}
+#cards article.card input[type=text] {
+  background-color: white;
+  margin: 0;
+}
 #content label {
   font-weight: normal;
 }
@@ -82,7 +134,7 @@ main > header span {
   }
   main > header {
     margin: 0;
-    padding: 0.5em;
+    /* padding: 0.5em; */
   }
   main > header span {
     margin: 0;
@@ -96,8 +148,6 @@ main > header span {
     border-bottom: 1px solid rgba(96, 108, 118, 0.4);
   }
 }
-
-
 
 footer {
   display: flex;
@@ -119,21 +169,84 @@ footer {
   **/
 
 button {
-  background-color: blue;
-  border-color: blue;
+  background-color: #0f4aa8;
+  border-color: #0f4aa8;
 }
 a.button {
-  background-color: blue;
-  border-color: blue;
+  background-color: #0f4aa8;
+  border-color: #0f4aa8;
 }
 a.button.button-outline {
-  color: blue;
+  color: black;
 }
 a {
-  color: blue;
+  color: black;
 }
+
 input[type=text]:focus,
 input[type=email]:focus,
 input[type=password]:focus {
-  border-color: blue;
+  border-color: #0f4aa8;
 }
+
+
+/*_____________________________________________________________________*/
+/*NAVBAR*/
+
+nav{
+  background-color: rgb(237, 237, 237);
+  display: flex;  
+  justify-content: space-between;
+  padding: 5px;
+  border-top: solid 2.5px #0f4aa8;
+  align-items: center;
+  border-bottom: 1px black solid;
+  margin-bottom: 20px;
+  /* box-shadow: 0px 1px 4px black; */
+}
+
+nav h1{
+  font-size: 3rem;
+  margin: 0px;
+}
+  
+.nav_logo{
+  margin-left: 15px;
+  /* background-color: blue; */
+}
+
+.search_container form{
+  display: flex;
+  margin: 0px;
+}
+
+.search_container{
+  width: 40%;
+}
+
+.search_container button{
+  border: none;
+  margin: 0px;
+}
+
+.search_container input{
+  background-color: rgb(245, 245, 245);
+  margin: 0px;
+  border: 1px solid black;
+  margin-right: 10px;
+}
+
+.search_container input:focus{
+  background-color: white;  
+}
+
+.nav_buttons_container{
+  display: flex;
+  padding-bottom: 0px;
+  align-items: center;
+}
+
+.header-buttons a{
+  margin: 0;
+}
+/*_____________________________________________________________________*/

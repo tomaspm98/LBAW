@@ -17,7 +17,9 @@ use App\Models\Admin;
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <link href="{{ url('css/about.css') }}" rel="stylesheet">
+        <link href="{{ url('css/navbar.css') }}" rel="stylesheet">
         <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
+        <link href="{{ url('/css/home-page.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -42,42 +44,7 @@ use App\Models\Admin;
     <body>
         <main>
             <header>
-                <h1>
-                    <a href="{{ url('/login') }}">Query Stack!</a>
-                </h1>
-                <div class="search-bar">
-                    <form action="/search" method="get">
-                        <input type="text" name="query" placeholder="Search...">
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-                <div class="header-buttons">
-                @if (Auth::guest())
-                    <a class="button" class="login-button" href="{{ url('/login') }}"> Login </a> 
-                    <a class="button" class="register-button" href="{{ url('/register') }}"> Register </a>
-                @endif
-                @if (Auth::check())
-                    <form action="{{ url('/logout') }}" method="post">
-                        @csrf
-                        <button type="submit" class="button">Logout</button>
-                    </form>
-                    @if (Auth::check() && Admin::where('user_id', Auth::user()->user_id)->exists() )
-                    <div class="admin-area">
-                        <div class="admin-buttons">
-                            <a class="button" href="{{ route('admin.users') }}">Assign Moderator</a>
-                            <a class="button" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
-                        </div>
-                    </div>                    @endif  
-                    <a class="button" href="">Notifications</a>
-                    @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
-                        <a class="button" href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
-                    @else
-                        <a class="button" href="{{ route('member.show', ['user_id' => Auth::user()->user_id]) }}">User Profile</a>
-                    @endif
-                    <span>{{ Auth::user()->name }}</span>
-                @endif
-            
-                </div>
+                @include ('layouts.navbar')
             </header>
             <section id="content">
                 @yield('content')
@@ -89,7 +56,6 @@ use App\Models\Admin;
             <div class="site-map">
                 <a class="button" href="{{ route('about') }}"> About </a>
                 <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
-                
             </div>
         </footer>
     </body>
