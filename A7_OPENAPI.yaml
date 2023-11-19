@@ -1,0 +1,681 @@
+---
+openapi: 3.0.0
+info:
+  title: QueryStack Web API
+  description: Web Resources Specification (A7) for QueryStack
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/UP202103336_1/test/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://http://lbaw2311.lbaw.fe.up.pt
+  description: Production server
+tags:
+- name: "M01: Authentication and Individual Profile"
+- name: "M02: Questions"
+- name: "M03: Answers and Comments"
+- name: "M04: Votes"
+- name: "M05: Static pages"
+- name: "M06: User Administration, Moderation"
+paths:
+  /login:
+    get:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R101: Login Form"
+      description: "Provide login form. Access: PUB"
+      operationId: R101
+      responses:
+        "200":
+          description: OK. Show login UI
+    post:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R102: Login Action"
+      description: "Login form submission. Access: PUB"
+      operationId: R102
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/login_body'
+        required: true
+      responses:
+        "302":
+          description: Redirect after processing the login credentials.
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              examples:
+                "302Success":
+                  description: Authentication successful. Redirect to user profile.
+                  value: "/users/{id}"
+                "302Error":
+                  description: Authentication failed. Redirect to login form.
+                  value: /login
+  /logout:
+    post:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R103: Logout Action"
+      description: "Logout the authenticated user. Access: MEM, ADM, MOD"
+      operationId: R103
+      responses:
+        "302":
+          description: Redirect after processing logout.
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              examples:
+                "302Success":
+                  description: Logout successful. Redirect to login form.
+                  value: /login
+  /register:
+    get:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R104: Register Form"
+      description: "Provide new user registration form. Access: PUB"
+      operationId: R104
+      responses:
+        "200":
+          description: Ok. Show sign-up UI
+    post:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R105: Register Action"
+      description: "Processes the new user registration form submission. Access: PUB"
+      operationId: R105
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/register_body'
+        required: true
+      responses:
+        "302":
+          description: Redirect after processing the new user information.
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              examples:
+                "302Success":
+                  description: Successful authentication. Redirect to user profile.
+                  value: "/users/{id}"
+                "302Failure":
+                  description: Failed authentication. Redirect to login form.
+                  value: /login
+  /member/{id}:
+    get:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R106: View user profile"
+      description: "Show the individual user profile. Access: MEM, OWN, MOD, ADM"
+      operationId: R106
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Ok. Show User Profile UI
+        "401":
+          description: Not logged-in.
+        "404":
+          description: User not found
+  /member/{id}/edit:
+    get:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R107: User profile edit form"
+      description: "Show the user edit profile page. Access: OWN"
+      operationId: R107
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Ok. Show User Profile UI
+        "401":
+          description: Not logged-in.
+        "404":
+          description: User not found
+    post:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R108: Edit user profile action"
+      description: "Edit user profile. Access: OWN"
+      operationId: R108
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/id_edit_body'
+        required: true
+      responses:
+        "200":
+          description: Ok. User profile updated
+        "401":
+          description: Not logged-in.
+        "404":
+          description: User not found.
+    delete:
+      tags:
+      - "M01: Authentication and Individual Profile"
+      summary: "R109: Delete user profile"
+      description: "Delete an user account. Acess: OWN, ADM"
+      operationId: R109
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Ok. User deleted.
+        "401":
+          description: Not logged-in.
+        "404":
+          description: User not found.
+  /questions/create:
+    get:
+      tags:
+      - "M02: Questions"
+      summary: "R201: Question Form"
+      description: "Provide a question form. Access: MEM"
+      operationId: R201
+      responses:
+        "200":
+          description: Show the question form
+        "401":
+          description: Not logged in
+    post:
+      tags:
+      - "M02: Questions"
+      summary: "R202: Question Action"
+      description: Question Form submission. Access:MEM
+      operationId: R202
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/questions_create_body'
+        required: true
+      responses:
+        "201":
+          description: Redirect after processing question form.
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              examples:
+                "201Success":
+                  description: Question created successfully. Redirect to question
+                  value: "/question/{id}"
+                "201Error":
+                  description: Question creation failed. Redirect to question form.
+                  value: /question
+        "401":
+          description: Not logged in
+  /questions/{question_id}:
+    get:
+      tags:
+      - "M02: Questions"
+      summary: "R203: Get Question by ID"
+      description: Retrieve a question by a scpecific ID
+      operationId: R203
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Show Question
+        "404":
+          description: Question not found
+  /questions/{question_id}/edit:
+    get:
+      tags:
+      - "M02: Questions"
+      summary: "R204: Question edit form"
+      description: "Show the question edit page. Access: OWN"
+      operationId: R204
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Show question form UI
+        "401":
+          description: Not the owner
+    post:
+      tags:
+      - "M02: Questions"
+      summary: "R205: Edit question action"
+      description: Edit question. Access:OWN
+      operationId: R205
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/question_id_edit_body'
+        required: true
+      responses:
+        "200":
+          description: OK. Question updated
+        "401":
+          description: Question not found
+        "404":
+          description: User not found
+  /question/{question_id}:
+    delete:
+      tags:
+      - "M02: Questions"
+      summary: "R206: Delete question"
+      description: "Delete question. Access: OWN, MOD"
+      operationId: R206
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Question deleted
+        "401":
+          description: Not logged in
+        "402":
+          description: Question not found
+        "404":
+          description: User not found
+  /questions:
+    get:
+      tags:
+      - "M02: Questions"
+      summary: "R207: Get Questions"
+      description: "Retrieve a list of questions. Access: PUB"
+      operationId: R207
+      responses:
+        "200":
+          description: OK. Questions retrieved.
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad Request
+  /questions/{question_id}/answers/{answer_id}:
+    get:
+      tags:
+      - "M03: Answers and Comments"
+      summary: "R301: Get Answer by ID"
+      description: Retrieve an Answer by a specific ID
+      operationId: R301
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: answer_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Show Answer
+        "404":
+          description: Answer not found
+    delete:
+      tags:
+      - "M03: Answers and Comments"
+      summary: "R302: Delete answer"
+      description: "Delete answer. Access: OWN, MOD"
+      operationId: R302
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: answer_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Answer deleted
+        "401":
+          description: Not logged in
+        "402":
+          description: Answer not found
+        "404":
+          description: User not found
+  /questions/{question_id}answers/{answer_id}/edit:
+    get:
+      tags:
+      - "M03: Answers and Comments"
+      summary: "R303: Answer edit form"
+      description: "Show the answer edit form. Access: OWN"
+      operationId: R303
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: answer_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Show answer form UI
+        "401":
+          description: Not the owner
+    post:
+      tags:
+      - "M03: Answers and Comments"
+      summary: "R304: Edit answer action"
+      description: Edit answer. Access:OWN
+      operationId: R304
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: answer_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/answer_id_edit_body'
+        required: true
+      responses:
+        "200":
+          description: OK. Answer updated
+        "401":
+          description: Answer not found
+        "404":
+          description: User not found
+  /questions/{question_id}/answers:
+    get:
+      tags:
+      - "M03: Answers and Comments"
+      summary: R305:Create answer
+      description: Create an answer to some question
+      operationId: R305
+      parameters:
+      - name: question_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK. Answer created
+        "401":
+          description: Not logged in
+  /about:
+    get:
+      tags:
+      - "M05: Static pages"
+      summary: "R501: about page"
+      description: "Provide about page. ACCESS: PUB"
+      operationId: R501
+      responses:
+        "200":
+          description: OK. Show about page
+  /admin/assign:
+    get:
+      tags:
+      - "M06: User Administration, Moderation"
+      summary: "R601: assign moderator form"
+      description: "Provide assign moderator form. ACCESS: ADM"
+      operationId: R601
+      responses:
+        "200":
+          description: OK. Show assign UI
+    post:
+      tags:
+      - "M06: User Administration, Moderation"
+      summary: "R602: assign moderator action"
+      description: "Assign moderator submission. ACCESS: ADM"
+      operationId: R602
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/admin_assign_body'
+        required: true
+      responses:
+        "200":
+          description: Ok. Assignement done
+        "401":
+          description: Not an admin.
+        "404":
+          description: User not found.
+  /admin/remove:
+    get:
+      tags:
+      - "M06: User Administration, Moderation"
+      summary: "R603: remove moderator form"
+      description: "Provide remove moderator form. ACCESS: ADM"
+      operationId: R603
+      responses:
+        "200":
+          description: OK. Show remove UI
+    post:
+      tags:
+      - "M06: User Administration, Moderation"
+      summary: "R604: remove moderator action"
+      description: "Remove moderator submission. ACCESS: ADM"
+      operationId: R604
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/admin_remove_body'
+        required: true
+      responses:
+        "200":
+          description: Ok. Moderator removed.
+        "401":
+          description: Not an admin.
+        "404":
+          description: User not found.
+components:
+  schemas:
+    login_body:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    register_body:
+      required:
+      - birthDate
+      - email
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        birthDate:
+          type: string
+          format: date
+        picture:
+          type: string
+          format: binary
+    id_edit_body:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        birthDate:
+          type: string
+          format: date
+        picture:
+          type: string
+          format: binary
+    questions_create_body:
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        question_title:
+          type: string
+          format: question_title
+        content_text:
+          type: string
+          format: content_text
+    question_id_edit_body:
+      type: object
+      properties:
+        question_title:
+          type: string
+          format: title
+        content_text:
+          type: string
+          format: content
+    inline_response_200:
+      type: object
+      properties:
+        question_id:
+          type: integer
+        question_title:
+          type: string
+        content_text:
+          type: string
+        content_creation_date:
+          type: integer
+        content_is_edited:
+          type: boolean
+      example:
+      - question_id: 1
+        question_title: programming language
+        content_text: What is the best programming language
+        content_creation_date: 1698855459
+        content_is_edited: false
+    answer_id_edit_body:
+      type: object
+      properties:
+        content_text:
+          type: string
+          format: content_text
+    admin_assign_body:
+      required:
+      - tag
+      - user
+      type: object
+      properties:
+        user:
+          type: string
+          format: user
+        tag:
+          type: integer
+          format: tag
+    admin_remove_body:
+      required:
+      - user
+      type: object
+      properties:
+        user:
+          type: string
+          format: user
