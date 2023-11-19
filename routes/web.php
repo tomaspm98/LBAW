@@ -93,3 +93,5 @@ Route::controller(UserController::class)->group(function(){
     Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
 });
 
+// SEARCH PAGE
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');

@@ -12,8 +12,8 @@ use App\Models\Admin;
     </div>
 
     <div class="search_container">
-        <form action="" method="GET">
-            <input type="text" name="search" value="" placeholder="Search...">
+        <form action="{{ route('search') }}" method="GET">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search...">
             <button type="submit">Search</button>
         </form>
     </div>

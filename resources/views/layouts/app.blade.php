@@ -19,6 +19,7 @@ use App\Models\Admin;
         <link href="{{ url('css/about.css') }}" rel="stylesheet">
         <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
         <link href="{{ url('/css/home-page.css') }}" rel="stylesheet">
+        <link href="{{ url('css/search-page.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951

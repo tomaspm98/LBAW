@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 
 class Question extends Model
 {
@@ -22,7 +23,8 @@ class Question extends Model
         'content_creation_date',
         'content_text',
         'content_is_edited',
-        'content_is_visible'
+        'content_is_visible',
+        'tsvectors '
     ];
 
     // Relationships
@@ -76,5 +78,21 @@ class Question extends Model
         return $this->hasMany(UserFollowQuestion::class, 'question_id');
     }
 
+    public function scopeFilter($query, array $filters){
+
+        $query->when($filters['tag'] ?? false, function ($query, $tag) {
+            $query->whereHas('tag', function ($query) use ($tag) {
+                $query->where('tag_id', $tag);
+            });
+        });
+        
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereRaw('tsvectors @@ plainto_tsquery(?)', "%$search%")
+                    ->orWhereRaw('LOWER(question_title) LIKE ?', "%$search%")
+                    ->orWhereRaw('LOWER(content_text) LIKE ?', "%$search%");
+            });
+        });
+    }
 
 }
