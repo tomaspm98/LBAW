@@ -7,10 +7,26 @@
 
 
 <div class="container">
+    @if (session('error'))
+        <div id="errorPopup" class="popup-message">
+            {{ session('error') }}
+        </div>    
+            <script>
+            // Show the popup
+            let popup = document.getElementById('errorPopup');
+            popup.style.display = 'block';
+
+            // Hide the popup after 5 seconds (5000 milliseconds)
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 5000);
+        </script>    
+    @endif
 
     <h2>Top Questions</h2>
     <ul>
         @foreach ($questions as $question)
+         @if($question->content_is_visible)
             <li class="question_card">
 
                 <div class="question_user_container">
@@ -38,6 +54,7 @@
                     <p>{{$question->vote_count}} votes</p> 
                 </div>
             </li>
+            @endif
         @endforeach
     </ul>
 

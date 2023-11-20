@@ -22,17 +22,10 @@ class QuestionController extends Controller
     public function editShow($question_id)
     {
         $question = Question::findOrFail($question_id);
-        $check = Auth::user();
-
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        } elseif ($check->user_id === $question->content_author) {
-            return view('pages.edit_question', [
-                'question' => $question
-            ]);
-        } else {
-            return redirect()->route('home');
-        }
+        $this->authorize('edit', $question);
+        return view('pages.edit_question', [
+            'question' => $question
+        ]);
     }
 
     public function update(Request $request, $question_id)
@@ -45,34 +38,19 @@ class QuestionController extends Controller
         ]);
 
         $question = Question::findOrFail($question_id);
-        $check=Auth::user();
-
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        } elseif ($check->user_id === $question->content_author) {
-            $validatedData['content_is_edited'] = 'true';
+        $this->authorize('edit', $question);
+        $validatedData['content_is_edited'] = 'true';
             $question->update($validatedData);
             return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Question updated successfully');
-        } else {
-            return redirect()->route('home');
-        }
     }
 
     public function delete($question_id)
     {
         $question = Question::findOrFail($question_id);
-        $check = Auth::user();
-
-
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        } elseif ($check->user_id === $question->content_author) {
-            $validatedData['content_is_visible'] = 'false';
+        $this->authorize('delete', $question);
+        $validatedData['content_is_visible'] = 'false';
             $question->update($validatedData);
             return redirect()->route('home')->with('success', 'Question deleted successfully');
-        } else {
-            return redirect()->route('home');
-        }
     }
 
     public function list()
@@ -97,7 +75,8 @@ class QuestionController extends Controller
             'question_tag' => 'required|integer',
         ]);
 
-        $validatedData['content_author'] = '1';
+        $this->authorize('create', Question::class);
+        $validatedData['content_author'] = Auth::user()->user_id;
 
         $question = Question::create($validatedData);
 
