@@ -60,7 +60,7 @@ Route::get('/about', function () {
 Route::controller(QuestionController::class)->group(function(){
 
     Route::get('questions/create', 'createShow')->name('questions.create');
-    Route::post('questions', 'create')->name('questions.create');
+    Route::post('questions', 'create')->name('questions.create.post');
     Route::get('questions/{question_id}', 'show')->name('questions.show');
     Route::get('questions/{question_id}/edit', 'editShow')->name('questions.edit');
     Route::put('questions/{question_id}', 'update')->name('questions.update');
