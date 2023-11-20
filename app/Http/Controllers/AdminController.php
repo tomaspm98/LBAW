@@ -15,16 +15,7 @@ class AdminController extends Controller
 
     public function showAllUsers()
     {
-        $check = Auth::user();
-        if ($check != null){
-            $isAdmin = Admin::where('user_id', $check->user_id)->exists();
-            if(!$isAdmin){
-                return redirect()->route('home');
-            }
-        }
-        else if ($check == null){
-            return redirect()->route('login');
-        }
+       $this->authorize('show', Admin::class);
 
         $moderatorIds = Moderator::pluck('user_id')->toArray();
         $adminIds = Admin::pluck('user_id')->toArray();
@@ -38,16 +29,7 @@ class AdminController extends Controller
 
     public function showAllModerators()
     {
-        $check = Auth::user();
-        if ($check != null){
-            $isAdmin = Admin::where('user_id', $check->user_id)->exists();
-            if(!$isAdmin){
-                return redirect()->route('home');
-            }
-        }
-        else if ($check == null){
-            return redirect()->route('login');
-        }
+        $this->authorize('show', Admin::class);
         $moderatorIds = Moderator::pluck('user_id');
         $moderators = Member::whereIn('user_id', $moderatorIds)->get();
         return view('pages.admin_remove', ['moderators' => $moderators]);
@@ -55,16 +37,7 @@ class AdminController extends Controller
 
     public function addModerator(Request $request, $user_id)
     {
-        $check = Auth::user();
-        if ($check != null){
-            $isAdmin = Admin::where('user_id', $check->user_id)->exists();
-            if(!$isAdmin){
-                return redirect()->route('home');
-            }
-        }
-        else if ($check == null){
-            return redirect()->route('login');
-        }
+        $this->authorize('show', Admin::class);
         $tagId = $request->input('tag_id');
     
         // Check if the user is already a moderator
@@ -81,22 +54,13 @@ class AdminController extends Controller
 
     public function removeModerator($userId)
     {
-        $check = Auth::user();
-        if ($check != null){
-            $isAdmin = Admin::where('user_id', $check->user_id)->exists();
-            if(!$isAdmin){
-                return redirect()->route('home');
-            }
+        $this->authorize('show', Admin::class);
+        $moderator = Moderator::where('user_id', $userId)->first();
+        if ($moderator) {
+            $moderator->delete();
+            return redirect()->route('admin.moderators')->with('success', 'User added as a moderator.');
         }
-        else if ($check == null){
-            return redirect()->route('login');
+        return "User with ID: $userId is not a moderator.";
         }
-    $moderator = Moderator::where('user_id', $userId)->first();
-    if ($moderator) {
-        $moderator->delete();
-        return redirect()->route('admin.moderators')->with('success', 'User added as a moderator.');
-    }
-    return "User with ID: $userId is not a moderator.";
-    }
 
 }

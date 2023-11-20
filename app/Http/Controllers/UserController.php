@@ -10,21 +10,19 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
 {
-    public function show($user_id): View|RedirectResponse
+    public function show($user_id): View
     {
-        if (Auth::user()){
-            $member = Member::findOrFail($user_id);
-            return view('pages.user', [
-                'member' => $member,
-            ]);
-        }
-        else{
-            return redirect()->route('home');
-        }
+        $this->authorize('show', Member::class);
+        $member = Member::findOrFail($user_id);
+        return view('pages.user', [
+            'member' => $member,
+        ]);
+        
         
     }
 
@@ -49,6 +47,8 @@ class UserController extends Controller
         //     'member' => $member,
         // ]);
     }
+
+
     
     public function update(Request $request, $user_id)
     {
@@ -100,6 +100,7 @@ class UserController extends Controller
     }
 
 
+
     public function delete($user_id)
     {
         $member = Member::findOrFail($user_id);
@@ -114,8 +115,7 @@ class UserController extends Controller
         else {
             return redirect()->route('home');
         }        
-        // To change, there is no home yet
-        // I will leave it like this for now
+
         return redirect()->route('home')->with('success', 'User deleted successfully');
     }
 
