@@ -23,6 +23,9 @@
         </script>    
     @endif
 
+    @if (Auth::check())
+    <a class="button" class="login-button" href="{{ url('/questions/create') }}"> Create a question </a> 
+    @endif
     <h2>Top Questions</h2>
     <ul>
         @foreach ($questions as $question)
