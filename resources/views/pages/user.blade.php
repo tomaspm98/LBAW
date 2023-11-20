@@ -6,7 +6,7 @@
     
         <div>
             <br><h3>Email: {{ $member->user_email }} </h3>
-            <br><h3>picture: {{ $member->picture }} </h3>
+            <img src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
             <br><h3>score: {{ $member->user_score }} </h3>
             <br><h3>birthdate: {{ \Carbon\Carbon::parse($member->user_birthdate)->format('Y-m-d') }} </h3>
 

@@ -56,7 +56,7 @@
                 <div class="question_user_container">
                     <a href=""> <!-- route('member.show', $question->author) -->
                         <div class="question_user_photo">
-                            <img src="" alt="Profile Photo">
+                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username ?? 'Unknown' }}</b></p>

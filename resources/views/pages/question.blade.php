@@ -25,7 +25,7 @@
                 <div class="content_left_container">
                     <a href=""> <!-- route('member.show', $question->author) -->
                         <div class="content_user_profile_photo">
-                            <img src="" alt="Profile Photo">
+                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username }}</b></p>
@@ -114,7 +114,7 @@
                 <div class="content_left_container">
                     <a href="">
                         <div class="content_user_profile_photo">
-                            <img src="" alt="Profile Photo">
+                            <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$answer->author->username }}</b></p>
@@ -162,7 +162,7 @@
                 <div class="content_left_container">
                     <a href="">
                       <div class="content_user_profile_photo">
-                            <img src="" alt="Profile Photo">
+                        <img src="{{ Storage::url($comment->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$comment->author->username }}</b></p>
