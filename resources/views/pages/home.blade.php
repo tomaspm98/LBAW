@@ -12,8 +12,6 @@
     <ul>
         @foreach ($questions as $question)
             <li class="question_card">
-                
-                <!-- <small>Asked by {{ $question->author->username ?? 'Unknown' }}</small> -->
 
                 <div class="question_user_container">
                     <a href=""> <!-- route('member.show', $question->author) -->

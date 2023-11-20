@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Session;
 use App\Models\Question;
 use App\Models\Tag;
 use App\Models\Vote;
@@ -8,23 +9,28 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    public function search(Request $request){
+    public function search(Request $request)
+    {
+        $searchTerm = strtolower($request->input('search')); 
+        $selectedTag = $request->input('tag'); 
 
-        $searchTerm = strtolower($request->input('search'));
-        $tag = $request->input('Tag');
+        // Save the search value
+        Session::put('searchTerm', $searchTerm);
 
-        $currentTag = Tag::firstWhere('tag_id', $tag);
+        $questions = Question::filter([
+            'search' => $searchTerm,
+            'tag' => $selectedTag,
+        ])->paginate(10);
 
-        $questions = Question::filter(['search' => $searchTerm, 'tag' => $tag])->paginate(10);
-        $tags = Tag::all();
+        $totalResults = $questions->total();
 
-        // Append filter parameters to the pagination links
-        $questions->appends(['search' => $searchTerm, 'tag' => $tag]);
+        $tags = Tag::all(); 
 
-        return view('pages.search',[
+        return view('pages.search', [
             'questions' => $questions,
             'tags' => $tags,
-            'selectedTag' => $currentTag
-        ]);
+            'selectedTag' => $selectedTag,
+            'totalResults' => $totalResults,
+        ])->withInput($request->only('search'));
     }
 }

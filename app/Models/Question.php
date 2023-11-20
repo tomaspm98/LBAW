@@ -78,15 +78,22 @@ class Question extends Model
         return $this->hasMany(UserFollowQuestion::class, 'question_id');
     }
 
-    public function scopeFilter($query, array $filters){
-
-        $query->when($filters['tag'] ?? false, function ($query, $tag) {
-            $query->whereHas('tag', function ($query) use ($tag) {
-                $query->where('tag_id', $tag);
-            });
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when(isset($filters['tag']), function ($query) use ($filters) {
+            $tag = $filters['tag'];
+            
+            if ($tag != 'all') {
+                $query->when($filters['tag'] ?? false, function ($query) use ($tag) {
+                    $query->whereHas('tag', function ($query) use ($tag) {
+                        $query->where('tag_name', $tag);
+                    });
+                });
+            }
         });
-        
-        $query->when($filters['search'] ?? false, function ($query, $search) {
+
+        $query->when(isset($filters['search']), function ($query) use ($filters) {
+            $search = $filters['search'];
             $query->where(function ($query) use ($search) {
                 $query->whereRaw('tsvectors @@ plainto_tsquery(?)', "%$search%")
                     ->orWhereRaw('LOWER(question_title) LIKE ?', "%$search%")

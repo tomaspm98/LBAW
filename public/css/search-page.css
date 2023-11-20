@@ -1,0 +1,9 @@
+.no_result_message{
+    height: 50vh;
+    color: rgb(157, 3, 3);
+    font-size: 2rem;
+}
+
+.questions_results_container{
+    min-height: 50vh;
+}

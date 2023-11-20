@@ -11,12 +11,14 @@ use App\Models\Admin;
         </a>
     </div>
 
+    @if(\Request::route()->getName() !== "search")
     <div class="search_container">
         <form action="{{ route('search') }}" method="GET">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search...">
             <button type="submit">Search</button>
         </form>
     </div>
+    @endif
 
     <div class="nav_buttons_container">
      <div class="header-buttons">
