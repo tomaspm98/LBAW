@@ -50,6 +50,7 @@
 
     <ul class="questions_results_container">
         @forelse ($questions as $question)
+         @if($question->content_is_visible)
             <li class="question_card">
 
                 <div class="question_user_container">
@@ -84,10 +85,12 @@
                     <p>{{$question->vote_count}} votes</p> 
                 </div>
             </li>
+            @endif
         @empty
         <div class="no_result_message">
             <p>No results found. Please check back later.</p>
         </div>
+        
         @endforelse
     </ul>
 
