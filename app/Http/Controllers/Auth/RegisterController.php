@@ -77,22 +77,31 @@ class RegisterController extends Controller
 
             // Update the 'picture' field with the path
             $request->merge(['picture' => $path]);
+
+            Member::create([
+                'username' => $request -> username,
+                'user_email' => $request -> user_email,
+                'password' => Hash::make($request -> password),
+                'picture' => $path,
+                'user_birthdate' => Carbon::parse($request->user_birthdate)->toDateTimeString()
+            ]);
         } else {
             // No picture provided, set a default value
             $request->merge(['picture' => 'storage/app/public/pictures/default/profile_picture.png']);
+            Member::create([
+                'username' => $request -> username,
+                'user_email' => $request -> user_email,
+                'password' => Hash::make($request -> password),
+                'picture' => $request -> picture,
+                'user_birthdate' => Carbon::parse($request->user_birthdate)->toDateTimeString()
+            ]);
         }
 
-        Member::create([
-            'username' => $request -> username,
-            'user_email' => $request -> user_email,
-            'password' => Hash::make($request -> password),
-            'picture' => $path,
-            'user_birthdate' => Carbon::parse($request->user_birthdate)->toDateTimeString()
-        ]);
-        $credentials = $request->only('user_emailAuth::attempt($credentials);', 'password');
+        
+        $credentials = $request->only('user_email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('/')
+        return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

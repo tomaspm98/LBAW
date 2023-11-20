@@ -45,7 +45,7 @@ use App\Models\Admin;
             @else
                 <a class="button" href="{{ route('member.show', ['user_id' => Auth::user()->user_id]) }}">User Profile</a>
             @endif
-            <span>{{ Auth::user()->name }}</span>
+            <span>{{ Auth::user()->username }}</span>
         @endif
 
     </div>
