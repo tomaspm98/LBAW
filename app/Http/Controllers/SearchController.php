@@ -13,6 +13,8 @@ class SearchController extends Controller
     {
         $searchTerm = strtolower($request->input('search')); 
         $selectedTag = $request->input('tag'); 
+        $orderBy = $request->input('orderBy');
+
 
         // Save the search value
         Session::put('searchTerm', $searchTerm);
@@ -20,6 +22,7 @@ class SearchController extends Controller
         $questions = Question::filter([
             'search' => $searchTerm,
             'tag' => $selectedTag,
+            'orderBy' => $orderBy,
         ])->paginate(10);
 
         $totalResults = $questions->total();
@@ -31,6 +34,7 @@ class SearchController extends Controller
             'tags' => $tags,
             'selectedTag' => $selectedTag,
             'totalResults' => $totalResults,
+            'orderBy' => $orderBy,
         ])->withInput($request->only('search'));
     }
 }

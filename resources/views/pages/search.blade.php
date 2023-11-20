@@ -18,9 +18,23 @@
                 </option>
             @endforeach
         </select>
-        
+
         <button type="submit">Search</button>
     </form>
+
+    <!-- <b>Sort by:</b>
+    <div class="sort_container">
+
+        <button>
+            <a href="{{ route('search', ['orderBy' => 'date', 'orderDirection' => 'asc']) }}">most recent</a>
+        </button>
+        <button>
+            <a href="{{ route('search', ['orderBy' => 'date', 'orderDirection' => 'desc']) }}">oldest</a>
+        </button>
+    </div> -->
+
+
+
 
     @if($totalResults == 1)
     <div>{{$totalResults}} result:</div>

@@ -100,6 +100,10 @@ class Question extends Model
                     ->orWhereRaw('LOWER(content_text) LIKE ?', "%$search%");
             });
         });
+
+        if (isset($filters['orderBy']) && $filters['orderBy'] === 'date') {
+            $query->orderBy('content_creation_date', 'desc');
+        }
     }
 
 }

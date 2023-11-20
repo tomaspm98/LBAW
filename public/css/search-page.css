@@ -7,3 +7,12 @@
 .questions_results_container{
     min-height: 50vh;
 }
+
+.sort_container{
+    margin-bottom: 10px;
+}
+
+.sort_container button a{
+    color: white;
+
+}
