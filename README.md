@@ -159,3 +159,41 @@ For open source projects, say how it is licensed.
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+# Table High priority US
+
+| US Reference | Description | Implementation Status |
+|----------|----------|----------|
+| US01 | Sign-in | Done |
+| US02 | Sign-up | Done |
+| US11 | Home Page | Done |
+| US12 | Search | Done |
+| US13 | Filter | To be implemented |
+| US14 | About Page | Done |
+| US15 | Contacts Page | Done |
+| US16 | Personal scoreboard and badges | To be implemented |
+| US17 | View scoreboards and badges | To be implemented |
+| US201 | Post Question | Done |
+| US202 | Post Answer | Done |
+| US203 | Post comment | To be implemented |
+| US204 | Rate/Vote | To be implemented |
+| US205 | Personal Feed | To be implemented |
+| US206 | Follow | To be implemented |
+| US207 | Log out |Done |
+| US208 | Edit profile | Done |
+| US209 | Delete account | Done |
+| US31 | Edit question | Done |
+| US32 | Delete question | Done |
+| US33 | Edit answer | Done |
+| US34 | Delete answer | Done |
+| US35 | Edit comment | To be implemented |
+| US36 | Delete comment | To be implemented |
+| US41 | Delete content | To be implemented |
+| US42 | Edit question tags | To be implemented |
+| US43 | Manage reports | To be implemented |
+| US51 | Manage tags | To be implemented |
+| US52 | Assign moderator | Done |
+| US53 | Remove moderator | Done |
+| US54 | Manage members | To be implemented |
+
+
