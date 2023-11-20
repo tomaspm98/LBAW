@@ -1,3 +1,5 @@
+
+
 @extends('layouts.app')
 
 @section('content')
@@ -6,10 +8,10 @@
 
     <form class="search_form" action="{{ route('search') }}" method="GET">
 
-        <label for="search">Search:</label>
+        <span for="search">Search:</span>
         <input type="text" name="search" value="{{ Session::get('searchTerm') }}" placeholder="Search...">
 
-        <label for="tag">Filter by Tag name:</label>
+        <span for="tag">Filter by Tag name:</span>
         <select name="tag">
             <option value="all">All tags</option>
             @foreach ($tags as $tag)
@@ -22,24 +24,28 @@
         <button type="submit">Search</button>
     </form>
 
-    <!-- <b>Sort by:</b>
+    <b>Sort by:</b>
     <div class="sort_container">
 
-        <button>
-            <a href="{{ route('search', ['orderBy' => 'date', 'orderDirection' => 'asc']) }}">most recent</a>
-        </button>
-        <button>
-            <a href="{{ route('search', ['orderBy' => 'date', 'orderDirection' => 'desc']) }}">oldest</a>
-        </button>
-    </div> -->
+        <div>
+            <span>Creation date </span>
+            <br>
+            <button>
+                <a href="{{ route('search', array_merge(request()->query(), ['orderBy' => 'date', 'orderDirection' => 'desc'])) }}">most recent</a>
+            </button>
+            <button>
+                <a href="{{ route('search', array_merge(request()->query(), ['orderBy' => 'date', 'orderDirection' => 'asc'])) }}">oldest</a>
+            </button>
+        </div>
 
+    </div>
 
-
+    <hr>
 
     @if($totalResults == 1)
-    <div>{{$totalResults}} result:</div>
+    <div><b> {{$totalResults}}</b> result:</div>
     @else
-    <div>{{$totalResults}} results:</div>
+    <div><b> {{$totalResults}}</b> results:</div>
     @endif
 
     <ul class="questions_results_container">
@@ -62,7 +68,8 @@
                         @if(strlen($question->content_text > 50))
                         <a class="more_details" href="{{ route('questions.show', $question->question_id) }}"> more details</a>  
                         @endif
-                    </p>         
+                    </p>    
+                    <p>{{ $question->createdAt }}</p>   
                 </div>
 
                 <div class="top_questions_n_answers">
