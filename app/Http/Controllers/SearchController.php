@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use App\Models\Question;
@@ -10,11 +9,12 @@ use Illuminate\Http\Request;
 class SearchController extends Controller
 {
     public function search(Request $request)
-    {
+    {   
+        // Inputs
         $searchTerm = strtolower($request->input('search')); 
         $selectedTag = $request->input('tag'); 
         $orderBy = $request->input('orderBy');
-
+        $orderDirection = $request->input('orderDirection');
 
         // Save the search value
         Session::put('searchTerm', $searchTerm);
@@ -23,7 +23,8 @@ class SearchController extends Controller
             'search' => $searchTerm,
             'tag' => $selectedTag,
             'orderBy' => $orderBy,
-        ])->paginate(10);
+            'orderDirection' => $orderDirection,
+        ])->paginate(50);
 
         $totalResults = $questions->total();
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
+use Carbon\Carbon;
 
 class Question extends Model
 {
@@ -78,12 +79,18 @@ class Question extends Model
         return $this->hasMany(UserFollowQuestion::class, 'question_id');
     }
 
-    public function scopeFilter($query, array $filters)
+    public function getCreatedAtAttribute()
     {
+        return Carbon::parse($this->content_creation_date)->diffForHumans();
+    }
+
+    public function scopeFilter($query, array $filters)
+    {   
+        // Search by tag
         $query->when(isset($filters['tag']), function ($query) use ($filters) {
             $tag = $filters['tag'];
             
-            if ($tag != 'all') {
+            if ($tag != 'all') { // Tag selected
                 $query->when($filters['tag'] ?? false, function ($query) use ($tag) {
                     $query->whereHas('tag', function ($query) use ($tag) {
                         $query->where('tag_name', $tag);
@@ -92,6 +99,7 @@ class Question extends Model
             }
         });
 
+        // Search by total or partial words without distinction of uppercase and lowercase letters
         $query->when(isset($filters['search']), function ($query) use ($filters) {
             $search = $filters['search'];
             $query->where(function ($query) use ($search) {
@@ -101,8 +109,10 @@ class Question extends Model
             });
         });
 
+        // Sorting by creation date
         if (isset($filters['orderBy']) && $filters['orderBy'] === 'date') {
-            $query->orderBy('content_creation_date', 'desc');
+            $orderDirection = $filters['orderDirection'] === 'asc' ? 'asc' : 'desc';
+            $query->orderBy('content_creation_date', $orderDirection);
         }
     }
 
