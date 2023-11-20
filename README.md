@@ -1,199 +1,125 @@
-# lbaw2311
+# QueryStack - Q&A Website
+> Project developed  by:
+> GROUP 0111 _(lbaw2311)_, 26/09/2023
+
+## Description 
+QueryStack is a platform for technology enthusiasts, professionals, and learners to share their knowledge and solve their problems. QueryStack allows users to ask, answer, vote, comment, and edit questions and answers related to various topics in technology, such as programming languages, frameworks, tools, algorithms, data structures, design patterns, etc. QueryStack also provides features such as tags, badges, reputation points, and leaderboards to categorize, reward, and rank the users and their contributions.
+## Project Artifacts
+* [ER: Requirements Specification]
+* [EBD: Database Specification]
+* [EAP: Architecture Specification and Prototype]
+* [PA: Product and Presentation] - Not implemented for this delivery
+
+## Local Setup
+The project can be modified and tested locally.
+### Minimum Prerequisits
+* Docker (or another container application)
+* PostgreSQL 11 and pgAdmin 4 version 7.
+* Git
+* Composer 
+* Php php-mbstring php-xml php-pgsql php-curl (recommended version 8.1)
+### Installation
+* Clone the repository locally using:
+    ```bash
+    git clone https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311.git
+    ```
+* Start the containers from the project root.
+    ```bash
+    docker compose up -d
+    # To stop the container run:
+    # docker compose down
+    ```
+* Initiate pgAdmin
+
+    Open your browser and navigate to http://localhost:4321. If you encounter any issues with 'localhost,' you may need to use the IP address provided by the virtual machine running Docker.
+    Credentials to login:
+
+        Email: postgres@lbaw.com
+        Password: pg!password
+
+    In the first use of the development database, you will need to add a new server using the following settings:
+
+        hostname: postgres
+        username: postgres
+        password: pg!password
 
 
+### Usage
+* Before seting up the website, you should create the .env file with the configurations of the test version not the production one.
 
+    ```bash
+    # Create a new .env file based on the .env.thingy reference file.
+    cp .env.thingy .env
+    ```
+* Install the local PHP dependencies
+    ```bash 
+    composer update
+    ```
+* To start the development server from the project's root run:
+    ```bash 
+    # Seed database from the SQL file.
+    # Needed on first run and every time the database script changes.
+    php artisan db:seed
 
+    # Start the development server
+    php artisan serve
+    ```
 
-
-
-
-
-This repository defines a **docker-compose.yaml file**, which is a configuration file used to define and run multi-container Docker applications.
-
-This file configures two services, each represented by a container. The 'postgres' container is based on PostgreSQL 11 and includes the definition of an administrator user. Additionally, the 'pgadmin' container is built using pgAdmin 4 version 7. These container images are obtained from [Docker Hub](https://hub.docker.com), an official repository of container images.
-
-The following image depicts our infrastructure. It is also an example of GitLab's support for [Mermaid](https://docs.gitlab.com/ee/user/markdown.html#mermaid), a tool that renders diagrams from markdown specifications.
-
-```mermaid
-flowchart LR
-    subgraph Docker
-    subgraph postgres[postgres container]
-    end
-    subgraph pgadmin[pgadmin container]
-    end
-    end
+## Product
+The live version of the producut can be accessed in:
+```
+http://lbaw2311.lbaw.fe.up.pt/
 ```
 
-To **start the containers**, from the project root run the following command:
+### Website
+Include images
 
-```bash
-docker compose up -d
-```
+# Features implemented (US)
+> For more information about the user stories defined, see the [ER artifact](../../wiki/er).
 
-This will download and start the two containers. The `-d` flag stands for "detached" mode and runs the containers in the background. This allows you to continue using your terminal without the containers' output flooding your screen.
+- [x] US01 - Sign-in
+- [x] US02 | Sign-up 
+- [x] US11 | Home Page 
+- [x] US12 | Search 
+- [ ] US13 | Filter 
+- [x] US14 | About Page 
+- [x] US15 | Contacts Page 
+- [ ] US16 | Personal scoreboard and badges 
+- [ ] US17 | View scoreboards and badges 
+- [x] US201 | Post Question 
+- [x] US202 | Post Answer 
+- [ ] US203 | Post comment 
+- [ ] US204 | Rate/Vote 
+- [ ] US205 | Personal Feed 
+- [ ] US206 | Follow 
+- [x] US207 | Log out 
+- [x] US208 | Edit profile 
+- [x] US209 | Delete account 
+- [x] US31 | Edit question 
+- [x] US32 | Delete question 
+- [x] US33 | Edit answer 
+- [x] US34 | Delete answer 
+- [ ] US35 | Edit comment 
+- [ ] US36 | Delete comment 
+- [ ] US41 | Delete content 
+- [ ] US42 | Edit question tags 
+- [ ] US43 | Manage reports 
+- [ ] US51 | Manage tags 
+- [x] US52 | Assign moderator
+- [x] US53 | Remove moderator
+- [ ] US54 | Manage members 
 
-You can open Docker Desktop dashboard to see if the containers are running as expected. You can also **check the status of the containers** from the command line with the following command:
+## Credentials for test purposes
+||Administrator|Moderator|Regular User|
+|-----|-----|-----|------|
+|Email|admin@example.com|moderator@example.com|member1@example.com|
+|Password|pass|pass|pass|
 
-```bash
-docker ps
-```
+## Project Status
+The project is currently still in development. The present delivery corresponds to the EAP artifact(A7 e A8 artifacts) and it constitutes the intial prototype of the website.
 
-To **stop the containers**, just run the command:
-
-```bash
-docker compose down
-```
-
-
-
-
-
-
-
-### Using pgAdmin 4
-
-Open your browser and navigate to http://localhost:4321. If you encounter any issues with 'localhost,' you may need to use the IP address provided by the virtual machine running Docker. Refer to your installation documentation for guidance on this.
-
-Use the following credentials to login:
-
-    Email: postgres@lbaw.com
-    Password: pg!password
-
-In the first use of the development database, you will need to add a new server using the following settings:
-
-    hostname: postgres
-    username: postgres
-    password: pg!password
-
-Note: We use 'postgres' as the hostname instead of 'localhost' because Docker creates an internal DNS entry to facilitate connections between linked containers.
-
-
-
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
-
-# Table High priority US
-
-| US Reference | Description | Implementation Status |
-|----------|----------|----------|
-| US01 | Sign-in | Done |
-| US02 | Sign-up | Done |
-| US11 | Home Page | Done |
-| US12 | Search | Done |
-| US13 | Filter | To be implemented |
-| US14 | About Page | Done |
-| US15 | Contacts Page | Done |
-| US16 | Personal scoreboard and badges | To be implemented |
-| US17 | View scoreboards and badges | To be implemented |
-| US201 | Post Question | Done |
-| US202 | Post Answer | Done |
-| US203 | Post comment | To be implemented |
-| US204 | Rate/Vote | To be implemented |
-| US205 | Personal Feed | To be implemented |
-| US206 | Follow | To be implemented |
-| US207 | Log out |Done |
-| US208 | Edit profile | Done |
-| US209 | Delete account | Done |
-| US31 | Edit question | Done |
-| US32 | Delete question | Done |
-| US33 | Edit answer | Done |
-| US34 | Delete answer | Done |
-| US35 | Edit comment | To be implemented |
-| US36 | Delete comment | To be implemented |
-| US41 | Delete content | To be implemented |
-| US42 | Edit question tags | To be implemented |
-| US43 | Manage reports | To be implemented |
-| US51 | Manage tags | To be implemented |
-| US52 | Assign moderator | Done |
-| US53 | Remove moderator | Done |
-| US54 | Manage members | To be implemented |
-
-
+## Team
+* António José Salazar Correia, up201804832@up.pt
+* Gonçalo Nuno Leitão Pinho da Costa, up202103336@up.pt
+* Tomás Pereira Maciel, up202006845@up.pt
+* Ricardo Miguel Matos Oliveira Peralta, up2206392@up.pt
