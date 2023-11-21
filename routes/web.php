@@ -11,7 +11,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AdminController;
-
+use App\Events\QuestionUpdated;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,6 +55,8 @@ Route::get('/about', function () {
     return view('pages.about');
 })->name('about');
 
+// AJAX REQUESTS
+Route::post('/update-count',  [App\Http\Controllers\updateCountsController::class, 'updateQuestionCount'])->name('update-count');
 
 
 Route::controller(QuestionController::class)->group(function(){

@@ -10,6 +10,7 @@ composer install
 php artisan config:clear
 php artisan clear-compiled
 php artisan optimize
+# php artisan storage:link
 
 # docker buildx build --push --platform linux/amd64 -t $IMAGE_NAME .
 docker build -t $IMAGE_NAME .

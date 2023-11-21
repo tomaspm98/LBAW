@@ -3,9 +3,6 @@
 @section('content')
 
 
-
-
-
 <div class="container">
     @if (session('error'))
         <div id="errorPopup" class="popup-message">
@@ -21,7 +18,12 @@
                 popup.style.display = 'none';
             }, 5000);
         </script>    
-    @endif
+    @endif    
+    <div id="realTimeUpdates">
+        <p>Total Questions: <span id="totalQuestions">{{ $totalQuestions }}</span></p>
+        <p>Questions this week: <span id="questionsLastWeek">{{ $questionsLastWeek }}</span></p>
+        <p>New Users this week: <span id="newUsersLastWeek">{{ $newUsersLastWeek }}</span></p>
+    </div>
 
     @if (Auth::check())
     <a class="button" class="login-button" href="{{ url('/questions/create') }}"> Create a question </a> 
@@ -33,9 +35,9 @@
             <li class="question_card">
 
                 <div class="question_user_container">
-                    <a href=""> <!-- route('member.show', $question->author) -->
+                    <a href="{{ route('member.show', $question->author) }}"> <!-- route('member.show', $question->author) -->
                         <div class="question_user_photo">
-                            <img src="" alt="Profile Photo">
+                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username ?? 'Unknown' }}</b></p>
@@ -49,7 +51,7 @@
                     @if($question->answer_count !== 1)
                     <p>{{$question->answer_count}} answers</p>
                     @else
-                    p>{{$question->answer_count}} answer</p>
+                    <p>{{$question->answer_count}} answer</p>
                     @endif
                 </div>
 
@@ -62,6 +64,4 @@
     </ul>
 
 </div>
-
-
 @endsection
