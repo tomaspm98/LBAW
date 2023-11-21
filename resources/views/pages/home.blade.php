@@ -18,8 +18,12 @@
                 popup.style.display = 'none';
             }, 5000);
         </script>    
-    @endif
-
+    @endif    
+    <div id="realTimeUpdates">
+        <p>Total Questions: <span id="totalQuestions">{{ $totalQuestions }}</span></p>
+        <p>Questions this week: <span id="questionsLastWeek">{{ $questionsLastWeek }}</span></p>
+        <p>New Users this week: <span id="newUsersLastWeek">{{ $newUsersLastWeek }}</span></p>
+    </div>
     <h2>Top Questions</h2>
     <ul>
         @foreach ($questions as $question)
@@ -43,7 +47,7 @@
                     @if($question->answer_count !== 1)
                     <p>{{$question->answer_count}} answers</p>
                     @else
-                    p>{{$question->answer_count}} answer</p>
+                    <p>{{$question->answer_count}} answer</p>
                     @endif
                 </div>
 

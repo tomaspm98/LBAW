@@ -179,3 +179,23 @@ function addEventListeners() {
   
   addEventListeners();
   
+
+
+  function updateQuestionCount() {
+    axios.post('/update-count')
+        .then(response => {
+            console.log(response.data.message);
+            document.getElementById('totalQuestions').innerText = response.data.totalQuestions;
+            document.getElementById('questionsLastWeek').innerText = response.data.questionsLastWeek;
+            document.getElementById('newUsersLastWeek').innerText = response.data.newUsersLastWeek;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+// Run the function initially
+updateQuestionCount();
+
+// Set up an interval to run the function every 5 seconds
+setInterval(updateQuestionCount, 5000);

@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Events\QuestionUpdated;
+use App\Models\Member;
+use Carbon\Carbon;
+
 
 class QuestionController extends Controller
 {
@@ -66,6 +70,25 @@ class QuestionController extends Controller
     {
         return view('pages.create_question');
     }
+
+    public function updateQuestionCount()
+    {
+        $totalQuestions = Question::count();
+
+        $oneWeekAgo = Carbon::now()->subWeek()->toDateTimeString();
+
+        $questionsLastWeek = Question::where('content_creation_date', '>=', $oneWeekAgo)->count();
+        $newUsersLastWeek = Member::where('user_creation_date', '>=', $oneWeekAgo)->count();
+
+        // Do not broadcast the event, just return the JSON response
+        return response()->json([
+            'totalQuestions' => $totalQuestions,
+            'questionsLastWeek' => $questionsLastWeek,
+            'newUsersLastWeek' => $newUsersLastWeek,
+            'message' => 'Question count updated successfully'
+        ]);
+    }
+
 
     public function create(Request $request)
     {
