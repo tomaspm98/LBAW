@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\QuestionUpdated;
 use App\Models\Member;
 use Carbon\Carbon;
+use App\Models\Tag;
 
 
 class QuestionController extends Controller
@@ -68,7 +69,10 @@ class QuestionController extends Controller
 
     public function createShow()
     {
-        return view('pages.create_question');
+        $tags = Tag::all();
+        return view('pages.create_question', [
+            'tags' => $tags
+        ]);
     }
 
     public function updateQuestionCount()

@@ -18,10 +18,17 @@
                 <textarea class="form-control" id="content_text" name="content_text" required></textarea>
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="question_tag">Tag ID</label>
                 <input type="number" class="form-control" id="question_tag" name="question_tag" required>
-            </div>
+            </div> --}}
+
+            @csrf
+            <select name="question_tag">
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                @endforeach
+            </select>
 
             <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to create this question?')">Create Question</button>
         </form>
