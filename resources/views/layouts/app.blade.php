@@ -20,6 +20,7 @@ use App\Models\Admin;
         <link href="{{ url('/css/question-page.css') }}" rel="stylesheet">
         <link href="{{ url('/css/home-page.css') }}" rel="stylesheet">
         <link href="{{ url('css/search-page.css') }}" rel="stylesheet">
+        <link href="{{ url('css/admin-page.css') }}" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug

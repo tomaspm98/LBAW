@@ -31,8 +31,8 @@ class AdminController extends Controller
     {
         $this->authorize('show', Admin::class);
         $moderatorIds = Moderator::pluck('user_id');
-        $moderators = Member::whereIn('user_id', $moderatorIds)->get();
-        return view('pages.admin_remove', ['moderators' => $moderators]);
+        $members = Member::whereIn('user_id', $moderatorIds)->get();
+        return view('pages.admin_remove', ['members' => $members]);
     }
 
     public function addModerator(Request $request, $user_id)
