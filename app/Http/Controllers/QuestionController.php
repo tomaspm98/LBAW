@@ -18,9 +18,11 @@ class QuestionController extends Controller
     {
 
         $question = Question::findOrFail($question_id);
+        $tags = Tag::all();
 
         return view('pages.question', [
-            'question' => $question
+            'question' => $question,
+            'tags' => $tags
         ]);
     }
 
@@ -31,6 +33,13 @@ class QuestionController extends Controller
         return view('pages.edit_question', [
             'question' => $question
         ]);
+    }
+
+    public function updateTag(Request $request, Question $question)
+    {
+        $question->update(['question_tag' => $request->input('question_tag')]);
+        // Perform necessary actions after updating the tag
+        return redirect()->back()->with('success', 'Tag updated successfully');
     }
 
     public function update(Request $request, $question_id)

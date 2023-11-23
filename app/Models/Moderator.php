@@ -24,6 +24,6 @@ class Moderator extends Model
 
     public function tag()
     {
-        return $this->belongsToMany(Tag::class, 'tag_id');
+        return $this->belongsTo(Tag::class, 'tag_id');
     }
 }
