@@ -1,3 +1,6 @@
+<?php 
+use App\Models\Moderator;
+?>
 @extends('layouts.app')
 
 @section('content')
@@ -57,6 +60,14 @@
                             Edit
                         </button>
                     </form>    
+                </div>
+                @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                <div class="content_right_container"> 
+                    <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+                    </form>
                 </div>
                 @endif
             </div>
@@ -141,7 +152,16 @@
                         <button> 
                             Edit
                         </button>
-                    </form>  
+                    </form> 
+                    @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    <div class="content_right_container"> 
+                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>   
+                
                 @endif    
                     <div>
                         <button class="button_like_dislike"> 

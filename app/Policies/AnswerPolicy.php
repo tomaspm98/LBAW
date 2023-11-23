@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Member;
 use App\Models\Answer;
 use App\Models\Question;
+use App\Models\Moderator;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,15 @@ class AnswerPolicy
 
     public function delete(Member $member, Answer $answer): bool
     {
-        return $member->user_id === $answer->content_author;
+        if ($member->user_id === $answer->content_author) {
+            return true;
+        }
+        else if (Moderator::where('user_id', $member->user_id)->exists()){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
