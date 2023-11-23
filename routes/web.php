@@ -64,6 +64,8 @@ Route::controller(QuestionController::class)->group(function(){
     Route::put('questions/{question_id}', 'update')->name('questions.update');
     Route::delete('questions/{question_id}', 'delete')->name('questions.delete');
     Route::get('questions', 'list')->name('questions.list');
+    Route::post('/questions/{question}/updateTag', 'updateTag')->name('questions.updateTag');
+
 
 });
 
@@ -93,3 +95,12 @@ Route::controller(UserController::class)->group(function(){
 
 // SEARCH PAGE
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
+
+
+// REPORTS
+Route::get('/reports', [App\Http\Controllers\ReportController::class, 'showAllReports'])->name('reports');
+Route::get('report/{report_id}', [App\Http\Controllers\ReportController::class, 'viewReport'])->name('report.view');
+
+
+
+
