@@ -1,0 +1,98 @@
+/* General styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Profile header */
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-header h2 {
+    margin-bottom: 10px;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff; /* You can change the border color */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+}
+
+/* Profile details */
+.profile-details {
+    margin-bottom: 20px;
+}
+
+.detail-section {
+    margin-bottom: 10px;
+}
+
+.detail-section h3 {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* User activity */
+.user-activity {
+    display: flex;
+    justify-content: space-between;
+}
+
+.activity-section {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.activity-section h3 {
+    margin-bottom: 10px;
+}
+
+.activity-item {
+    margin-bottom: 5px;
+}
+
+.activity-item p {
+    margin: 5px 0;
+}
+
+
+/* Toggle section */
+.toggle-section {
+    cursor: pointer;
+}
+
+/* Arrow icon */
+.arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Content hidden by default */
+.hidden-content {
+    display: none;
+    margin-top: 10px;
+}
+
+/* Show content when the hidden-content class is removed */
+.show-content .hidden-content {
+    display: block;
+}
+
+.question-title {
+    color: blue; /* Change to desired color */
+}
+
+.your-answer {
+    color: green; /* Change to desired color */
+}
+
+.your-comment {
+    color: blue; /* Change to desired color */
+}
