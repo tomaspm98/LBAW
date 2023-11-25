@@ -47,6 +47,24 @@ use App\Models\Moderator;
                     @else
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
+                    @if (Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    <button id="editTagButton">Edit Tag</button>
+                        {{-- Create a button to change the tag of the question here --}}
+
+                        <div id="tagEditSection" style="display: none;">
+                            <form id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
+                                @csrf
+                                <select name="question_tag">
+                                    @foreach($tags as $tag)
+                                        <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit">Save</button>
+                            </form>
+                        </div>
+
+                    @endif
+
                     <h1>{{ $question->question_title }}</h1>
                     <p>
                         <strong>Created at: </strong>{{$question->content_creation_date}}
