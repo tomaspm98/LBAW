@@ -217,7 +217,7 @@ use App\Models\Moderator;
 
                 <div>
                     <button class="button_report" id="showReportAnswerForm"> 
-                        Report {{ $answer->answer_id }}
+                        Report
                     </button>
                     <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
                         <div class="form-group"> 
@@ -291,9 +291,27 @@ use App\Models\Moderator;
                     </div>
                 @else
                 <div>
-                    <button class="button_report"> 
-                        Report
+                    <button class="button_report" id="showReportCommentForm"> 
+                        Report Comment {{ $comment->answer->answer_id }}
                     </button>
+                    <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
+                        <div class="form-group"> 
+                            @csrf
+                            <select name="report_reason" id="report_reason_comment" required>
+                                <option value="" disabled selected>Select reason</option>
+                                <option value="spam">Spam</option>
+                                <option value="offensive">Offensive</option>
+                                <option value="Rules Violation">Rules Violation</option>
+                                <option value="Inappropriate tag">Inappropriate tag</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report_text">Question Content</label>
+                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                        </div>
+                        <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
+                    </form>
+                </div>
                 @endif    
                     <div>
                         <button class="button_like_dislike"> 
@@ -391,6 +409,38 @@ function showNotificationAnswer() {
             notification.style.display = 'none';
         }, 3000); // 3000 milliseconds = 3 seconds
     }
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const reportButton = document.getElementById('showReportCommentForm');
+    const reportForm = document.getElementById('reportCommentForm');
+
+    reportButton.addEventListener('click', function() {
+        reportButton.style.display = 'none'; // Hide the "Report" button
+        reportForm.style.display = 'block'; // Show the form
+    });
+});
+
+
+function showNotificationComment() {
+        var reason = document.getElementById('report_reason_comment');
+        reason = reason.value;
+        console.log(reason);
+        if (reason === ""){
+            console.log("null");
+            return false;
+        }
+        var notification = document.getElementById('success-message');
+        notification.style.display = 'block';
+
+        setTimeout(function() {
+            notification.style.display = 'none';
+        }, 3000); // 3000 milliseconds = 3 seconds
+    }   
 
 
 

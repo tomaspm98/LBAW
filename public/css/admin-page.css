@@ -38,17 +38,3 @@ tr:nth-child(even) {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 999; /* Ensure it's above other elements */
 }
-
-success-message {
-    display: none;
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: blue;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 999; /* Ensure it's above other elements */
-}

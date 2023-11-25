@@ -104,5 +104,6 @@ Route::get('report/create/{question_id}', [App\Http\Controllers\ReportController
 
 Route::post('report/create/{answer_id}', [App\Http\Controllers\ReportController::class, 'createReportAnswer'])->name('report.answer');
 
+Route::post('report/create/{answer_id}/{comment_id}', [App\Http\Controllers\ReportController::class, 'createReportComment'])->name('report.comment');
 
 
