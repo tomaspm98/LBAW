@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Answer extends Model
 {
@@ -46,7 +47,15 @@ class Answer extends Model
 
     public function getVoteCountAttribute()
     {
-        return $this->votes()->count();
+        $upVotes = $this->votes()->where('upvote', 'up')->count();
+        $downVotes = $this->votes()->where('upvote', 'down')->count();
+
+        return $upVotes - $downVotes; 
+    }
+
+    public function userVote()
+    {
+        return $this->hasOne(Vote::class, 'vote_content_answer')->where('vote_author', Auth::id());
     }
 
     public function getCommentCountAttribute()

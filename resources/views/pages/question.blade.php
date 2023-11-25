@@ -86,12 +86,12 @@ use App\Models\Moderator;
                 </div>
 
                 <div class="content_right_container"> 
-                    <button> 
-                        LIKE
-                    </button>
-                    <button> 
-                        DISLIKE
-                    </button>
+                <form action="{{ route('votes.voteQuestion', ['question_id' => $question->question_id]) }}" method="POST">
+                    @csrf
+                    @php $userVote = $question->userVote; @endphp
+                    <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                    <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                </form>
                     <p><b>{{$question->vote_count}}</b></p>
                 </div>
             </div>
@@ -164,12 +164,12 @@ use App\Models\Moderator;
                 
                 @endif    
                     <div>
-                        <button class="button_like_dislike"> 
-                            LIKE
-                        </button>
-                        <button class="button_like_dislike"> 
-                            DISLIKE
-                        </button>
+                        <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
+                            @csrf
+                            @php $userVote = $answer->userVote; @endphp
+                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                        </form>
                     </div>
                     <p><b>{{$answer->vote_count}}</b></p>
                 </div>
@@ -228,12 +228,12 @@ use App\Models\Moderator;
                     </div>    
                 @endif    
                     <div>
-                        <button class="button_like_dislike"> 
-                            LIKE
-                        </button>
-                        <button class="button_like_dislike"> 
-                            DISLIKE
-                        </button>
+                        <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}" method="POST">
+                            @csrf
+                            @php $userVote = $comment->userVote; @endphp
+                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                        </form>
                     </div>
                     <p><b>{{$comment->vote_count}}</b></p>
                 </div>

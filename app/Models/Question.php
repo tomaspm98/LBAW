@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class Question extends Model
@@ -61,7 +62,10 @@ class Question extends Model
 
     public function getVoteCountAttribute()
     {
-        return $this->votes()->count();
+        $upVotes = $this->votes()->where('upvote', 'up')->count();
+        $downVotes = $this->votes()->where('upvote', 'down')->count();
+
+        return $upVotes - $downVotes; 
     }
 
     public function reports()
@@ -83,6 +87,12 @@ class Question extends Model
     {
         return Carbon::parse($this->content_creation_date)->diffForHumans();
     }
+
+    public function userVote()
+    {
+        return $this->hasOne(Vote::class, 'vote_content_question')->where('vote_author', Auth::id());
+    }
+
 
     public function scopeFilter($query, array $filters)
     {   

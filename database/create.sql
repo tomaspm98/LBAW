@@ -481,22 +481,37 @@ AFTER INSERT ON comment
 FOR EACH ROW
 EXECUTE FUNCTION award_user_point();
 
--- Create a trigger to award users one point for each vote
-CREATE FUNCTION award_user_point_vote()
+-- Create a trigger to award users for the votes in the different scenarios
+
+CREATE OR REPLACE FUNCTION award_user_point_vote()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE member
-    SET user_score = user_score + 1
-    WHERE user_id = NEW.vote_author;
+    IF TG_OP = 'INSERT' AND NEW.upvote != 'out' THEN
+        UPDATE member
+        SET user_score = user_score + 1
+        WHERE user_id = NEW.vote_author;
+    ELSIF TG_OP = 'UPDATE' AND NEW.upvote != OLD.upvote THEN
+        IF (NEW.upvote = 'out') THEN
+            UPDATE member
+            SET user_score = user_score - 1
+            WHERE user_id = NEW.vote_author;
+        ELSIF (OLD.upvote = 'out' AND NEW.upvote != 'out') THEN
+            UPDATE member
+            SET user_score = user_score + 1
+            WHERE user_id = NEW.vote_author;	
+        END IF;
+    END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS award_user_point_vote ON vote;
 CREATE TRIGGER award_user_point_vote
-AFTER INSERT ON vote
+AFTER INSERT OR UPDATE ON vote
 FOR EACH ROW
 EXECUTE FUNCTION award_user_point_vote();
+
 
 
 -- TRIGGER 07 - An user gets a badge when he registers a new account in the system.
