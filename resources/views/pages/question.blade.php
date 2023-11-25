@@ -4,6 +4,14 @@ use App\Models\Moderator;
 @extends('layouts.app')
 
 @section('content')
+
+<div id="success-message" style="display: none">
+
+    Report submitted successfully!
+</div>
+
+
+
 @if ($question->content_is_visible)
     @if (session('error'))
         <div id="errorPopup" class="popup-message">
@@ -86,9 +94,36 @@ use App\Models\Moderator;
                         <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                     </form>
                 </div>
+                @else
+
+                <div>
+                    <button class="button_report" id="showReportForm"> 
+                        Report
+                    </button>
+                    <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
+                        <div class="form-group"> 
+                            @csrf
+                            <select name="report_reason" id="report_reason" required>
+                                <option value="" disabled selected>Select reason</option>
+                                <option value="spam">Spam</option>
+                                <option value="offensive">Offensive</option>
+                                <option value="Rules Violation">Rules Violation</option>
+                                <option value="Inappropriate tag">Inappropriate tag</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report_text">Question Content</label>
+                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                        </div>
+                        <button type="submit" class="button_report" onclick="showNotification()">Submit Report</button>
+                    </form>
+                </div>
+                
                 @endif
             </div>
 
+
+            
             <div class="content_bottom_container">
 
                 <div class="content_left_container">    
@@ -178,7 +213,31 @@ use App\Models\Moderator;
                             <button type="submit">Delete</button>
                         </form>
                     </div>   
-                
+                @else 
+
+                <div>
+                    <button class="button_report" id="showReportAnswerForm"> 
+                        Report {{ $answer->answer_id }}
+                    </button>
+                    <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
+                        <div class="form-group"> 
+                            @csrf
+                            <select name="report_reason" id="report_reason_answer" required>
+                                <option value="" disabled selected>Select reason</option>
+                                <option value="spam">Spam</option>
+                                <option value="offensive">Offensive</option>
+                                <option value="Rules Violation">Rules Violation</option>
+                                <option value="Inappropriate tag">Inappropriate tag</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report_text">Question Content</label>
+                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                        </div>
+                        <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
+                    </form>
+                </div>
+
                 @endif    
                     <div>
                         <button class="button_like_dislike"> 
@@ -222,7 +281,19 @@ use App\Models\Moderator;
                         <button> 
                             Edit
                         </button>
-                    </div>    
+                    </div>  
+                    
+                @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    <div class="content_right_container"> 
+                        <button> 
+                            delete
+                        </button>
+                    </div>
+                @else
+                <div>
+                    <button class="button_report"> 
+                        Report
+                    </button>
                 @endif    
                     <div>
                         <button class="button_like_dislike"> 
@@ -258,7 +329,75 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+document.addEventListener("DOMContentLoaded", function() {
+    const reportButton = document.getElementById('showReportForm');
+    const reportForm = document.getElementById('reportForm');
+
+    reportButton.addEventListener('click', function() {
+        reportButton.style.display = 'none'; // Hide the "Report" button
+        reportForm.style.display = 'block'; // Show the form
+    });
+
+    
+});
+
+function showNotification() {
+        var reason = document.getElementById("report_reason");
+        reason = reason.value;
+        console.log(reason);
+        if (reason === ""){
+            console.log("null");
+            return false;
+        }
+        var notification = document.getElementById('success-message');
+        notification.style.display = 'block';
+
+        setTimeout(function() {
+            notification.style.display = 'none';
+        }, 3000); // 3000 milliseconds = 3 seconds
+    }
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const reportButton = document.getElementById('showReportAnswerForm');
+    const reportForm = document.getElementById('reportAnswerForm');
+
+    reportButton.addEventListener('click', function() {
+        reportButton.style.display = 'none'; // Hide the "Report" button
+        reportForm.style.display = 'block'; // Show the form
+    });
+});
+
+
+function showNotificationAnswer() {
+        var reason = document.getElementById('report_reason_answer');
+        reason = reason.value;
+        console.log(reason);
+        if (reason === ""){
+            console.log("null");
+            return false;
+        }
+        var notification = document.getElementById('success-message');
+        notification.style.display = 'block';
+
+        setTimeout(function() {
+            notification.style.display = 'none';
+        }, 3000); // 3000 milliseconds = 3 seconds
+    }
+
+
+
+
 </script>
+
+
 
 
 

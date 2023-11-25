@@ -100,7 +100,9 @@ Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])-
 // REPORTS
 Route::get('/reports', [App\Http\Controllers\ReportController::class, 'showAllReports'])->name('reports');
 Route::get('report/{report_id}', [App\Http\Controllers\ReportController::class, 'viewReport'])->name('report.view');
+Route::get('report/create/{question_id}', [App\Http\Controllers\ReportController::class, 'createReportQuestion'])->name('report.question');
 
+Route::post('report/create/{answer_id}', [App\Http\Controllers\ReportController::class, 'createReportAnswer'])->name('report.answer');
 
 
 
