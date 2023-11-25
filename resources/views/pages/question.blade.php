@@ -355,8 +355,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const reportForm = document.getElementById('reportForm');
 
     reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; // Hide the "Report" button
-        reportForm.style.display = 'block'; // Show the form
+        reportButton.style.display = 'none'; 
+        reportForm.style.display = 'block'; 
     });
 
     
@@ -375,7 +375,7 @@ function showNotification() {
 
         setTimeout(function() {
             notification.style.display = 'none';
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 3000); 
     }
 
 
@@ -391,8 +391,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const reportForm = document.getElementById('reportAnswerForm');
 
     reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; // Hide the "Report" button
-        reportForm.style.display = 'block'; // Show the form
+        reportButton.style.display = 'none'; 
+        reportForm.style.display = 'block';
     });
 });
 
@@ -410,7 +410,7 @@ function showNotificationAnswer() {
 
         setTimeout(function() {
             notification.style.display = 'none';
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 3000); 
     }
 
 
@@ -423,8 +423,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const reportForm = document.getElementById('reportCommentForm');
 
     reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; // Hide the "Report" button
-        reportForm.style.display = 'block'; // Show the form
+        reportButton.style.display = 'none'; 
+        reportForm.style.display = 'block'; 
     });
 });
 
@@ -442,7 +442,7 @@ function showNotificationComment() {
 
         setTimeout(function() {
             notification.style.display = 'none';
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 3000);
     }   
 
 
