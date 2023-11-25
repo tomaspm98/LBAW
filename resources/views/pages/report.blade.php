@@ -4,7 +4,6 @@ use App\Models\Answer;
 use App\Models\Comment;
 ?>
 
-<!-- In your Blade template -->
 @extends('layouts.app')
 
 @section('content')
@@ -26,7 +25,6 @@ use App\Models\Comment;
                     </a>
                 </div>
             @elseif ($report->content_reported_answer)
-                <!-- Reported Answer -->
                 @php $answer = Answer::find($report->content_reported_answer) @endphp
                 <div class="reported-item">
                     <span>Answer:</span>
@@ -37,7 +35,6 @@ use App\Models\Comment;
                     </a>
                 </div>
             @elseif ($report->content_reported_comment)
-                <!-- Reported Comment -->
                 @php $comment = Comment::find($report->content_reported_comment) @endphp
                 <div class="reported-item">
                     <span>Comment:</span>

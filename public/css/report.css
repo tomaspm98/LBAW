@@ -1,4 +1,3 @@
-/* In your CSS file or style section */
 .report-container {
     margin-top: 20px;
 }
@@ -28,6 +27,6 @@
 
 .reported-item a {
     text-decoration: none;
-    color: #0366d6; /* Adjust the color as needed */
+    color: #0366d6; 
 }
 

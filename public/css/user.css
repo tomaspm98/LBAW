@@ -1,4 +1,3 @@
-/* General styles */
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -6,7 +5,6 @@
     font-family: Arial, sans-serif;
 }
 
-/* Profile header */
 .profile-header {
     text-align: center;
     margin-bottom: 20px;
@@ -21,11 +19,10 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #fff; /* You can change the border color */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+    border: 3px solid #fff; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
 }
 
-/* Profile details */
 .profile-details {
     margin-bottom: 20px;
 }
@@ -39,7 +36,6 @@
     font-weight: bold;
 }
 
-/* User activity */
 .user-activity {
     display: flex;
     justify-content: space-between;
@@ -63,36 +59,32 @@
 }
 
 
-/* Toggle section */
 .toggle-section {
     cursor: pointer;
 }
 
-/* Arrow icon */
 .arrow {
     display: inline-block;
     transition: transform 0.3s ease;
 }
 
-/* Content hidden by default */
 .hidden-content {
     display: none;
     margin-top: 10px;
 }
 
-/* Show content when the hidden-content class is removed */
 .show-content .hidden-content {
     display: block;
 }
 
 .question-title {
-    color: blue; /* Change to desired color */
+    color: blue; 
 }
 
 .your-answer {
-    color: green; /* Change to desired color */
+    color: green; 
 }
 
 .your-comment {
-    color: blue; /* Change to desired color */
+    color: blue; 
 }
