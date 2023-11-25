@@ -14,6 +14,17 @@ class Report extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'report_creator',
+        'report_reason',
+        'content_reported_question',
+        'content_reported_answer',
+        'content_reported_comment',
+        'report_reason',
+        'report_text',
+        'report_date',
+    ];
+
     public function creator()
     {
         return $this->belongsTo(Member::class, 'report_creator');

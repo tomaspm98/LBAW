@@ -746,7 +746,8 @@ VALUES (2, 'up', 'answer',NULL ,3, NULL ), -- Upvote answer 3 (belongs to admin)
 INSERT INTO report (report_creator, report_handler, content_reported_question, 
             content_reported_answer, content_reported_comment , report_reason, report_text)
 VALUES (3, NULL, NULL, 4, NULL, 'spam', 'Inappropriate content'), -- Report on answer 4 from member1
-       (1, NULL, 2, NULL, NULL, 'offensive', 'Offensive language'); -- Report on question 2 from admin
+       (1, NULL, 2, NULL, NULL, 'offensive', 'Offensive language'), -- Report on question 2 from admin
+       (2, NULL, NULL, NULL, 1,  'offensive', 'Offensive language');
 
 -- THESE REPORTS ARE TO BE ASSIGNED A HANDLER AND BE REFUSED
 -- FOR TEST PURPOSES AFTER THE FEATURES ARE IMPLEMENTED
