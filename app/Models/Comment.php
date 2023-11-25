@@ -14,6 +14,15 @@ class Comment extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'answer_id',
+        'content_author',
+        'content_creation_date',
+        'content_text',
+        'content_is_edited',
+        'content_is_visible'
+    ];
+
     public function author()
     {
         return $this->belongsTo(Member::class, 'content_author');
@@ -42,5 +51,10 @@ class Comment extends Model
     public function getReportCountAttribute()
     {
         return $this->reports()->count();
+    }
+
+    public function getQuestion()
+    {
+        return $this->answer->question->question_id;
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommentController;
 use App\Events\QuestionUpdated;
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,13 @@ Route::controller(AnswerController::class)->group(function(){
     Route::get('questions/{question_id}/answers/{answer_id}/edit', 'editShow')->name('answers.edit');
     Route::put('questions/{question_id}/answers/{answer_id}', 'update')->name('answers.update');
     Route::delete('questions/{question_id}/answers/{answer_id}', 'delete')->name('answers.delete');
+});
+
+Route::controller(CommentController::class)->group(function(){
+    Route::post('questions/{question_id}/answers/{answer_id}/comments', 'createComment')->name('comments.create');
+    Route::get('questions/{question_id}/answers/{answer_id}/comments/{comment_id}/edit', 'editShow')->name('comments.edit');
+    Route::put('questions/{question_id}/answers/{answer_id}/comments/{comment_id}', 'update')->name('comments.update');
+    Route::delete('questions/{question_id}/answers/{answer_id}/comments/{comment_id}', 'delete')->name('comments.delete');
 });
 
 

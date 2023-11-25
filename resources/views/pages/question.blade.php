@@ -40,23 +40,6 @@ use App\Models\Moderator;
                     @else
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
-                    @if (Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <button id="editTagButton">Edit Tag</button>
-                        {{-- Create a button to change the tag of the question here --}}
-
-                        <div id="tagEditSection" style="display: none;">
-                            <form id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
-                                @csrf
-                                <select name="question_tag">
-                                    @foreach($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit">Save</button>
-                            </form>
-                        </div>
-
-                    @endif
                     <h1>{{ $question->question_title }}</h1>
                     <p>
                         <strong>Created at: </strong>{{$question->content_creation_date}}
@@ -192,8 +175,23 @@ use App\Models\Moderator;
                 </div>
             </div>
         </div>
-
+        <div class="comment_form_container">
+        <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="comment_content_text_{{ $answer->answer_id }}">Post Comment:</label>
+                    <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>    
         @foreach ($answer->comments as $comment)
+        @if ($comment->content_is_visible)
+        <div class="content_text_container">
+                    @if($comment->content_is_edited)
+                    <p>edited</p>
+                    @endif
+        </div>
         <div class="comment_container">
             <div class="content_top_container">
                 <div class="content_left_container">
@@ -216,12 +214,17 @@ use App\Models\Moderator;
 
                 @if(Auth::check() && Auth::id()===$comment->content_author) <!-- TODO: restrict access only for owner -->
                     <div class="content_right_container"> 
-                        <button> 
-                            delete
-                        </button>
-                        <button> 
-                            Edit
-                        </button>
+                        <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Delete</button>
+                        </form>
+                        <form method="GET" action="{{ route('comments.edit', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}">
+                            @csrf
+                            <button> 
+                                Edit
+                            </button>
+                    </form> 
                     </div>    
                 @endif    
                     <div>
@@ -236,6 +239,7 @@ use App\Models\Moderator;
                 </div>
             </div>
         </div>
+        @endif
         @endforeach
         <hr>
         @endif
