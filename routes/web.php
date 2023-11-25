@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\VoteController;
 use App\Events\QuestionUpdated;
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,12 @@ Route::controller(CommentController::class)->group(function(){
     Route::get('questions/{question_id}/answers/{answer_id}/comments/{comment_id}/edit', 'editShow')->name('comments.edit');
     Route::put('questions/{question_id}/answers/{answer_id}/comments/{comment_id}', 'update')->name('comments.update');
     Route::delete('questions/{question_id}/answers/{answer_id}/comments/{comment_id}', 'delete')->name('comments.delete');
+});
+
+Route::controller(VoteController::class)->group(function(){
+    Route::post('questions/{question_id}/votes', 'createVoteQuestion')->name('votes.voteQuestion');
+    Route::post('questions/{question_id}/answers/{answer_id}/votes', 'createVoteAnswer')->name('votes.voteAnswer');
+    Route::post('questions/{question_id}/answers/{answer_id}/comments/{comment_id}/votes', 'createVoteComment')->name('votes.voteComment');
 });
 
 
