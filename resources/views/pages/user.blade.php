@@ -28,12 +28,12 @@
         <div classs="badges-section">
             <h3>Badges:</h3>
             <div class="badges">
-                {{-- @foreach ($member->badges as $badge)
+                @foreach ($member->badges as $badge)
                     <div class="badge">
-                        <img src="{{ Storage::url($badge->badge_picture) }}" alt="Badge Picture">
+                        <!--img src="{{ Storage::url($badge->badge_picture) }}" alt="Badge Picture"-->
                         <p>{{ $badge->badge_name }}</p>
                     </div>
-                @endforeach --}}
+                @endforeach 
             </div>
         </div>
 
