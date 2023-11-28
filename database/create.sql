@@ -613,15 +613,15 @@ INSERT INTO member (user_id, username, user_email, password, picture, user_birth
 VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0);
 
 INSERT INTO member (username, user_email, password, picture, user_birthdate, user_score)
-VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0),
-       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1999-04-10', 0),
-       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1989-05-23', 0),
-       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1993-12-01', 0),
-       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2005-10-23', 0),
-       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2000-08-24', 0),
-       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2003-08-19', 0);
+VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15', 0),
+       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1999-04-10', 0),
+       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1989-05-23', 0),
+       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1993-12-01', 0),
+       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2005-10-23', 0),
+       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2000-08-24', 0),
+       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2003-08-19', 0);
 
 -- All paswords are 'pass'
 
