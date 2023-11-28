@@ -20,31 +20,33 @@
         </script>    
     @endif    
     <div id="realTimeUpdates">
-        <p>Total Questions: <span id="totalQuestions">{{ $totalQuestions }}</span></p>
-        <p>Questions this week: <span id="questionsLastWeek">{{ $questionsLastWeek }}</span></p>
-        <p>New Users this week: <span id="newUsersLastWeek">{{ $newUsersLastWeek }}</span></p>
+        <span>Total Questions: <b id="totalQuestions">{{ $totalQuestions }}</b></span>
+        <span>Questions this week: <b id="questionsLastWeek">{{ $questionsLastWeek }}</b></span>
+        <span>New Users this week: <b id="newUsersLastWeek">{{ $newUsersLastWeek }}</b></span>
     </div>
 
     @if (Auth::check())
     <a class="button" class="login-button" href="{{ url('/questions/create') }}"> Create a question </a> 
     @endif
     <h2>Top Questions</h2>
-    <ul>
+    <ul class="top_questions">
         @foreach ($questions as $question)
          @if($question->content_is_visible)
             <li class="question_card">
 
                 <div class="question_user_container">
-                    <a href="{{ route('member.show', $question->author) }}"> <!-- route('member.show', $question->author) -->
+                    <a href="{{ route('member.show', $question->author) }}">
                         <div class="question_user_photo">
                             <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
-                    <p><b>{{ $question->author->username ?? 'Unknown' }}</b></p>
+                    <a href="{{ route('member.show', $question->author) }}">
+                        <p><b>{{ $question->author->username ?? 'Unknown' }}</b></p>
+                    </a>
                 </div>
                 
                 <div class="top_questions_tittle">
-                    <a href="{{ route('questions.show', $question->question_id) }}"> <h3>{{ $question->question_title }}</h3></a>     
+                    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ route('questions.show', $question->question_id) }}"> <h3>{{ $question->question_title }}</h3></a>     
                     <a class="more_details" href="{{ route('questions.show', $question->question_id) }}"> more details</a>           
                 </div>
                 <div class="top_questions_n_answers">

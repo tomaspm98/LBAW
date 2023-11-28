@@ -9,6 +9,15 @@
     margin-bottom: 2px;
 }
 
+#realTimeUpdates{
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: solid black 1px;
+    margin-bottom: 20px;
+}
+
 .question_user_container{
     /* background-color: blue; */
     text-align: center;
@@ -34,6 +43,10 @@
 .top_questions_tittle{
     width: 60%;
     /* background-color: blue; */
+}
+
+.top_questions{
+    padding-left: 0;
 }
 
 .top_questions_n_answers, .top_questions_votes{

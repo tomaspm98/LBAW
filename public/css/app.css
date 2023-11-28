@@ -194,20 +194,26 @@ input[type=password]:focus {
 /*NAVBAR*/
 
 nav{
-  background-color: rgb(237, 237, 237);
+  background-color: rgb(221, 221, 221);
   display: flex;  
-  justify-content: space-between;
+  justify-content:space-evenly;
   padding: 5px;
   border-top: solid 2.5px #0f4aa8;
   align-items: center;
-  border-bottom: 1px black solid;
+  /* border-bottom: 1px black solid; */
   margin-bottom: 20px;
   /* box-shadow: 0px 1px 4px black; */
 }
 
+.nav_buttons{
+  justify-content: right;
+  padding-right: 100px;
+}
+
 nav h1{
-  font-size: 3rem;
+  font-size: 2rem;
   margin: 0px;
+  padding-left: 15px;
 }
   
 .nav_logo{
@@ -215,29 +221,34 @@ nav h1{
   /* background-color: blue; */
 }
 
-.search_container form{
+.nav_search_container form{
   display: flex;
   margin: 0px;
+  margin-left: 100px;
 }
 
-.search_container{
-  width: 40%;
+.nav_search_container{
+  width:100%;
+  margin-left: 20px;
+  margin-right: 20px;
+
 }
 
-.search_container button{
+.nav_search_container button{
   border: none;
   margin: 0px;
 }
 
-.search_container input{
+.nav_search_container input{
   background-color: rgb(245, 245, 245);
   margin: 0px;
+  margin-right: 5px;
   border: 1px solid black;
-  margin-right: 10px;
 }
 
-.search_container input:focus{
+.nav_search_container input:focus{
   background-color: white;  
+  box-shadow: none;
 }
 
 .nav_buttons_container{
