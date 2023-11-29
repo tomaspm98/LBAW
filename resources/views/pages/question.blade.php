@@ -35,7 +35,7 @@ use App\Models\Moderator;
                 <div class="content_left_container">
                     <a href=""> <!-- route('member.show', $question->author) -->
                         <div class="content_user_profile_photo">
-                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username }}</b></p>
@@ -47,7 +47,7 @@ use App\Models\Moderator;
                     @else
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
-                    @if (Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    @if (Auth::check()  && Moderator::where('user_id', Auth::user()->user_id)->exists())
                     <button id="editTagButton">Edit Tag</button>
                         {{-- Create a button to change the tag of the question here --}}
 
@@ -177,7 +177,7 @@ use App\Models\Moderator;
                 <div class="content_left_container">
                     <a href="">
                         <div class="content_user_profile_photo">
-                            <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            <img src="{{ asset($answer->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$answer->author->username }}</b></p>
@@ -274,7 +274,7 @@ use App\Models\Moderator;
                 <div class="content_left_container">
                     <a href="">
                       <div class="content_user_profile_photo">
-                        <img src="{{ Storage::url($comment->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                        <img src="{{ asset($comment->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$comment->author->username }}</b></p>

@@ -5,7 +5,7 @@
 
         <div class="profile-header">
             <h2><strong>{{ $member->username }} Profile Page</strong></h2>
-            <img class="profile-picture" src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+            <img class="profile-picture" src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
         </div>
         
         <div class="profile-details">
