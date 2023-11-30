@@ -44,7 +44,7 @@ class ReportController extends Controller{
     }
 
     public function createReportQuestion(Request $request, $question_id) {
-        // Process the submitted report data
+        $this->authorize('create', Report::class);
 
         $validatedData = $request->validate([
             'report_reason' => 'required|string',
@@ -59,6 +59,8 @@ class ReportController extends Controller{
     }
 
     public function createReportAnswer(Request $request, $answer_id) {
+
+        $this->authorize('create', Report::class);
 
         $validatedData = $request->validate([
             'report_reason' => 'required|string',
@@ -77,6 +79,8 @@ class ReportController extends Controller{
 
     public function createReportComment(Request $request, $comment_id) {
 
+        $this->authorize('create', Report::class);
+
         $validatedData = $request->validate([
             'report_reason' => 'required|string',
             'report_text' => 'nullable|string',
@@ -91,6 +95,17 @@ class ReportController extends Controller{
         $comment = Comment::find($report->content_reported_comment);
 
         return redirect()->route('questions.show', ['question_id' => $comment->answer->question->question_id])->with('success', 'Report created successfully');
+    }
+
+    public function assign(Request $request, Report $report)
+    {
+        $this->authorize('assign', Report::class);
+        $user = auth()->user(); 
+        $report->report_handler = $user->user_id;
+        $report->save();
+        
+        return redirect()->route('report.view', [ 'report_id' => $report->report_id])
+            ->with('success', 'Report assigned to you successfully.');
     }
 
 

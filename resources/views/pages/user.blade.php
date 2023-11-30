@@ -1,3 +1,8 @@
+<?php
+use App\Models\UserBadge;
+?>	
+
+
 @extends('layouts.app')
 
 @section('content')
@@ -26,14 +31,16 @@
         </div>
 
         <div classs="badges-section">
-            <h3>Badges:</h3>
+            <h3><b>Badges:</b></h3>
             <div class="badges">
-                {{-- @foreach ($member->badges as $badge)
-                    <div class="badge">
-                        <img src="{{ Storage::url($badge->badge_picture) }}" alt="Badge Picture">
-                        <p>{{ $badge->badge_name }}</p>
-                    </div>
-                @endforeach --}}
+            @php $userbadges = UserBadge::where('user_id', $member->user_id)->get() @endphp
+            @forEach ($userbadges as $userbadge)
+                <div class="badge-unique" >
+                    <b>badge name: </b>{{ $userbadge->badge->badge_name }}
+                    <b>badge description: </b>{{ $userbadge->badge->badge_description }}
+                </div>
+                
+            @endforeach
             </div>
         </div>
 

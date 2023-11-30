@@ -21,12 +21,12 @@ class MemberPolicy
 
     public function edit(Member $authenticatedMember, Member $memberBeingEdited): bool
 {
-    return $authenticatedMember->id === $memberBeingEdited->id;
+    return $authenticatedMember->user_id === $memberBeingEdited->user_id;
 }
 
     public function delete(Member $member): bool
     {
-        return Auth::check()->user_id === $member->user_id;
+        return Auth::user()->user_id === $member->user_id;
     }
 
 }
