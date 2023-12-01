@@ -4,7 +4,7 @@ use App\Models\Moderator;
 
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ url ('/') }}"><h1>QueryStack!</h1></a>
+    <a class="navbar-brand" href="{{ url ('/') }}" ><h1>QueryStack!</h1></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -30,7 +30,6 @@ use App\Models\Moderator;
                 <a class="nav-link" href="{{ url('/register') }}"> Register </a>
             </li>
             @endif
-
 
             @if (Auth::check())
             <li class="nav-item active">
