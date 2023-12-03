@@ -10,7 +10,7 @@ use App\Models\Moderator;
     <div class="container">
 
         <div class="row mt-5">
-            <div class="col-md-3">
+            <div class="col-md-3 w-1">
                 <img class="profile-picture img-fluid" src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
             </div>
             <div class="col-md-9">

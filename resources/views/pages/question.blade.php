@@ -6,7 +6,6 @@ use App\Models\Moderator;
 @section('content')
 
 <div id="success-message" style="display: none">
-
     Report submitted successfully!
 </div>
 
@@ -28,11 +27,18 @@ use App\Models\Moderator;
             }, 5000);
         </script>
     @endif
-    <div class="container">
-        <div class="content_container"> <!--Question-->
-            <div class="content_top_container">
 
-                <div class="content_left_container">
+    <div class="container">
+
+
+
+
+
+        <div> <!--Question-->
+
+            <div class="d-flex flex-column flex-md-row align-items-center mt-4">
+
+                <div class="text-center">
                     <a href=""> <!-- route('member.show', $question->author) -->
                         <div class="content_user_profile_photo">
                             <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
@@ -41,188 +47,100 @@ use App\Models\Moderator;
                     <p><b>{{ $question->author->username }}</b></p>
                 </div>
                 
-                <div class="question_tittle_container">
-                    @if ($question->tag)
-                    <p><strong>Tag:</strong> {{ $question->tag->tag_name }}</p>
-                    @else
-                    <p><strong>Tag:</strong> Not specified</p>
-                    @endif
-                    @if (Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <button id="editTagButton">Edit Tag</button>
-                        {{-- Create a button to change the tag of the question here --}}
+                <div class="question_tittle_container p-3">
 
-                        <div id="tagEditSection" style="display: none;">
-                            <form id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
-                                @csrf
-                                <select name="question_tag">
-                                    @foreach($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit">Save</button>
-                            </form>
-                        </div>
+                    <div class="d-flex flex-column flex-md-row align-items-center">
+                        @if ($question->tag)
+                        <p class="m-0"><strong>Tag:</strong> {{ $question->tag->tag_name }}</p>
+                        @else
+                        <p class="m-0"><strong>Tag:</strong> Not specified</p>
+                        @endif
+                        @if (Moderator::where('user_id', Auth::user()->user_id)->exists())
+                        <button id="editTagButton" class="btn btn-warning p-1 mx-4">Edit Tag</button>
+                            {{-- Create a button to change the tag of the question here --}}
 
-                    @endif
+                            <div id="tagEditSection" style="display: none;">
+                                <form class="d-flex align-items-center m-0" id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
+                                    @csrf
+                                    <select class="border rounded p-1 mx-1" name="question_tag">
+                                        @foreach($tags as $tag)
+                                            <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-success p-1" type="submit">Save</button>
+                                </form>
+                            </div>
 
-                    <h1>{{ $question->question_title }}</h1>
+                        @endif
+                    </div>
+
+                    <h2>{{ $question->question_title }}</h2>
                     <p>
-                        <strong>Created at: </strong>{{$question->content_creation_date}}
+                        <strong>Created at: </strong>{{\Carbon\Carbon::parse($question->content_creation_date)->format('Y-m-d')}}
+                        @if($question->content_is_edited)
+                        <br>
+                        <span class="text-warning">edited</span>
+                        @endif
                     </p>
                 </div>
-
-                @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
-                <div class="content_right_container"> 
-                <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                </form>
-                    <form method="GET" action="{{ route('questions.edit', $question->question_id) }}">
-                        @csrf
-                        @method('GET')
-                        <button> 
-                            Edit
-                        </button>
-                    </form>    
-                </div>
-                @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                <div class="content_right_container"> 
-                    <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                    </form>
-                </div>
-
-                @else
-
-                <div>
-                    <button class="button_report" id="showReportForm"> 
-                        Report
-                    </button>
-                    <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
-                        <div class="form-group"> 
-                            @csrf
-                            <select name="report_reason" id="report_reason" required>
-                                <option value="" disabled selected>Select reason</option>
-                                <option value="spam">Spam</option>
-                                <option value="offensive">Offensive</option>
-                                <option value="Rules Violation">Rules Violation</option>
-                                <option value="Inappropriate tag">Inappropriate tag</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="report_text">Question Content</label>
-                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                        </div>
-                        <button type="submit" class="button_report" onclick="showNotification()">Submit Report</button>
-                    </form>
-                </div>
-                
-                @endif
 
             </div>
 
-            <div class="content_bottom_container">
 
-                <div class="content_left_container">    
 
-                </div>
-                
-                <div class="content_text_container">
-                    <h3>{{ $question->content_text }}</h3>
-                    @if($question->content_is_edited)
-                    <p>edited</p>
-                    @endif
-                </div>
 
-                <div class="content_right_container"> 
-                <form action="{{ route('votes.voteQuestion', ['question_id' => $question->question_id]) }}" method="POST">
-                    @csrf
-                    @php $userVote = $question->userVote; @endphp
-                    <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                    <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
-                </form>
-                    <p><b>{{$question->vote_count}}</b></p>
-                </div>
-            </div>
-        </div>
 
-        <div>
-            <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
-                @csrf
-                <div class="form-group">
-                    <label for="content_text">Post Answer:</label>
-                    <textarea class="form-control" id="content_text" name="content_text" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Post Answer</button>
-            </form>
 
-        @if($question->answer_count !== 1)
-        <br><h3>{{ $question->answer_count }} Answers: </h3>
-        @else
-        <br><h3>{{ $question->answer_count }} Answer: </h3>
-        @endif
-        @foreach ($question->answers as $answer)
-        @if ($answer->content_is_visible)
-        <div class="content_text_container">
-            @if($answer->content_is_edited)
-            <p>edited</p>
-            @endif
-        </div>
-        <div class="content_container">
-            <div class="content_top_container">
 
-                <div class="content_left_container">
-                    <a href="">
-                        <div class="content_user_profile_photo">
-                            <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
-                        </div>
-                    </a>
-                    <p><b>{{$answer->author->username }}</b></p>
-                </div>
-                
-                <div class="content_text_container">
-                    <p>
-                        <h3>{{ $answer->content_text }}</h3>
-                    </p>
-                    <p>
-                        <strong>Created at: </strong>{{$answer->content_creation_date}}
-                    </p>
-                </div>
 
-                @if(Auth::check() && Auth::id()===$answer->content_author) <!-- TODO: restrict access only for owner -->
-                <div class="content_right_container"> 
-                    <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+            <div class="content_bottom_container d-flex">
+
+                <div id="action_buttons" class="text-center p-2">
+                    <form action="{{ route('votes.voteQuestion', ['question_id' => $question->question_id]) }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
-                    </form>
-                    <form method="GET" action="{{ route('answers.edit', [$question->question_id, $answer->answer_id]) }}">
-                        @csrf
-                        <button> 
-                            Edit
+                        @php $userVote = $question->userVote; @endphp
+                        <button type="submit" name="upvote" value="up" class="btn p-2 rounded-top-5 {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">
+                            <i class="bi bi-hand-thumbs-up"></i> <!--like-->
                         </button>
-                    </form> 
-                    @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                        <p class="mt-3"><b>{{$question->vote_count}}</b></p>
+                        <button type="submit" name="upvote" value="down" class="btn p-2 rounded-bottom-5 {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">
+                            <i class="bi bi-hand-thumbs-down"></i> <!--dislike-->
+                        </button>
+                    </form>
+
+                        
+                    @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
                     <div class="content_right_container"> 
-                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                        <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">Delete</button>
+                            <button class="btn btn-outline-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                         </form>
-                    </div> 
-                    @else 
+                        <form method="GET" action="{{ route('questions.edit', $question->question_id) }}">
+                            @csrf
+                            @method('GET')
+                            <button class="btn btn-outline-warning"> Edit </button>
+                        </form>    
+                    </div>
+                    @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    <div class="content_right_container"> 
+                        <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+                        </form>
+                    </div>
+
+                    @else
 
                     <div>
-                        <button class="button_report" id="showReportAnswerForm"> 
+                        <button class="button_report" id="showReportForm"> 
                             Report
                         </button>
-                        <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
+                        <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
                             <div class="form-group"> 
                                 @csrf
-                                <select name="report_reason" id="report_reason_answer" required>
+                                <select name="report_reason" id="report_reason" required>
                                     <option value="" disabled selected>Select reason</option>
                                     <option value="spam">Spam</option>
                                     <option value="offensive">Offensive</option>
@@ -234,62 +152,172 @@ use App\Models\Moderator;
                                 <label for="report_text">Question Content</label>
                                 <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
                             </div>
-                            <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
+                            <button type="submit" class="button_report" onclick="showNotification()">Submit Report</button>
                         </form>
                     </div>
-    
-                
-                @endif    
-                    <div>
-                        <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
-                            @csrf
-                            @php $userVote = $answer->userVote; @endphp
-                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
-                        </form>
-                    </div>
-                    <p><b>{{$answer->vote_count}}</b></p>
+                    
+                    @endif
                 </div>
+            
+                <div class="content_text_container border-bottom bg-light w-100 p-2">
+                    <p>{{ $question->content_text }}</p>
+                </div>
+                
             </div>
+
+
         </div>
-        <div class="comment_form_container">
-        <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
+
+
+
+
+
+
+        <div>
+            <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
                 @csrf
                 <div class="form-group">
-                    <label for="comment_content_text_{{ $answer->answer_id }}">Post Comment:</label>
-                    <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required></textarea>
+                    <label for="content_text">Post Answer:</label>
+                    <textarea class="form-control" id="content_text" name="content_text" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Post Comment</button>
+                <button type="submit" class="btn btn-primary">Post Answer</button>
             </form>
-        </div>    
-        @foreach ($answer->comments as $comment)
-        @if ($comment->content_is_visible)
-        <div class="content_text_container">
-                    @if($comment->content_is_edited)
-                    <p>edited</p>
-                    @endif
-        </div>
-        <div class="comment_container">
-            <div class="content_top_container">
-                <div class="content_left_container">
-                    <a href="">
-                      <div class="content_user_profile_photo">
-                        <img src="{{ Storage::url($comment->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
-                        </div>
-                    </a>
-                    <p><b>{{$comment->author->username }}</b></p>
-                </div>
-                
-                <div class="content_text_container">
-                    <p>
-                        <h4>Comment : {{ $comment->content_text }}</h4>
-                    </p>
-                    <p>
-                        <strong>Created at: </strong>{{$comment->content_creation_date}}
-                    </p>
-                </div>
 
-                @if(Auth::check() && Auth::id()===$comment->content_author) <!-- TODO: restrict access only for owner -->
+            @if($question->answer_count !== 1)
+            <br><h3>{{ $question->answer_count }} Answers: </h3>
+            @else
+            <br><h3>{{ $question->answer_count }} Answer: </h3>
+            @endif
+
+            @foreach ($question->answers as $answer)
+            @if ($answer->content_is_visible)
+            <div class="content_text_container">
+                @if($answer->content_is_edited)
+                <p>edited</p>
+                @endif
+            </div>
+
+            <div class="content_container">
+                <div class="content_top_container">
+
+                    <div class="content_left_container">
+                        <a href="">
+                            <div class="content_user_profile_photo">
+                                <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            </div>
+                        </a>
+                        <p><b>{{$answer->author->username }}</b></p>likesubmit
+                    </div>
+                    
+                    <div class="content_text_container">
+                        <p>
+                            <h3>{{ $answer->content_text }}</h3>
+                        </p>
+                        <p>
+                            <strong>Created at: </strong>{{$answer->content_creation_date}}
+                        </p>
+                    </div>
+
+                    @if(Auth::check() && Auth::id()===$answer->content_author) <!-- TODO: restrict access only for owner -->
+                    <div class="content_right_container"> 
+                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                        <form method="GET" action="{{ route('answers.edit', [$question->question_id, $answer->answer_id]) }}">
+                            @csrf
+                            <button> 
+                                Edit
+                            </button>
+                        </form> 
+                        @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                        <div class="content_right_container"> 
+                            <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-outline-danger" type="submit">Delete</button>
+                            </form>
+                        </div> 
+                        @else 
+
+                        <div>
+                            <button class="button_report" id="showReportAnswerForm"> 
+                                Report
+                            </button>
+                            <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
+                                <div class="form-group"> 
+                                    @csrf
+                                    <select name="report_reason" id="report_reason_answer" required>
+                                        <option value="" disabled selected>Select reason</option>
+                                        <option value="spam">Spam</option>
+                                        <option value="offensive">Offensive</option>
+                                        <option value="Rules Violation">Rules Violation</option>
+                                        <option value="Inappropriate tag">Inappropriate tag</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="report_text">Question Content</label>
+                                    <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                                </div>
+                                <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
+                            </form>
+                        </div>
+        
+                    
+                        @endif    
+                        <div>
+                            <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
+                                @csrf
+                                @php $userVote = $answer->userVote; @endphp
+                                <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                                <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            </form>
+                        </div>
+                        <p><b>{{$answer->vote_count}}</b></p>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="comment_form_container">
+                <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="comment_content_text_{{ $answer->answer_id }}">Post Comment:</label>
+                        <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+            </div>    
+            @foreach ($answer->comments as $comment)
+            @if ($comment->content_is_visible)
+            <div class="content_text_container">
+                        @if($comment->content_is_edited)
+                        <p>edited</p>
+                        @endif
+            </div>
+
+            <div class="comment_container">
+                <div class="content_top_container">
+                    <div class="content_left_container">
+                        <a href="">
+                            <div class="content_user_profile_photo">
+                                <img src="{{ Storage::url($comment->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            </div>
+                        </a>
+                        <p><b>{{$comment->author->username }}</b></p>
+                    </div>
+                    
+                    <div class="content_text_container">
+                        <p>
+                            <h4>Comment : {{ $comment->content_text }}</h4>
+                        </p>
+                        <p>
+                            <strong>Created at: </strong>{{$comment->content_creation_date}}
+                        </p>
+                    </div>
+
+                    @if(Auth::check() && Auth::id()===$comment->content_author) <!-- TODO: restrict access only for owner -->
                     <div class="content_right_container"> 
                         <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                             @csrf
@@ -307,33 +335,33 @@ use App\Models\Moderator;
                     <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit">Delete</button>
+                        <button class="btn btn-outline-danger" type="submit">Delete</button>
                     </form>
-                @else
-                <div>
-                    <button class="button_report" id="showReportCommentForm"> 
-                        Report Comment {{ $comment->answer->answer_id }}
-                    </button>
-                    <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
-                        <div class="form-group"> 
-                            @csrf
-                            <select name="report_reason" id="report_reason_comment" required>
-                                <option value="" disabled selected>Select reason</option>
-                                <option value="spam">Spam</option>
-                                <option value="offensive">Offensive</option>
-                                <option value="Rules Violation">Rules Violation</option>
-                                <option value="Inappropriate tag">Inappropriate tag</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="report_text">Question Content</label>
-                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                        </div>
-                        <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
-                    </form>
-                </div>
-  
-                @endif    
+                    @else
+                    <div>
+                        <button class="button_report" id="showReportCommentForm"> 
+                            Report Comment {{ $comment->answer->answer_id }}
+                        </button>
+                        <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
+                            <div class="form-group"> 
+                                @csrf
+                                <select name="report_reason" id="report_reason_comment" required>
+                                    <option value="" disabled selected>Select reason</option>
+                                    <option value="spam">Spam</option>
+                                    <option value="offensive">Offensive</option>
+                                    <option value="Rules Violation">Rules Violation</option>
+                                    <option value="Inappropriate tag">Inappropriate tag</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="report_text">Question Content</label>
+                                <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                            </div>
+                            <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
+                        </form>
+                    </div>
+    
+                    @endif    
                     <div>
                         <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}" method="POST">
                             @csrf
@@ -344,13 +372,12 @@ use App\Models\Moderator;
                     </div>
                     <p><b>{{$comment->vote_count}}</b></p>
                 </div>
+                @endif
+                @endforeach
+                @endif
+                @endforeach    
             </div>
         </div>
-        @endif
-        @endforeach
-        <hr>
-        @endif
-        @endforeach    
     </div>
     @else
      <?php abort(404); ?>
