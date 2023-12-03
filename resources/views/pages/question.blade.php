@@ -167,9 +167,9 @@ use App\Models\Moderator;
         @foreach ($question->answers as $answer)
         @if ($answer->content_is_visible)
         <div class="content_text_container">
-                    @if($answer->content_is_edited)
-                    <p>edited</p>
-                    @endif
+            @if($answer->content_is_edited)
+            <p>edited</p>
+            @endif
         </div>
         <div class="content_container">
             <div class="content_top_container">
