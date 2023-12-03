@@ -26,7 +26,7 @@ use App\Models\Admin;
 
         <!-- Bootstrap -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <!-- jQuery, Popper.js and Bootstrap scripts-->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
@@ -64,13 +64,24 @@ use App\Models\Admin;
                 @yield('content')
             </section>
         </main>
-        <footer>
-            <p class="site-moto">The best Q&A Platform for thechnology questions</p>
-            <p>&copy; Query Stack!</p>
-            <div class="site-map">
-                <a class="button" href="{{ route('about') }}"> About </a>
-                <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
+        <footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <p class="site-motto mb-0">The best Q&A Platform for technology questions</p>
             </div>
-        </footer>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="d-flex justify-content-center justify-content-md-end">
+                    <p class="mb-0">&copy; Query Stack!</p>
+                    <div class="site-map ms-3">
+                        <a class="btn btn-outline-light me-2 mb-md-0" href="{{ route('about') }}">About</a>
+                        <a class="btn btn-outline-light" href="{{ route('about') }}#platform-contacts">Contacts</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
     </body>
 </html>

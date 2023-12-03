@@ -5,10 +5,12 @@ use App\Models\Moderator;
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{{ url ('/') }}" ><h1>QueryStack!</h1></a>
+
+    @if(\Request::route()->getName() !== "login" && \Request::route()->getName() !== "register")
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
+    @endif
           
     @if(\Request::route()->getName() !== "search")
     <div class="nav_search_container align-items-center">
@@ -26,7 +28,7 @@ use App\Models\Moderator;
             <li class="nav-item active p-1">
                 <a class="nav-link" href="{{ url('/login') }}"> Login </a> 
             </li>    
-            <li class="nav-item active">
+            <li class="nav-item active p-1">
                 <a class="nav-link" href="{{ url('/register') }}"> Register </a>
             </li>
             @endif

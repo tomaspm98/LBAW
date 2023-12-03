@@ -1,17 +1,29 @@
 @extends('layouts.app')
 
+<?php 
+use App\Models\Admin; 
+use App\Models\Moderator; 
+
+?>
+
 @section('content')
     <div class="container">
 
         <div class="profile-header">
-            <h2><strong>{{ $member->username }} Profile Page</strong></h2>
+            <h2>Profile Page</h2>
+            <h3><strong>{{ $member->username }}
+            @if (Auth::check() && Admin::where('user_id', Auth::user()->user_id)->exists() )
+                <i title="Admin" class="bi bi-patch-check-fill text-primary"></i></p></strong>
+            @endif
+            </h3>
+
             <img class="profile-picture" src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
         </div>
         
         <div class="profile-details">
             <div class="detail-section">
                 <h3>Email:</h3>
-                <p>{{ $member->user_email }}</p>
+                <p>{{ $member->user_email }}
             </div>
 
             <div class="detail-section">
