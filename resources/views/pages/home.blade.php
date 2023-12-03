@@ -21,7 +21,7 @@
         </script>    
     @endif    
 
-    <div class="d-flex flex-column flex-md-row align-items-center justify-content-md-between">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-md-between mt-1">
         <p class="me-3 mb-2 mb-md-0">Total Questions: <b id="totalQuestions">{{ $totalQuestions }}</b></p>
         <p class="me-3 mb-2 mb-md-0">Questions this week: <b id="questionsLastWeek">{{ $questionsLastWeek }}</b></p>
         <p class="me-3 mb-2 mb-md-0">New Users this week: <b id="newUsersLastWeek">{{ $newUsersLastWeek }}</b></p>

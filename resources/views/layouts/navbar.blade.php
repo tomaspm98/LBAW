@@ -16,7 +16,7 @@ use App\Models\Moderator;
     <div class="nav_search_container align-items-center">
         <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
         <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-success text-dark my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
         </form>
     </div>
     @endif
