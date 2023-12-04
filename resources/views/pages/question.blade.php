@@ -10,6 +10,11 @@ use App\Models\Moderator;
     Report submitted successfully!
 </div>
 
+<div id="correct-answer" class="popup-message" style="display: none">
+
+    Answer marked as correct!
+</div>
+
 
 @if ($question->content_is_visible)
     @if (session('error'))
@@ -192,7 +197,7 @@ use App\Models\Moderator;
                     </p>
                 </div>
 
-                @if(Auth::check() && Auth::id()===$answer->content_author) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$answer->content_author) 
                 <div class="content_right_container"> 
                     <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
                         @csrf
@@ -236,10 +241,18 @@ use App\Models\Moderator;
                             </div>
                             <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
                         </form>
+                    </div>  
+                    @endif     
+                    @if (Auth::check() && Auth::id() === $question->content_author) 
+                    <div class="correct_answer">
+                        <form action="{{ route('answers.correct', ['question_id' => $question->question_id, 'answer_id' => $answer -> answer_id]) }}" method="POST">
+                            @csrf
+                            @php $correct = $question->correct_answer; @endphp
+                            <button type="submit" onclick="showSuccessMessage()" class="btn {{ $correct && $correct == $answer->answer_id ? 'btn-cor_answer' : 'btn-primary' }}">Mark as Correct</button>
+                        </form>
                     </div>
-    
-                
-                @endif    
+                    @endif
+      
                     <div>
                         <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
                             @csrf
@@ -464,8 +477,19 @@ function showNotificationComment() {
         }, 3000);
     }   
 
+    function showSuccessMessage() {
+    var notification = document.getElementById('correct-answer');
+    notification.style.display = 'block';
+
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 3000); 
+}    
+
 
 </script>
+
+
 
 
 
