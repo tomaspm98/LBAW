@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\QuestionUpdated;
 use App\Models\Member;
 use Carbon\Carbon;
+use App\Models\UserFollowQuestion;
 use App\Models\Tag;
 
 
@@ -117,5 +118,26 @@ class QuestionController extends Controller
         $question = Question::create($validatedData);
 
         return redirect()->route('questions.show', ['question_id' => $question->question_id])->with('success', 'Question created successfully');
+    }
+
+    public function followQuestion(Request $request, $question_id)
+    {
+        $question = Question::findOrFail($question_id);
+        $user_id = Auth::user()->user_id;
+        $follow = UserFollowQuestion::where('user_id', $user_id)
+                                    ->where('question_id', $question_id)
+                                    ->first();
+        $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); 
+
+        if ($follow) {
+            $validatedData['follow'] = false;
+            $follow->update($validatedData);
+            return response()->json(['isFollowing' => $isFollowing]);
+        } else {
+            $validatedData['user_id'] = $user_id;
+            $validatedData['question_id'] = $question_id;
+            $validatedData['follow'] = true;
+            $follow_create = UserFollowQuestion::create($validatedData);
+            return response()->json(['isFollowing' => $isFollowing]);        }                            
     }
 }

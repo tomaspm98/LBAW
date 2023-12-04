@@ -1,5 +1,6 @@
 <?php 
 use App\Models\Moderator;
+use App\Models\UserFollowQuestion;
 ?>
 @extends('layouts.app')
 
@@ -52,6 +53,12 @@ use App\Models\Moderator;
                     @else
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
+                    <div>
+                    @php $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); @endphp    
+                    <button id="followQuestionButton" data-question-id="{{ $question->question_id }}">
+                        {{ $isFollowing ? 'Unfollow' : 'Follow' }} Question
+                    </button>
+                    </div>
                     @if (Auth::check()  && Moderator::where('user_id', Auth::user()->user_id)->exists())
                     <button id="editTagButton">Edit Tag</button>
                         {{-- Create a button to change the tag of the question here --}}
@@ -485,6 +492,32 @@ function showNotificationComment() {
         notification.style.display = 'none';
     }, 3000); 
 }    
+
+document.addEventListener("DOMContentLoaded", function() {
+    const followButton = document.getElementById('followQuestionButton');
+    followButton.addEventListener('click', function() {
+        const questionId = this.getAttribute('data-question-id');
+        const url = `/questions/${questionId}/follow`; // The route you defined
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRF token
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ question_id: questionId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update button text based on the response
+            followButton.textContent = data.isFollowing ? 'Unfollow Question' : 'Follow Question';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+
 
 
 </script>
