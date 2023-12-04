@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Edit Profile</h1>
-        <form action="{{ route('user.update', $member->user_id) }}" method="POST">
+        <form action="{{ route('user.update', $member->user_id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -33,6 +33,12 @@
             <div class="form-group">
                 <label for="user_birthdate">Birthdate</label>
                 <input type="date" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
+            </div>
+
+
+            <div class="form-group">
+                <label for="picture">Profile Picture</label>
+                <input type="file" class="form-control" id="picture" name="picture">
             </div>
 
             @if ($errors->any())

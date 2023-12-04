@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 
 class UserController extends Controller
@@ -51,7 +52,9 @@ class UserController extends Controller
             'username' => 'nullable|string|max:255|unique:member,username,' . $user_id . ',user_id',
             'user_email' => 'nullable|email|unique:member,user_email,' . $user_id . ',user_email',
             'user_password' => 'nullable|string|max:255|confirmed',
-            'user_birthdate' => 'nullable|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d'), Carbon::parse($request->user_birthdate)->toDateTimeString()
+            'user_birthdate' => 'nullable|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d'), Carbon::parse($request->user_birthdate)->toDateTimeString(),
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Adjust max file size as needed
+
         ],
 
         [ // Custom error messages
@@ -76,12 +79,30 @@ class UserController extends Controller
             'user_birthdate.before_or_equal' => 'The birthdate must be at least 12 years ago.',
         ]);
 
-
-        $member = Member::findOrFail($user_id);
-        $check = Auth::user();        
         $attributes = array_filter($request->all());
+        unset($attributes['picture']);
+        if ($request->hasFile('picture')) {
+            $file = $request->file('picture');
+            $filename = 'profile_picture.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("pictures/{$memberBeingEdited->username}", $filename);
+
+
+            // Delete the previous picture if it exists
+            if ($memberBeingEdited->picture) {
+                Storage::delete($memberBeingEdited->picture);
+            }
+
+            $request->merge(['picture' => $path]);
+
+            
+            $attributes['picture'] = $path;
+        }
+
+
+        //dd($attributes);
+        // $attributes = array_filter($request->all());
         
-        $member->update($attributes);
+        $memberBeingEdited->update($attributes);
 
         return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
     }
