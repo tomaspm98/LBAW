@@ -2,12 +2,30 @@
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Comment;
+use App\Models\Member;
 ?>
 
 @extends('layouts.app')
 
 @section('content')
-    <div class="container report-container">
+
+<div id="success-message" style="display: none">
+
+    Report assigned successfully!
+</div>
+
+<div class="container report-container">
+    @if(!$report->handler) 
+        <form method="POST" action="{{ route('reports.assign', $report->report_id) }}">
+            @csrf
+            <button type="submit" class="btn btn-primary" onclick="showSuccess()">Assign to Me</button>
+        </form> 
+    @else
+        @php $handler = Member::find($report->report_handler) @endphp
+        <div class="report-handler">
+            <h4>Report handler: {{ $handler->username }}</h4>
+        </div>
+    @endif
         <h2><strong>Report Creator: {{ $report->creator->username ?? 'unknown' }}</strong></h2>
         <div class="report-details">
             <br>
@@ -47,4 +65,18 @@ use App\Models\Comment;
             @endif
         </div>
     </div>
+<script>
+function showSuccess(){
+    var notification = document.getElementById('success-message');
+        notification.style.display = 'block';
+
+        setTimeout(function() {
+            notification.style.display = 'none';
+        }, 3000);
+    
+}
+
+</script>
+
+
 @endsection

@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoteController;
 use App\Events\QuestionUpdated;
+use App\Http\Controllers\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -112,15 +113,15 @@ Route::controller(UserController::class)->group(function(){
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
 
-// REPORTS
-Route::get('/reports', [App\Http\Controllers\ReportController::class, 'showAllReports'])->name('reports');
-Route::get('report/{report_id}', [App\Http\Controllers\ReportController::class, 'viewReport'])->name('report.view');
-Route::get('report/create/{question_id}', [App\Http\Controllers\ReportController::class, 'createReportQuestion'])->name('report.question');
-
-Route::post('report/create/{answer_id}', [App\Http\Controllers\ReportController::class, 'createReportAnswer'])->name('report.answer');
-
-Route::post('report/create/{answer_id}/{comment_id}', [App\Http\Controllers\ReportController::class, 'createReportComment'])->name('report.comment');
 
 
+Route::controller(ReportController::class)->group(function(){
+    Route::get('/reports', 'showAllReports')->name('reports');
+    Route::get('report/{report_id}', 'viewReport')->name('report.view');
+    Route::get('report/create/{question_id}', 'createReportQuestion')->name('report.question');
+    Route::post('report/create/{answer_id}', 'createReportAnswer')->name('report.answer');
+    Route::post('report/create/{answer_id}/{comment_id}', 'createReportComment')->name('report.comment');
+    Route::post('/reports/{report}/assign', 'assign')->name('reports.assign');
+});
 
 

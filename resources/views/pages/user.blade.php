@@ -1,3 +1,8 @@
+<?php
+use App\Models\UserBadge;
+?>	
+
+
 @extends('layouts.app')
 
 @section('content')
@@ -5,7 +10,7 @@
 
         <div class="profile-header">
             <h2><strong>{{ $member->username }} Profile Page</strong></h2>
-            <img class="profile-picture" src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+            <img class="profile-picture" src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
         </div>
         
         <div class="profile-details">
@@ -26,14 +31,15 @@
         </div>
 
         <div classs="badges-section">
-            <h3>Badges:</h3>
+            <h3><b>Badges:</b></h3>
             <div class="badges">
-                @foreach ($member->badges as $badge)
-                    <div class="badge">
-                        <!--img src="{{ Storage::url($badge->badge_picture) }}" alt="Badge Picture"-->
-                        <p>{{ $badge->badge_name }}</p>
-                    </div>
-                @endforeach 
+            @foreach ($member->badges as $badge)
+                <div class="badge-unique" >
+                    <b>badge name: </b>{{ $badge->badge_name }}
+                    <b>badge description: </b>{{ $badge->badge_description }}
+                </div>
+                
+            @endforeach
             </div>
         </div>
 

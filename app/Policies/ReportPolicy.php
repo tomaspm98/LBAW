@@ -33,4 +33,9 @@ class ReportPolicy
         return Member::where('user_id', Auth::user()->user_id)->exists();
     }
 
+    public function assign(): bool
+    {
+        return Moderator::where('user_id', Auth::user()->user_id)->exists() || Admin::where('user_id', Auth::user()->user_id)->exists();
+    }
+
 }
