@@ -33,11 +33,10 @@ use App\Models\UserBadge;
         <div classs="badges-section">
             <h3><b>Badges:</b></h3>
             <div class="badges">
-            @php $userbadges = UserBadge::where('user_id', $member->user_id)->get() @endphp
-            @forEach ($userbadges as $userbadge)
+            @foreach ($member->badges as $badge)
                 <div class="badge-unique" >
-                    <b>badge name: </b>{{ $userbadge->badge->badge_name }}
-                    <b>badge description: </b>{{ $userbadge->badge->badge_description }}
+                    <b>badge name: </b>{{ $badge->badge_name }}
+                    <b>badge description: </b>{{ $badge->badge_description }}
                 </div>
                 
             @endforeach
