@@ -68,8 +68,6 @@ Route::controller(QuestionController::class)->group(function(){
     Route::delete('questions/{question_id}', 'delete')->name('questions.delete');
     Route::get('questions', 'list')->name('questions.list');
     Route::post('/questions/{question}/updateTag', 'updateTag')->name('questions.updateTag');
-
-
 });
 
 Route::controller(AnswerController::class)->group(function(){
@@ -77,6 +75,7 @@ Route::controller(AnswerController::class)->group(function(){
     Route::get('questions/{question_id}/answers/{answer_id}/edit', 'editShow')->name('answers.edit');
     Route::put('questions/{question_id}/answers/{answer_id}', 'update')->name('answers.update');
     Route::delete('questions/{question_id}/answers/{answer_id}', 'delete')->name('answers.delete');
+    Route::post('questions/{question_id}/answers/{answer_id}/correct', 'correctAnswer')->name('answers.correct');
 });
 
 Route::controller(CommentController::class)->group(function(){
