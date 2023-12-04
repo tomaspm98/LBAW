@@ -364,6 +364,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (editTagButton && tagEditSection) {
         editTagButton.addEventListener('click', function() {
             tagEditSection.style.display = 'block';
+            editTagButton.style.display = 'none';
         });
     }
 });

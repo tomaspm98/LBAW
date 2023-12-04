@@ -122,6 +122,7 @@ Route::controller(ReportController::class)->group(function(){
     Route::post('report/create/{answer_id}', 'createReportAnswer')->name('report.answer');
     Route::post('report/create/{answer_id}/{comment_id}', 'createReportComment')->name('report.comment');
     Route::post('/reports/{report}/assign', 'assign')->name('reports.assign');
+    Route::post('/reports/{report}/close', 'close')->name('report.close');
 });
 
 
