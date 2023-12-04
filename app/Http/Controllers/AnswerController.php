@@ -68,11 +68,16 @@ class AnswerController extends Controller
     public function correctAnswer($question_id, $answer_id)
     {
         //$this->authorize('mark_answer_correct', $question_id);
-        $answer = Answer::findOrFail($answer_id);
+        if (Auth::user()->user_id === Question::findOrFail($question_id)->content_author) {
+            $answer = Answer::findOrFail($answer_id);
 
-        $question = Question::findOrFail($question_id);
-        $validatedData['correct_answer'] = $answer_id;
-        $question->update($validatedData);
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer corrected successfully');
+            $question = Question::findOrFail($question_id);
+            $validatedData['correct_answer'] = $answer_id;
+            $question->update($validatedData);
+            return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer corrected successfully');
+        }
+        else {
+            return redirect()->route('questions.show', ['question_id' => $question_id])->with('error', 'You are not authorized to mark this answer as correct');
+        }
     }
 }

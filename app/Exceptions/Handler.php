@@ -32,14 +32,16 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof AuthorizationException) {
+        if ($exception instanceof AuthorizationException || $exception instanceof MethodNotAllowedHttpException)
             // Flash a message to the session
             Session::flash('error', 'You are not authorized to perform this action.');
     
             // Redirect to a specific route
             return redirect()->route('home');
-        }
+        
+
     
         return parent::render($request, $exception);
     }
 }
+
