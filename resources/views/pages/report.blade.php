@@ -14,6 +14,11 @@ use App\Models\Member;
     Report assigned successfully!
 </div>
 
+<div id="close-success-message" style="display: none">
+
+    Report closed successfully!
+</div>
+
 <div class="container report-container">
     @if(!$report->handler) 
         <form method="POST" action="{{ route('reports.assign', $report->report_id) }}">
@@ -65,6 +70,44 @@ use App\Models\Member;
             @endif
         </div>
     </div>
+
+    @if ($report->report_dealt == 1 )
+        <div class="report-close-info">
+            <h3>Report dealt with</h3>
+            <h4> <strong>Punished:</strong> {{ $report->report_accepted == 1 ? 'YES' : 'NO' }}</h4>
+            <h4><strong>Comment: </strong>{{ $report->report_answer }}</h4>
+            
+        </div>
+
+
+    @elseif ($report->report_handler == Auth::user()->user_id)
+    <div class="moderator-dealing">
+        <form method="POST" action="{{ route('report.close', ['report' => $report->report_id]) }}" onsubmit="return validateForm()">
+            @csrf
+            @method('POST') <!-- Assuming you're using PATCH method to update -->
+        
+            <label for="punished_yes">
+                <input type="radio" id="punished_yes" name="punished" value="yes" required>
+                Punished
+            </label><br>
+        
+            <label for="punished_no">
+                <input type="radio" id="punished_no" name="punished" value="no" required>
+                Not Punished
+            </label><br>
+        
+            <label for="comment">Brief Comment:</label><br>
+            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br>
+        
+            <input type="submit" value="Submit">
+        </form>
+
+
+
+    </div>
+    @endif
+
+
 <script>
 function showSuccess(){
     var notification = document.getElementById('success-message');
@@ -75,6 +118,35 @@ function showSuccess(){
         }, 3000);
     
 }
+
+function validateForm() {
+    var punishedYes = document.getElementById('punished_yes').checked;
+    var punishedNo = document.getElementById('punished_no').checked;
+    var comment = document.getElementById('comment').value.trim();
+
+    if (!(punishedYes || punishedNo)) {
+        alert("Please select whether the user was punished or not.");
+        return false;
+    }
+
+    if (comment === '') {
+        alert("Please provide a brief comment.");
+        return false;
+    }
+
+    // If all validations pass, display success message for 'success-message-close' div and hide after 3 seconds
+    displaySuccessMessageClose();
+    setTimeout(function() {
+        hideSuccessMessageClose();
+    }, 3000);
+
+
+    // Allow form submission after displaying success message
+    return true;
+}
+
+
+
 
 </script>
 

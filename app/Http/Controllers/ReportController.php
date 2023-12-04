@@ -108,6 +108,21 @@ class ReportController extends Controller{
             ->with('success', 'Report assigned to you successfully.');
     }
 
+    public function close(Request $request, Report $report)
+    {
+        $this->authorize('close', Report::class);
+        
+        // Update the report details based on the form submission
+        $report->report_dealt = true;
+        $report->report_accepted = $request->input('punished') === 'yes' ? true : false;
+        $report->report_answer = $request->input('comment');
+        
+        $report->save();
+    
+        // Add any additional actions or redirects upon closing the report
+        return redirect()->back()->with('success', 'Report has been closed successfully.');
+    }
+
 
 
 

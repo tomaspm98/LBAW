@@ -31,56 +31,59 @@ $moderator = Moderator::find(Auth::user()->user_id);
             <tbody>
                 @foreach($reports as $report)
     <tr>
-        @if($report->content_reported_question)
-                @php $question = Question::find($report->content_reported_question) @endphp
-                @if ($moderator->tag_id === $question->tag->tag_id)
-                <td>{{ $report->creator->username ?? 'unkown' }} </td>
-                <td>{{ $report->report_reason }}</td>
-                <td>{{ $report->report_text }}</td>
-                <td> {{$question->tag->tag_name}} </td>
-                <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
-                @if( $moderator->user_id === $report->report_handler)
-                    <td> TO ME </td>
-                @elseif (!$report->report_handler)
-                    <td> NO </td>
-                @else
-                    <td> TO OTHER </td>
-                @endif
-                @endif
-            @elseif ($report->content_reported_answer)
-                @php $answer = Answer::find($report->content_reported_answer) @endphp
-                @if ($moderator->tag_id === $answer->question->tag->tag_id)
-                <td>{{ $report->creator->username ?? 'unkown' }} </td>
-                <td>{{ $report->report_reason }}</td>
-                <td>{{ $report->report_text }}</td>
-                <td> {{$answer->question->tag->tag_name}} </td>
-                <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
-                @if( $moderator->user_id === $report->report_handler)
-                    <td> TO ME </td>
-                @elseif (!$report->report_handler)
-                    <td> NO </td>
-                @else
-                    <td> TO OTHER </td>
-                @endif
-                @endif
+        @if (!$report->report_dealt)
+            @if($report->content_reported_question)
+                    @php $question = Question::find($report->content_reported_question) @endphp
+                    @if ($moderator->tag_id === $question->tag->tag_id)
+                    <td>{{ $report->creator->username ?? 'unkown' }} </td>
+                    <td>{{ $report->report_reason }}</td>
+                    <td>{{ $report->report_text }}</td>
+                    <td> {{$question->tag->tag_name}} </td>
+                    <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
+                    @if( $moderator->user_id === $report->report_handler)
+                        <td> TO ME </td>
+                    @elseif (!$report->report_handler)
+                        <td> NO </td>
+                    @else
+                        <td> TO OTHER </td>
+                    @endif
+                    @endif
+                @elseif ($report->content_reported_answer)
+                    @php $answer = Answer::find($report->content_reported_answer) @endphp
+                    @if ($moderator->tag_id === $answer->question->tag->tag_id)
+                    <td>{{ $report->creator->username ?? 'unkown' }} </td>
+                    <td>{{ $report->report_reason }}</td>
+                    <td>{{ $report->report_text }}</td>
+                    <td> {{$answer->question->tag->tag_name}} </td>
+                    <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
+                    @if( $moderator->user_id === $report->report_handler)
+                        <td> TO ME </td>
+                    @elseif (!$report->report_handler)
+                        <td> NO </td>
+                    @else
+                        <td> TO OTHER </td>
+                    @endif
+                    @endif
 
-            @elseif ($report->content_reported_comment)
-                @php $comment = Comment::find($report->content_reported_comment) @endphp
-                @if ($moderator->tag_id === $comment->answer->question->tag->tag_id)
-                <td>{{ $report->creator->username ?? 'unkown' }} </td>
-                <td>{{ $report->report_reason }}</td>
-                <td>{{ $report->report_text }}</td>
-                <td> {{$comment->answer->question->tag->tag_name}} </td>
-                <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
-                @if( $moderator->user_id === $report->report_handler)
-                    <td> TO ME </td>
-                @elseif (!$report->report_handler)
-                    <td> NO </td>
-                @else
-                    <td> TO OTHER </td>
+                @elseif ($report->content_reported_comment)
+                    @php $comment = Comment::find($report->content_reported_comment) @endphp
+                    @if ($moderator->tag_id === $comment->answer->question->tag->tag_id)
+                    <td>{{ $report->creator->username ?? 'unkown' }} </td>
+                    <td>{{ $report->report_reason }}</td>
+                    <td>{{ $report->report_text }}</td>
+                    <td> {{$comment->answer->question->tag->tag_name}} </td>
+                    <td><a href=" {{ route('report.view', $report->report_id)}}"> Go to this report </a></td>
+                    @if( $moderator->user_id === $report->report_handler)
+                        <td> TO ME </td>
+                    @elseif (!$report->report_handler)
+                        <td> NO </td>
+                    @else
+                        <td> TO OTHER </td>
+                    @endif
+                    @endif
                 @endif
-                @endif
-            @endif
+        
+        @endif
     </tr>
     
 @endforeach
