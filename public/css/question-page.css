@@ -96,3 +96,11 @@
 
 
  */
+
+
+ /* create answer text area fixed */
+.fixed-height {
+    height: 150px; 
+    resize: none; 
+    overflow-y: auto; 
+}

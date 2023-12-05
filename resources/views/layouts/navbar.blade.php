@@ -16,7 +16,7 @@ use App\Models\Moderator;
     <div class="nav_search_container align-items-center">
         <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
         <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
-        <button class="btn btn-outline-success text-dark my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
+        <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
         </form>
     </div>
     @endif
@@ -66,7 +66,7 @@ use App\Models\Moderator;
                     @endif  
 
                     <div class="dropdown-divider"></div>
-                    <form action="{{ url('/logout') }}" method="post">
+                    <form class="m-0" action="{{ url('/logout') }}" method="post">
                         @csrf
                         <button class="dropdown-item text-danger" type="submit" class="button">Logout</button>
                     </form>
