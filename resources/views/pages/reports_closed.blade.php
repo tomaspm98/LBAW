@@ -13,13 +13,9 @@ $moderator = Moderator::find(Auth::user()->user_id);
 @extends('layouts.app')
 
 @section('content')
-<div class="reports-header">
-    <h1 class="header-title">All Reports</h1>
-    <a class="button" href="{{ route('reports.closed') }}">Closed Reports</a>
-</div>
-
+<h1>All Closed Reports</h1>
 @if($reports->isEmpty())
-    <p class="no-reports">No reports found.</p>
+    <p class="no-reports">No closed reports found.</p>
     @else
         <table>
             <thead>
@@ -35,7 +31,7 @@ $moderator = Moderator::find(Auth::user()->user_id);
             <tbody>
                 @foreach($reports as $report)
     <tr>
-        @if (!$report->report_dealt)
+        @if ($report->report_dealt)
             @if($report->content_reported_question)
                     @php $question = Question::find($report->content_reported_question) @endphp
                     @if ($moderator->tag_id === $question->tag->tag_id)

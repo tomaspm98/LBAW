@@ -23,6 +23,7 @@ use App\Models\Admin;
         <link href="{{ url('css/admin-page.css') }}" rel="stylesheet">
         <link href="{{ url('css/user.css') }}" rel="stylesheet">
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
+        <link href="{{ url('css/tags.css') }}" rel="stylesheet">	
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="text/javascript">

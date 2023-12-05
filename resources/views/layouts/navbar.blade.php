@@ -39,6 +39,7 @@ use App\Models\Moderator;
                 <div class="admin-buttons">
                     <a class="button" href="{{ route('admin.users') }}">Assign Moderator</a>
                     <a class="button" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
+                    <a class="button" href="{{ route('tags.show') }}">Tags</a>
                 </div>
             </div>                   
             @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists() )

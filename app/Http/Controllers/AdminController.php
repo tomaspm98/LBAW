@@ -60,6 +60,14 @@ class AdminController extends Controller
             return redirect()->route('admin.moderators')->with('success', 'User added as a moderator.');
         }
         return "User with ID: $userId is not a moderator.";
-        }
+    }
+
+    public function showAllTags()
+    {
+        $this->authorize('showTags', Admin::class);
+        $tags = Tag::all();
+        return view('pages.tags', ['tags' => $tags]);
+    }
+    
 
 }

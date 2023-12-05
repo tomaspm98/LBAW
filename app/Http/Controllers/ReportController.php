@@ -97,8 +97,9 @@ class ReportController extends Controller{
         return redirect()->route('questions.show', ['question_id' => $comment->answer->question->question_id])->with('success', 'Report created successfully');
     }
 
-    public function assign(Request $request, Report $report)
+    public function assign(Request $request, $report_id)
     {
+        $report = Report::where('report_id', $report_id)->first();
         $this->authorize('assign', Report::class);
         $user = auth()->user(); 
         $report->report_handler = $user->user_id;
@@ -108,19 +109,25 @@ class ReportController extends Controller{
             ->with('success', 'Report assigned to you successfully.');
     }
 
-    public function close(Request $request, Report $report)
+    public function close(Request $request, $report_id)
     {
+        $report = Report::where('report_id', $report_id)->first();
         $this->authorize('close', Report::class);
         
-        // Update the report details based on the form submission
         $report->report_dealt = true;
         $report->report_accepted = $request->input('punished') === 'yes' ? true : false;
         $report->report_answer = $request->input('comment');
         
         $report->save();
     
-        // Add any additional actions or redirects upon closing the report
         return redirect()->back()->with('success', 'Report has been closed successfully.');
+    }
+
+    public function showClosedReports(Request $request)
+    {
+        $this->authorize('showAll', Report::class);
+        $reports = Report::where('report_dealt', true)->get();
+        return view('pages.reports_closed', ['reports' => $reports]);
     }
 
 

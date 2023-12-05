@@ -21,8 +21,8 @@ use App\Models\Member;
 
 <div class="container report-container">
     @if(!$report->handler) 
-        <form method="POST" action="{{ route('reports.assign', $report->report_id) }}">
-            @csrf
+    <form method="POST" action="{{ route('reports.assign', ['report_id' => $report->report_id]) }}">
+        @csrf
             <button type="submit" class="btn btn-primary" onclick="showSuccess()">Assign to Me</button>
         </form> 
     @else
@@ -82,9 +82,9 @@ use App\Models\Member;
 
     @elseif ($report->report_handler == Auth::user()->user_id)
     <div class="moderator-dealing">
-        <form method="POST" action="{{ route('report.close', ['report' => $report->report_id]) }}" onsubmit="return validateForm()">
+        <form method="POST" action="{{ route('report.close', ['report_id' => $report->report_id]) }}" onsubmit="return validateForm()">
             @csrf
-            @method('POST') <!-- Assuming you're using PATCH method to update -->
+            @method('POST') 
         
             <label for="punished_yes">
                 <input type="radio" id="punished_yes" name="punished" value="yes" required>
@@ -97,7 +97,7 @@ use App\Models\Member;
             </label><br>
         
             <label for="comment">Brief Comment:</label><br>
-            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br>
+            <textarea id="comment" name="comment" rows="4" cols="50" required placeholder="Introduce a brief comment on the report"></textarea><br>
         
             <input type="submit" value="Submit">
         </form>
@@ -134,14 +134,12 @@ function validateForm() {
         return false;
     }
 
-    // If all validations pass, display success message for 'success-message-close' div and hide after 3 seconds
     displaySuccessMessageClose();
     setTimeout(function() {
         hideSuccessMessageClose();
     }, 3000);
 
 
-    // Allow form submission after displaying success message
     return true;
 }
 
