@@ -54,10 +54,12 @@ use App\Models\UserFollowQuestion;
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
                     <div>
+                    @if (Auth::check())    
                     @php $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); @endphp    
                     <button id="followQuestionButton" data-question-id="{{ $question->question_id }}">
-                        {{ $isFollowing ? 'Unfollow' : 'Follow' }} Question
+                        {{ $isFollowing ? 'Unfollow Question' : 'Follow Question' }}
                     </button>
+                    @endif
                     </div>
                     @if (Auth::check()  && Moderator::where('user_id', Auth::user()->user_id)->exists())
                     <button id="editTagButton">Edit Tag</button>
@@ -497,8 +499,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const followButton = document.getElementById('followQuestionButton');
     followButton.addEventListener('click', function() {
         const questionId = this.getAttribute('data-question-id');
-        const url = `/questions/${questionId}/follow`; // The route you defined
-
+        const url = `/questions/${questionId}/follow`; 
         fetch(url, {
             method: 'POST',
             headers: {
@@ -510,10 +511,19 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            // Update button text based on the response
-            followButton.textContent = data.isFollowing ? 'Unfollow Question' : 'Follow Question';
+            console.log(data.isFollowing)
+            // Confirm and maintain the UI update
+            if (data.isFollowing) {
+                followButton.textContent = 'Follow Question';
+            } else {
+                followButton.textContent = 'Unfollow Question';
+            }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            followButton.textContent = isCurrentlyFollowing ? 'Unfollow Question' : 'Follow Question';
+            followButton.classList.toggle('btn-following', isCurrentlyFollowing);
+        });
     });
 });
 

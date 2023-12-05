@@ -126,12 +126,23 @@ class QuestionController extends Controller
         $user_id = Auth::user()->user_id;
         $follow = UserFollowQuestion::where('user_id', $user_id)
                                     ->where('question_id', $question_id)
-                                    ->first();
-        $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); 
+                                    ->where('follow', true)
+                                    ->first();      
+        $notFollow = UserFollowQuestion::where('user_id', $user_id)
+                                    ->where('question_id', $question_id)
+                                    ->where('follow', false)
+                                    ->first();                                                     
+        $isFollowing = UserFollowQuestion::where('user_id', $user_id)->where('question_id', $question_id)->where('follow', true)->exists(); 
 
         if ($follow) {
-            $validatedData['follow'] = false;
-            $follow->update($validatedData);
+            UserFollowQuestion::where('user_id', $user_id)
+            ->where('question_id', $question_id)
+            ->update(['follow' => false]);
+            return response()->json(['isFollowing' => $isFollowing]); //ver esta questao pa qnd $follow é false pq n e seguido pelu user (e n pq n esta criado na bd)
+        } else if ($notFollow) {
+            UserFollowQuestion::where('user_id', $user_id)
+            ->where('question_id', $question_id)
+            ->update(['follow' => true]);
             return response()->json(['isFollowing' => $isFollowing]);
         } else {
             $validatedData['user_id'] = $user_id;
