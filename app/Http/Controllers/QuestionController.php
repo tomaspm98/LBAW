@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\QuestionUpdated;
 use App\Models\Member;
 use Carbon\Carbon;
+use App\Models\UserFollowQuestion;
 use App\Models\Tag;
 
 
@@ -117,5 +118,37 @@ class QuestionController extends Controller
         $question = Question::create($validatedData);
 
         return redirect()->route('questions.show', ['question_id' => $question->question_id])->with('success', 'Question created successfully');
+    }
+
+    public function followQuestion(Request $request, $question_id)
+    {
+        $question = Question::findOrFail($question_id);
+        $user_id = Auth::user()->user_id;
+        $follow = UserFollowQuestion::where('user_id', $user_id)
+                                    ->where('question_id', $question_id)
+                                    ->where('follow', true)
+                                    ->first();      
+        $notFollow = UserFollowQuestion::where('user_id', $user_id)
+                                    ->where('question_id', $question_id)
+                                    ->where('follow', false)
+                                    ->first();                                                     
+        $isFollowing = UserFollowQuestion::where('user_id', $user_id)->where('question_id', $question_id)->where('follow', true)->exists(); 
+
+        if ($follow) {
+            UserFollowQuestion::where('user_id', $user_id)
+            ->where('question_id', $question_id)
+            ->update(['follow' => false]);
+            return response()->json(['isFollowing' => $isFollowing]); //ver esta questao pa qnd $follow é false pq n e seguido pelu user (e n pq n esta criado na bd)
+        } else if ($notFollow) {
+            UserFollowQuestion::where('user_id', $user_id)
+            ->where('question_id', $question_id)
+            ->update(['follow' => true]);
+            return response()->json(['isFollowing' => $isFollowing]);
+        } else {
+            $validatedData['user_id'] = $user_id;
+            $validatedData['question_id'] = $question_id;
+            $validatedData['follow'] = true;
+            $follow_create = UserFollowQuestion::create($validatedData);
+            return response()->json(['isFollowing' => $isFollowing]);        }                            
     }
 }
