@@ -222,7 +222,7 @@ use App\Models\Moderator;
 
                     <div>
                         <button class="button_report" id="showReportAnswerForm"> 
-                            Report
+                            Report Answer
                         </button>
                         <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
                             <div class="form-group"> 
@@ -325,7 +325,7 @@ use App\Models\Moderator;
                 @else
                 <div>
                     <button class="button_report" id="showReportCommentForm"> 
-                        Report Comment {{ $comment->answer->answer_id }}
+                        Report Comment 
                     </button>
                     <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
                         <div class="form-group"> 
