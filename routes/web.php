@@ -99,6 +99,8 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/remove', 'showAllModerators')->name('admin.moderators');
     Route::post('add/{userId}', 'addModerator')->name('moderator.add');
     Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
+    Route::get('/tags', 'showAllTags')->name('tags.show');
+
 });
 
 Route::controller(UserController::class)->group(function(){
@@ -120,8 +122,10 @@ Route::controller(ReportController::class)->group(function(){
     Route::get('report/create/{question_id}', 'createReportQuestion')->name('report.question');
     Route::post('report/create/{answer_id}', 'createReportAnswer')->name('report.answer');
     Route::post('report/create/{answer_id}/{comment_id}', 'createReportComment')->name('report.comment');
-    Route::post('/reports/{report}/assign', 'assign')->name('reports.assign');
-    Route::post('/reports/{report}/close', 'close')->name('report.close');
+    Route::post('/reports/{report_id}/assign', 'assign')->name('reports.assign');
+    Route::post('/reports/{report_id}/close', 'close')->name('report.close');
+    Route::get('/closedReports', 'showClosedReports')->name('reports.closed');
 });
 
 
+Route::post('tags/create', [App\Http\Controllers\TagController::class, 'create'])->name('tags.create');
