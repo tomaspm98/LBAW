@@ -119,7 +119,7 @@ Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])-
 Route::controller(ReportController::class)->group(function(){
     Route::get('/reports', 'showAllReports')->name('reports');
     Route::get('report/{report_id}', 'viewReport')->name('report.view');
-    Route::get('report/create/{question_id}', 'createReportQuestion')->name('report.question');
+    Route::post('report/create/{question_id}', 'createReportQuestion')->name('report.question');
     Route::post('report/create/{answer_id}', 'createReportAnswer')->name('report.answer');
     Route::post('report/create/{comment_id}', 'createReportComment')->name('report.comment');
     Route::post('/reports/{report_id}/assign', 'assign')->name('reports.assign');

@@ -106,7 +106,7 @@ use App\Models\Moderator;
                     <button class="button_report" id="showReportForm"> 
                         Report
                     </button>
-                    <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
+                    <form id="reportForm" method="POST" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
                         <div class="form-group"> 
                             @csrf
                             <select name="report_reason" id="report_reason" required>
