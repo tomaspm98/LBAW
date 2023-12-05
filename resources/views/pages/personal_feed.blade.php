@@ -1,41 +1,14 @@
-@extends('layouts.app')
 
-@section('content')
+<div class="container">   
 
-
-<div class="container">
-    @if (session('error'))
-        <div id="errorPopup" class="popup-message">
-            {{ session('error') }}
-        </div>    
-            <script>
-            // Show the popup
-            let popup = document.getElementById('errorPopup');
-            popup.style.display = 'block';
-
-            // Hide the popup after 5 seconds (5000 milliseconds)
-            setTimeout(function() {
-                popup.style.display = 'none';
-            }, 5000);
-        </script>    
-    @endif    
-    <div id="realTimeUpdates">
-        <p>Total Questions: <span id="totalQuestions">{{ $totalQuestions }}</span></p>
-        <p>Questions this week: <span id="questionsLastWeek">{{ $questionsLastWeek }}</span></p>
-        <p>New Users this week: <span id="newUsersLastWeek">{{ $newUsersLastWeek }}</span></p>
-    </div>
-
-    @if (Auth::check())
-    <a class="button" class="login-button" href="{{ url('/questions/create') }}"> Create a question </a> 
-    @endif
-    <h2>Top Questions</h2>
+    <h2>Personal Feed</h2>
     <ul>
-        @foreach ($questions as $question)
+        @foreach ($questions_followed as $question)
          @if($question->content_is_visible)
             <li class="question_card">
 
                 <div class="question_user_container">
-                    <a href="{{ route('member.show', $question->author) }}"> <!-- route('member.show', $question->author) -->
+                    <a href="{{ route('member.show', $question->author) }}"> 
                         <div class="question_user_photo">
                             <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
@@ -62,6 +35,5 @@
             @endif
         @endforeach
     </ul>
-    @include('pages.personal_feed')
+
 </div>
-@endsection
