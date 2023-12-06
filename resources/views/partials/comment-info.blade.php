@@ -75,7 +75,7 @@ use App\Models\Moderator;
             </li>
             
             @else
-            <div class="btn-group dropstart text-danger">
+            <div class="btn-group dropdown text-danger">
                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Report Comment
                 </button>

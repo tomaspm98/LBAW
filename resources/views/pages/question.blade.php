@@ -77,7 +77,7 @@ use App\Models\Moderator;
             @endif
             @endforeach
             <br>
-            <hr>
+            <hr >
             <br>
             @endif
             @endforeach    
@@ -99,17 +99,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const reportButton = document.getElementById('showReportForm');
-    const reportForm = document.getElementById('reportForm');
+// document.addEventListener("DOMContentLoaded", function() {
+//     const reportButton = document.getElementById('showReportForm');
+//     const reportForm = document.getElementById('reportForm');
 
-    reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; 
-        reportForm.style.display = 'block'; 
-    });
+//     reportButton.addEventListener('click', function() {
+//         reportButton.style.display = 'none'; 
+//         reportForm.style.display = 'block'; 
+//     });
 
     
-});
+// });
 
 function showNotification() {
         var reason = document.getElementById("report_reason");

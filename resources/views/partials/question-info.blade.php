@@ -5,7 +5,7 @@ use App\Models\Moderator;
 
 <div> <!--Question-->
 
-    <div class="d-flex flex-column flex-md-row align-items-center mt-4">
+    <div class="d-flex flex-column flex-md-row align-items-center mt-4 position-relative">
 
         <div class="text-center">
             <a href="{{ route('member.show', $question->author) }} " class="text-decoration-none"> <!-- route('member.show', $question->author) -->
@@ -53,6 +53,120 @@ use App\Models\Moderator;
                 @endif
             </p>
         </div>
+
+
+
+
+
+
+
+
+        
+
+
+
+        <div class="dropdown dropleft position-absolute top-0 end-0" >
+            <button class="btn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu">
+
+            @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
+                <li>
+                    <form action="{{ route('questions.delete', $question->question_id) }} " 
+                    method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn dropdown-item text-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+                    </form>
+                </li>
+                <li>
+                    <form method="GET" action="{{ route('questions.edit', $question->question_id) }}" class="m-0">
+                        @csrf
+                        <button class="dropdown-item"> 
+                            Edit
+                        </button>
+                    </form>
+                </li>
+                
+                @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                <li>
+                    <form action="{{ route('questions.delete', $question->question_id) }}" 
+                    method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn dropdown-item text-danger" type="submit" onclick="return confirm('Are you sure you want to delete this question?')">
+                            Delete
+                        </button>
+                    </form>
+                </li>
+                
+                @else
+                <div class="btn-group dropdown text-danger">
+                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Report Question
+                    </button>
+                    <ul class="dropdown-menu p-1" style="width:300px;">
+                                
+                        <form class="p-2" id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}">
+                            <div class="form-group mb-1">
+                                @csrf
+                                <select class="form-select" name="report_reason" id="report_reason" required>
+                                    <option value="" disabled selected>Select reason</option>
+                                    <option value="spam">Spam</option>
+                                    <option value="offensive">Offensive</option>
+                                    <option value="Rules Violation">Rules Violation</option>
+                                    <option value="Inappropriate tag">Inappropriate tag</option>
+                                </select>
+                            </div>
+                            <div class="form-group my-2">
+                                <textarea class="form-control" name="report_text" placeholder="Additional text (optional)" rows="4"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Report</button>
+                        </form>
+
+                    </ul>
+                </div>  
+                @endif    
+
+            </ul>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </div>
 
