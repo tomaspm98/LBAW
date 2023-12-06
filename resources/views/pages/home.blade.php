@@ -62,6 +62,8 @@
             @endif
         @endforeach
     </ul>
-    @include('pages.personal_feed')
+    @if (Auth::check())
+        @include('pages.personal_feed')
+    @endif    
 </div>
 @endsection
