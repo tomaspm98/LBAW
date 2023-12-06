@@ -10,12 +10,12 @@
 
             <div class="form-group">
                 <label for="question_title">Question Title</label>
-                <input type="text" class="form-control" id="question_title" name="question_title" required>
+                <input type="text" class="form-control" placeholder="Question Title.." id="question_title" name="question_title" required>
             </div>
 
             <div class="form-group">
                 <label for="content_text">Question Content</label>
-                <textarea class="form-control" id="content_text" name="content_text" required></textarea>
+                <textarea class="form-control" id="content_text" placeholder="Write your question.."name="content_text" required></textarea>
             </div>
 
             {{-- <div class="form-group">

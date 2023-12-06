@@ -109,8 +109,8 @@ use App\Models\UserFollowQuestion;
                     </form>
                 </div>
 
-                @else
-
+                @endif
+                @if(Auth::check())
                 <div>
                     <button class="button_report" id="showReportForm"> 
                         Report
@@ -168,7 +168,7 @@ use App\Models\UserFollowQuestion;
                 @csrf
                 <div class="form-group">
                     <label for="content_text">Post Answer:</label>
-                    <textarea class="form-control" id="content_text" name="content_text" required></textarea>
+                    <textarea class="form-control" id="content_text" placeholder="Write answer..." name="content_text" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Post Answer</button>
             </form>
@@ -227,8 +227,8 @@ use App\Models\UserFollowQuestion;
                             <button type="submit">Delete</button>
                         </form>
                     </div> 
-                    @else 
-
+                    @endif 
+                    @if (Auth::check())
                     <div>
                         <button class="button_report" id="showReportAnswerForm"> 
                             Report
@@ -279,7 +279,7 @@ use App\Models\UserFollowQuestion;
                 @csrf
                 <div class="form-group">
                     <label for="comment_content_text_{{ $answer->answer_id }}">Post Comment:</label>
-                    <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required></textarea>
+                    <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" placeholder="Write comment..." name="content_text" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Post Comment</button>
             </form>
@@ -331,10 +331,11 @@ use App\Models\UserFollowQuestion;
                         @method('DELETE')
                         <button type="submit">Delete</button>
                     </form>
-                @else
+                    @endif     
+                @if (Auth::check())
                 <div>
                     <button class="button_report" id="showReportCommentForm"> 
-                        Report Comment {{ $comment->answer->answer_id }}
+                        Report
                     </button>
                     <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
                         <div class="form-group"> 
@@ -354,8 +355,8 @@ use App\Models\UserFollowQuestion;
                         <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
                     </form>
                 </div>
-  
-                @endif    
+                @endif
+                   
                     <div>
                         <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}" method="POST">
                             @csrf
