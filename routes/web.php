@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoteController;
 use App\Events\QuestionUpdated;
+use App\Http\Controllers\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,8 +68,7 @@ Route::controller(QuestionController::class)->group(function(){
     Route::delete('questions/{question_id}', 'delete')->name('questions.delete');
     Route::get('questions', 'list')->name('questions.list');
     Route::post('/questions/{question}/updateTag', 'updateTag')->name('questions.updateTag');
-
-
+    Route::post('/questions/{question_id}/follow', 'followQuestion')->name('questions.follow');
 });
 
 Route::controller(AnswerController::class)->group(function(){
@@ -76,6 +76,7 @@ Route::controller(AnswerController::class)->group(function(){
     Route::get('questions/{question_id}/answers/{answer_id}/edit', 'editShow')->name('answers.edit');
     Route::put('questions/{question_id}/answers/{answer_id}', 'update')->name('answers.update');
     Route::delete('questions/{question_id}/answers/{answer_id}', 'delete')->name('answers.delete');
+    Route::post('questions/{question_id}/answers/{answer_id}/correct', 'correctAnswer')->name('answers.correct');
 });
 
 Route::controller(CommentController::class)->group(function(){
@@ -99,6 +100,8 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/remove', 'showAllModerators')->name('admin.moderators');
     Route::post('add/{userId}', 'addModerator')->name('moderator.add');
     Route::delete('remove/{userId}', 'removeModerator')->name('moderator.remove');
+    Route::get('/tags', 'showAllTags')->name('tags.show');
+
 });
 
 Route::controller(UserController::class)->group(function(){
@@ -112,15 +115,18 @@ Route::controller(UserController::class)->group(function(){
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
 
-// REPORTS
-Route::get('/reports', [App\Http\Controllers\ReportController::class, 'showAllReports'])->name('reports');
-Route::get('report/{report_id}', [App\Http\Controllers\ReportController::class, 'viewReport'])->name('report.view');
-Route::get('report/create/{question_id}', [App\Http\Controllers\ReportController::class, 'createReportQuestion'])->name('report.question');
-
-Route::post('report/create/{answer_id}', [App\Http\Controllers\ReportController::class, 'createReportAnswer'])->name('report.answer');
-
-Route::post('report/create/{answer_id}/{comment_id}', [App\Http\Controllers\ReportController::class, 'createReportComment'])->name('report.comment');
 
 
+Route::controller(ReportController::class)->group(function(){
+    Route::get('/reports', 'showAllReports')->name('reports');
+    Route::get('report/{report_id}', 'viewReport')->name('report.view');
+    Route::get('report/create/{question_id}', 'createReportQuestion')->name('report.question');
+    Route::post('report/create/{answer_id}', 'createReportAnswer')->name('report.answer');
+    Route::post('report/create/{answer_id}/{comment_id}', 'createReportComment')->name('report.comment');
+    Route::post('/reports/{report_id}/assign', 'assign')->name('reports.assign');
+    Route::post('/reports/{report_id}/close', 'close')->name('report.close');
+    Route::get('/closedReports', 'showClosedReports')->name('reports.closed');
+});
 
 
+Route::post('tags/create', [App\Http\Controllers\TagController::class, 'create'])->name('tags.create');

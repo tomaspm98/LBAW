@@ -42,7 +42,7 @@
                 <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
                     <a href="{{ route('member.show', $question->author) }}">
                         <div class="question_user_photo">
-                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            <!-- <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo"> -->
                         </div>
                         <div class="mt-2">
                             <p class="mb-0"><b>{{ $question->author->username ?? 'Unknown' }}</b></p>
@@ -53,7 +53,8 @@
                 <div class="col-md-7">
                     <div class="card-body">
                         <div class="top_questions_title">
-                            <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ route('questions.show', $question->question_id) }}"  > 
+                            <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" 
+                            href="{{ route('questions.show', $question->question_id) }}"  > 
                                 <h3>{{ Str::limit($question->question_title, 50) }}</h3>
                             </a>     
                         </div>

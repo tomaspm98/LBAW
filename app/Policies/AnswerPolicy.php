@@ -41,4 +41,10 @@ class AnswerPolicy
         }
     }
 
+    public function mark_answer_correct(Member $member, $question_id): bool
+    {
+        
+        return true;
+    }
+
 }

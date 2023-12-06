@@ -86,5 +86,14 @@ class Member extends Authenticatable
         return $this->comments()->count();
     }
 
+    public function badges()
+{
+    return $this->belongsToMany(Badge::class, 'userbadge', 'user_id', 'badge_id');
+}
+
+    public function follows(){
+        return $this->hasMany(UserFollowQuestion::class, 'user_id');
+    }
+
 }
 

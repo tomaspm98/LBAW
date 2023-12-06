@@ -10,11 +10,10 @@ use App\Models\Moderator;
         <div class="text-center">
             <a href="{{ route('member.show', $question->author) }} " class="text-decoration-none"> <!-- route('member.show', $question->author) -->
                 <div class="content_user_profile_photo">
-                    <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                    <!-- <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo"> -->
                 </div>
                 <p><b class="text-dark">{{ $question->author->username }}</b></p>
             </a>
-
         </div>
         
         <div class="question_tittle_container p-3">
@@ -70,6 +69,18 @@ use App\Models\Moderator;
                 <i class="bi bi-three-dots"></i>
             </button>
             <ul class="dropdown-menu">
+
+
+            <!-- TODO: -->
+            @if (Auth::check())
+            <li>
+                <button class="btn dropdown-button text-warning" id="followQuestionButton" data-question-id="{{ $question->question_id }}">
+                    Follow featuring
+                </button>
+            </li>
+            @endif
+
+
 
             @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
                 <li>
@@ -131,45 +142,7 @@ use App\Models\Moderator;
 
             </ul>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-
 
     <div class="content_bottom_container d-flex">
 
@@ -186,57 +159,7 @@ use App\Models\Moderator;
                 </button>
             </form>
 
-                
-            @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
-            <div class="content_right_container"> 
-                <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-outline-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                </form>
-                <form method="GET" action="{{ route('questions.edit', $question->question_id) }}">
-                    @csrf
-                    @method('GET')
-                    <button class="btn btn-outline-warning"> Edit </button>
-                </form>    
-            </div>
-            @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-            <div class="content_right_container"> 
-                <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-outline-danger mt-2" type="submit" onclick="return confirm('Are you sure you want to delete this question?')">
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </form>
-            </div>
-
-            @else
-
-            <div>
-                <button class="button_report btn btn-danger" id="showReportForm"> 
-                    Report
-                </button>
-                <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
-                    <div class="form-group"> 
-                        @csrf
-                        <select name="report_reason" id="report_reason" required>
-                            <option value="" disabled selected>Select reason</option>
-                            <option value="spam">Spam</option>
-                            <option value="offensive">Offensive</option>
-                            <option value="Rules Violation">Rules Violation</option>
-                            <option value="Inappropriate tag">Inappropriate tag</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="report_text">Question Content</label>
-                        <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                    </div>
-                    <button type="submit" class="button_report btn btn-danger" onclick="showNotification()">Submit Report</button>
-                </form>
-            </div>
-            
-            @endif
+  
         </div>
 
         <div class="content_text_container border-bottom bg-light w-100 p-2">

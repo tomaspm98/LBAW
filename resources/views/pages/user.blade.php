@@ -1,3 +1,8 @@
+<?php
+use App\Models\UserBadge;
+?>	
+
+
 @extends('layouts.app')
 
 <?php 
@@ -11,7 +16,8 @@ use App\Models\Moderator;
 
         <div class="row mt-5">
             <div class="col-md-3 w-1">
-                <img class="profile-picture img-fluid" src="{{ Storage::url($member->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                <!-- <img class="profile-picture img-fluid"  src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo> -->
+
             </div>
             <div class="col-md-9">
                 <h3 class="mb-3 p-1">
@@ -40,14 +46,15 @@ use App\Models\Moderator;
         </div>
 
         <div classs="badges-section">
-            <h3>Badges:</h3>
+            <h3><b>Badges:</b></h3>
             <div class="badges">
-                {{-- @foreach ($member->badges as $badge)
-                    <div class="badge">
-                        <img src="{{ Storage::url($badge->badge_picture) }}" alt="Badge Picture">
-                        <p>{{ $badge->badge_name }}</p>
-                    </div>
-                @endforeach --}}
+            @foreach ($member->badges as $badge)
+                <div class="badge-unique" >
+                    <b>badge name: </b>{{ $badge->badge_name }}
+                    <b>badge description: </b>{{ $badge->badge_description }}
+                </div>
+                
+            @endforeach
             </div>
         </div>
 

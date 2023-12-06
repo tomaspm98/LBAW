@@ -30,3 +30,90 @@
     color: #0366d6; 
 }
 
+
+.moderator-dealing {
+    margin-top: 20px;
+}
+
+.moderator-dealing form {
+    max-width: 100%; 
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: fit-content; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+.moderator-dealing label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.moderator-dealing textarea {
+    width: calc(100% - 22px); 
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.moderator-dealing input[type="radio"] {
+    margin-right: 5px;
+}
+
+.moderator-dealing input[type="submit"] {
+    background-color: #0366d6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.moderator-dealing input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+.report-close-info {
+    max-width: 100%; 
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: fit-content; 
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: 20px; 
+}
+
+.report-close-info h3,
+.report-close-info h4 {
+    margin-bottom: 10px;
+}
+
+
+.no-reports {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+    color: #555; 
+    font-weight: bold;
+}
+
+
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; 
+}
+
+.header-title {
+    text-align: center;
+    flex: 1; 
+    margin: 0; 
+}

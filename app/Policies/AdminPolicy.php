@@ -27,7 +27,17 @@ class AdminPolicy
 
     public function delete(Member $member): bool
     {
-        return Auth::check()->user_id === $member->user_id;
+        return Auth::user()->user_id === $member->user_id;
+    }
+
+    public function showTags(): bool
+    {
+        return Admin::where('user_id', Auth::user()->user_id)->exists();
+    }
+
+    public function create(): bool
+    {
+        return Admin::where('user_id', Auth::user()->user_id)->exists();
     }
 
 }

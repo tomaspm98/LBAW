@@ -24,20 +24,21 @@ use App\Models\Moderator;
     <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
 
         <ul class="navbar-nav">
+
             @if (Auth::guest())
             <li class="nav-item active p-1">
-                <a class="nav-link" href="{{ url('/login') }}"> Login </a> 
-            </li>    
+                <a class="nav-link" class="login-button" href="{{ url('/login') }}"> Login </a> 
+            </li>
             <li class="nav-item active p-1">
-                <a class="nav-link" href="{{ url('/register') }}"> Register </a>
+                <a class="nav-link" class="register-button" href="{{ url('/register') }}"> Register </a>
             </li>
             @endif
 
             @if (Auth::check())
             <li class="nav-item active">
-            <a class="nav-link" href="">Notifications</a>
+                <a class="nav-link" href="">Notifications</a>
             </li>
-                    
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span>{{ Auth::user()->username }}</span>
@@ -55,12 +56,13 @@ use App\Models\Moderator;
                         <div class="admin-buttons">
                             <a class="dropdown-item" href="{{ route('admin.users') }}">Assign Moderator</a>
                             <a class="dropdown-item" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
+                            <a class="dropdown-item" href="{{ route('tags.show') }}">Tags</a>
                         </div>
                     </div>                   
                     @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists() )
                     <div class="admin-area">
                         <div class="admin-buttons">
-                            <a class="button" href="{{ route('reports') }}">Reports</a>
+                            <a class="dropdown-item" href="{{ route('reports') }}">Reports</a>
                         </div>
                     </div>  
                     @endif  

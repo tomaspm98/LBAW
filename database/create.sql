@@ -532,14 +532,24 @@ CREATE TRIGGER register_badge
 -- TRIGGER 08 - An user gets a badge when he obtains 10 points by interacting with the platform.
 
 CREATE FUNCTION bronze_badge() RETURNS TRIGGER AS $$
+DECLARE
+    badge_already_awarded INT;
 BEGIN
     IF NEW.user_score = 10 THEN
-      INSERT INTO userbadge (user_id, badge_id) VALUES
-      (NEW.user_id, 1);
+        -- Check if the bronze badge has already been awarded
+        SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+        WHERE user_id = NEW.user_id AND badge_id = 1;
+
+        -- Award the badge only if it hasn't been awarded before
+        IF badge_already_awarded = 0 THEN
+            INSERT INTO userbadge (user_id, badge_id) VALUES
+            (NEW.user_id, 1);
+        END IF;
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
+
 
 CREATE TRIGGER bronze_badge
 AFTER INSERT OR UPDATE OF user_score ON member
@@ -548,11 +558,18 @@ FOR EACH ROW
 
 -- TRIGGER 09 - An user gets a badge when he obtains 100 points by interacting with the platform.
 CREATE FUNCTION silver_badge() RETURNS TRIGGER AS $$
+DECLARE
+    badge_already_awarded INT;
 BEGIN
     IF NEW.user_score = 100 THEN
-      INSERT INTO userbadge (user_id, badge_id) VALUES
-      (NEW.user_id, 2);
-    END IF;
+        SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+        WHERE user_id = NEW.user_id AND badge_id = 2;
+
+        IF badge_already_awarded = 0 THEN
+            INSERT INTO userbadge (user_id, badge_id) VALUES
+            (NEW.user_id, 2);
+        END IF;
+       END IF; 
     RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
@@ -566,10 +583,17 @@ FOR EACH ROW
 -- TRIGGER 10 - An user gets a badge when he obtains 1000 points by interacting with the platform.
 
 CREATE FUNCTION gold_badge() RETURNS TRIGGER AS $$
+DECLARE 
+    badge_already_awarded INT;
 BEGIN
     IF NEW.user_score = 1000 THEN
-      INSERT INTO userbadge (user_id, badge_id) VALUES
-      (NEW.user_id, 3);
+        SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+        WHERE user_id = NEW.user_id AND badge_id = 3;
+
+        IF badge_already_awarded = 0 THEN
+            INSERT INTO userbadge (user_id, badge_id) VALUES
+            (NEW.user_id, 3);
+        END IF;
     END IF;
     RETURN NEW;
 END;
@@ -579,6 +603,131 @@ CREATE TRIGGER gold_badge
 AFTER INSERT OR UPDATE OF user_score ON member
 FOR EACH ROW
   EXECUTE PROCEDURE gold_badge();
+
+-- TRIGGER 11 -- An user gets a badge when he gets 10, 25 and 100 upvotes in a question he made.  
+
+CREATE FUNCTION question_upvote_badge() RETURNS TRIGGER AS $$
+DECLARE
+    question_upvotes INT;
+    badge_already_awarded INT;
+BEGIN
+    IF NEW.entity_voted = 'question' AND NEW.upvote = 'up' THEN
+        -- Count the number of upvotes for the question
+        SELECT COUNT(*) INTO question_upvotes
+        FROM vote
+        WHERE entity_voted = 'question'
+        AND vote_content_question = NEW.vote_content_question
+        AND upvote = 'up';
+
+        -- Check for 10 upvotes badge
+        IF question_upvotes = 10 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM question WHERE question_id = NEW.vote_content_question)
+            AND badge_id = 7;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM question WHERE question_id = NEW.vote_content_question), 7);
+            END IF;
+        END IF;
+
+        -- Check for 25 upvotes badge
+        IF question_upvotes = 25 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM question WHERE question_id = NEW.vote_content_question)
+            AND badge_id = 6;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM question WHERE question_id = NEW.vote_content_question), 6);
+            END IF;
+        END IF;
+
+        -- Check for 100 upvotes badge
+        IF question_upvotes = 100 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM question WHERE question_id = NEW.vote_content_question)
+            AND badge_id = 5;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM question WHERE question_id = NEW.vote_content_question), 5);
+            END IF;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER question_upvote_trigger
+AFTER INSERT ON vote
+FOR EACH ROW
+EXECUTE PROCEDURE question_upvote_badge();  
+
+-- TRIGGER 12 -- An user gets a badge when he gets 10, 25 and 100 upvotes in a answer he made
+
+CREATE FUNCTION answer_upvote_badge() RETURNS TRIGGER AS $$
+DECLARE
+    answer_upvotes INT;
+    badge_already_awarded INT;
+BEGIN
+    IF NEW.entity_voted = 'answer' AND NEW.upvote = 'up' THEN
+        SELECT COUNT(*) INTO answer_upvotes
+        FROM vote
+        WHERE entity_voted = 'answer'
+        AND vote_content_answer = NEW.vote_content_answer
+        AND upvote = 'up';
+
+        -- Check for 10 upvotes badge
+        IF answer_upvotes = 10 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer)
+            AND badge_id = 10;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer), 10);
+            END IF;
+        END IF;
+
+        -- Check for 25 upvotes badge
+        IF answer_upvotes = 25 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer)
+            AND badge_id = 9;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer), 9);
+            END IF;
+        END IF;
+
+        -- Check for 100 upvotes badge
+        IF answer_upvotes = 100 THEN
+            SELECT COUNT(*) INTO badge_already_awarded FROM userbadge
+            WHERE user_id = (SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer)
+            AND badge_id = 8;
+
+            IF badge_already_awarded = 0 THEN
+                INSERT INTO userbadge (user_id, badge_id) VALUES
+                ((SELECT content_author FROM answer WHERE answer_id = NEW.vote_content_answer), 8);
+            END IF;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+
+CREATE TRIGGER answer_upvote_trigger
+AFTER INSERT ON vote
+FOR EACH ROW
+EXECUTE PROCEDURE answer_upvote_badge();
+
+
+
+
+
 
 
 
@@ -613,15 +762,23 @@ INSERT INTO member (user_id, username, user_email, password, picture, user_birth
 VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0);
 
 INSERT INTO member (username, user_email, password, picture, user_birthdate, user_score)
-VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0),
-       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1999-04-10', 0),
-       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1989-05-23', 0),
-       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1993-12-01', 0),
-       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2005-10-23', 0),
-       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2000-08-24', 0),
-       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '2003-08-19', 0);
+VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15', 0),
+       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator3', 'moderator3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator4', 'moderator4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator5', 'moderator5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator6', 'moderator6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator7', 'moderator7@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator8', 'moderator8@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator9', 'moderator9@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('moderator10', 'moderator10@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
+       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1999-04-10', 0),
+       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1989-05-23', 0),
+       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1993-12-01', 0),
+       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2005-10-23', 0),
+       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2000-08-24', 0),
+       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2003-08-19', 0);
 
 -- All paswords are 'pass'
 
@@ -649,7 +806,15 @@ VALUES (1);
 -- The assignment timestamp is automatically generated by the database
 INSERT INTO moderator (user_id, tag_id)
 VALUES (2, 1),
-        (3, 2);
+        (3, 2),
+        (4, 3),
+        (5, 4),
+        (6, 5),
+        (7, 6),
+        (8, 7),
+        (9, 8),
+        (10, 9),
+        (11, 10);
 
 
 

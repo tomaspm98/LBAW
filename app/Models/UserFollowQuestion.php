@@ -14,7 +14,9 @@ class UserFollowQuestion extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'follow'
+        'follow',
+        'user_id',
+        'question_id'
     ];
 
     public function user()

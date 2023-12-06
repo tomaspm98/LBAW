@@ -11,6 +11,12 @@
     border-color: #d9534f; /* Same as background-color */
 }
 
+.btn-cor_answer {
+    background-color: #5bc0de; /* Default color for Dislike button */
+    border-color: #5bc0de; /* Same as background-color */
+
+}
+
 /* Styles for hover effects */
 .btn-primary:hover,
 .btn-success:hover,

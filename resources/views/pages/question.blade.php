@@ -1,5 +1,6 @@
 <?php 
 use App\Models\Moderator;
+// use App\Models\UserFollowQuestion;
 ?>
 @extends('layouts.app')
 
@@ -7,6 +8,11 @@ use App\Models\Moderator;
 
 <div id="success-message" style="display: none">
     Report submitted successfully!
+</div>
+
+<div id="correct-answer" class="popup-message" style="display: none">
+
+    Answer marked as correct!
 </div>
 
 
@@ -81,6 +87,7 @@ use App\Models\Moderator;
             <br>
             @endif
             @endforeach    
+
         </div>
     </div>
     @else
@@ -95,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (editTagButton && tagEditSection) {
         editTagButton.addEventListener('click', function() {
             tagEditSection.style.display = 'block';
+            editTagButton.style.display = 'none';
         });
     }
 });
@@ -194,8 +202,53 @@ function showNotificationComment() {
         }, 3000);
     }   
 
+    function showSuccessMessage() {
+    var notification = document.getElementById('correct-answer');
+    notification.style.display = 'block';
+
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 3000); 
+}    
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const followButton = document.getElementById('followQuestionButton');
+//     followButton.addEventListener('click', function() {
+//         const questionId = this.getAttribute('data-question-id');
+//         const url = `/questions/${questionId}/follow`; 
+//         fetch(url, {
+//             method: 'POST',
+//             headers: {
+//                 'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRF token
+//                 'Content-Type': 'application/json',
+//                 'Accept': 'application/json',
+//             },
+//             body: JSON.stringify({ question_id: questionId })
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log(data.isFollowing)
+//             // Confirm and maintain the UI update
+//             if (data.isFollowing) {
+//                 followButton.textContent = 'Follow Question';
+//             } else {
+//                 followButton.textContent = 'Unfollow Question';
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             followButton.textContent = isCurrentlyFollowing ? 'Unfollow Question' : 'Follow Question';
+//             followButton.classList.toggle('btn-following', isCurrentlyFollowing);
+//         });
+//     });
+// });
+
+
+
 
 </script>
+
+
 
 
 

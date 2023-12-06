@@ -12,11 +12,21 @@ use App\Models\Moderator;
             <div class="text-center">
                 <a href="">
                     <div class="content_user_profile_photo">
-                        <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                        <!-- <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo"> -->
                     </div>
                 </a>
                 <p><b>{{ $answer->author->username }}</b></p>
             </div>
+
+            @if (Auth::check() && Auth::id() === $question->content_author) 
+            <div class="correct_answer">
+                <form action="{{ route('answers.correct', ['question_id' => $question->question_id, 'answer_id' => $answer -> answer_id]) }}" method="POST">
+                    @csrf
+                    @php $correct = $question->correct_answer; @endphp
+                    <button type="submit" onclick="showSuccessMessage()" class="btn {{ $correct && $correct == $answer->answer_id ? 'btn-cor_answer' : 'btn-primary' }}">Mark as Correct</button>
+                </form>
+            </div>
+            @endif
 
             <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}#answer-{{$answer->answer_id}}" method="POST">
                 @csrf
