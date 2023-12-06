@@ -15,11 +15,6 @@
 
             <button type="submit" class="btn btn-primary">Update Comment</button>
         </form>
-            <form action="{{ route('comments.delete', ['question_id' => $comment->getQuestion(), 'answer_id' => $comment->answer_id, 'comment_id' => $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">Delete Comment</button>
-            </form>
     </div>
 @else 
     <?php abort(404); ?>

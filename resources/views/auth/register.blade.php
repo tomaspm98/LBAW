@@ -6,19 +6,19 @@
       
 
   <label for="name">Username</label>
-  <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+  <input id="username" placeholder="Username.." type="text" name="username" value="{{ old('username') }}" required autofocus>
 
   <label for="email">E-Mail Address</label>
-  <input id="email" type="email" name="user_email" value="{{ old('user_email') }}" required>
+  <input id="email" type="email" placeholder="E-mail.." name="user_email" value="{{ old('user_email') }}" required>
 
   <label for="birthdate">Birthdate</label>
   <input id="birthdate" type="date" name="user_birthdate" value="{{ old('user_birthdate') }}" required>
 
   <label for="password">Password</label>
-  <input id="password" type="password" name="password" required>
+  <input id="password" type="password" placeholder="Password.." name="password" required>
 
   <label for="password-confirm">Confirm Password</label>
-  <input id="password-confirm" type="password" name="password_confirmation" required>
+  <input id="password-confirm" type="password" placeholder="Repeat password.." name="password_confirmation" required>
     
   <label for="picture">Profile Picture</label>
   <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png, image/jpeg, image/svg+xml">
