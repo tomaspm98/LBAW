@@ -24,22 +24,20 @@ use App\Models\UserFollowQuestion;
         </div>
 
         <script>
-            // Show the popup
             let popup = document.getElementById('errorPopup');
             popup.style.display = 'block';
 
-            // Hide the popup after 5 seconds (5000 milliseconds)
             setTimeout(function() {
                 popup.style.display = 'none';
             }, 5000);
         </script>
     @endif
     <div class="container">
-        <div class="content_container"> <!--Question-->
+        <div class="content_container">
             <div class="content_top_container">
 
                 <div class="content_left_container">
-                    <a href=""> <!-- route('member.show', $question->author) -->
+                    <a href="{{ route('member.show', $question->author) }}"> 
                         <div class="content_user_profile_photo">
                             <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
@@ -63,7 +61,6 @@ use App\Models\UserFollowQuestion;
                     </div>
                     @if (Auth::check()  && Moderator::where('user_id', Auth::user()->user_id)->exists())
                     <button id="editTagButton">Edit Tag</button>
-                        {{-- Create a button to change the tag of the question here --}}
 
                         <div id="tagEditSection" style="display: none;">
                             <form id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
@@ -85,7 +82,7 @@ use App\Models\UserFollowQuestion;
                     </p>
                 </div>
 
-                @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$question->content_author) 
                 <div class="content_right_container"> 
                 <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
                     @csrf
@@ -100,17 +97,7 @@ use App\Models\UserFollowQuestion;
                         </button>
                     </form>    
                 </div>
-                @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                <div class="content_right_container"> 
-                    <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                    </form>
-                </div>
-
-                @endif
-                @if(Auth::check())
+                @elseif (Auth::check())
                 <div>
                     <button class="button_report" id="showReportForm"> 
                         Report
@@ -131,6 +118,17 @@ use App\Models\UserFollowQuestion;
                             <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
                         </div>
                         <button type="submit" class="button_report" onclick="showNotification()">Submit Report</button>
+                    </form>
+                </div>
+
+
+                @endif
+                @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                <div class="content_right_container"> 
+                    <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                     </form>
                 </div>
                 
@@ -189,7 +187,7 @@ use App\Models\UserFollowQuestion;
             <div class="content_top_container">
 
                 <div class="content_left_container">
-                    <a href="">
+                    <a href="{{ route('member.show', $answer->author) }}">
                         <div class="content_user_profile_photo">
                             <img src="{{ asset($answer->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
@@ -219,16 +217,9 @@ use App\Models\UserFollowQuestion;
                             Edit
                         </button>
                     </form> 
-                    @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <div class="content_right_container"> 
-                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Delete</button>
-                        </form>
-                    </div> 
-                    @endif 
-                    @if (Auth::check())
+                    @elseif (Auth::check())
+                    {{-- Verificar se a tag da pergunta é diferente da tag pela qual o moderator é responsavel --}}
+                    {{-- @if (Moderator::where('user_id', Auth::user()->user_id)->exists() && $question->tag->tag_name !== Auth::user()->moderator->tag->tag_name) --}}
                     <div>
                         <button class="button_report" id="showReportAnswerForm"> 
                             Report
@@ -250,8 +241,20 @@ use App\Models\UserFollowQuestion;
                             </div>
                             <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
                         </form>
-                    </div>  
-                    @endif     
+                    </div> 
+                    {{-- @endif  --}}
+                    @endif
+
+                    @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    <div class="content_right_container"> 
+                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div> 
+                    @endif 
+                    
                     @if (Auth::check() && Auth::id() === $question->content_author) 
                     <div class="correct_answer">
                         <form action="{{ route('answers.correct', ['question_id' => $question->question_id, 'answer_id' => $answer -> answer_id]) }}" method="POST">
@@ -294,7 +297,7 @@ use App\Models\UserFollowQuestion;
         <div class="comment_container">
             <div class="content_top_container">
                 <div class="content_left_container">
-                    <a href="">
+                    <a href="{{ route('member.show', $comment->author) }}">
                       <div class="content_user_profile_photo">
                         <img src="{{ asset($comment->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
                         </div>
@@ -311,7 +314,7 @@ use App\Models\UserFollowQuestion;
                     </p>
                 </div>
 
-                @if(Auth::check() && Auth::id()===$comment->content_author) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$comment->content_author) 
                     <div class="content_right_container"> 
                         <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                             @csrf
@@ -325,37 +328,39 @@ use App\Models\UserFollowQuestion;
                             </button>
                     </form> 
                     </div>  
-                    @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+                    @elseif (Auth::check())
+                    <div>
+                        <button class="button_report" id="showReportCommentForm"> 
+                            Report
+                        </button>
+                        <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
+                            <div class="form-group"> 
+                                @csrf
+                                <select name="report_reason" id="report_reason_comment" required>
+                                    <option value="" disabled selected>Select reason</option>
+                                    <option value="spam">Spam</option>
+                                    <option value="offensive">Offensive</option>
+                                    <option value="Rules Violation">Rules Violation</option>
+                                    <option value="Inappropriate tag">Inappropriate tag</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="report_text">Question Content</label>
+                                <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                            </div>
+                            <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
+                        </form>
+                    </div>
+                    @endif
+
+                   
+                @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
                     <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit">Delete</button>
                     </form>
-                    @endif     
-                @if (Auth::check())
-                <div>
-                    <button class="button_report" id="showReportCommentForm"> 
-                        Report
-                    </button>
-                    <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
-                        <div class="form-group"> 
-                            @csrf
-                            <select name="report_reason" id="report_reason_comment" required>
-                                <option value="" disabled selected>Select reason</option>
-                                <option value="spam">Spam</option>
-                                <option value="offensive">Offensive</option>
-                                <option value="Rules Violation">Rules Violation</option>
-                                <option value="Inappropriate tag">Inappropriate tag</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="report_text">Question Content</label>
-                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                        </div>
-                        <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
-                    </form>
-                </div>
-                @endif
+                    @endif  
                    
                     <div>
                         <form id="voteForm" method="POST">

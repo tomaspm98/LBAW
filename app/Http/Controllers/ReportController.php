@@ -102,11 +102,18 @@ class ReportController extends Controller{
         $report = Report::where('report_id', $report_id)->first();
         $this->authorize('assign', Report::class);
         $user = auth()->user(); 
-        $report->report_handler = $user->user_id;
+        
+        if ($request->has('assign_to_me') && $request->input('assign_to_me') === 'true') {
+            $report->report_handler = $user->user_id;
+        } elseif ($request->has('moderator')) {
+            $moderatorId = $request->input('moderator');
+            $report->report_handler = $moderatorId;
+        } 
+        
         $report->save();
         
-        return redirect()->route('report.view', [ 'report_id' => $report->report_id])
-            ->with('success', 'Report assigned to you successfully.');
+        return redirect()->route('report.view', ['report_id' => $report->report_id])
+            ->with('success', 'Report assigned successfully.');
     }
 
     public function close(Request $request, $report_id)
@@ -116,6 +123,14 @@ class ReportController extends Controller{
         
         $report->report_dealt = true;
         $report->report_accepted = $request->input('punished') === 'yes' ? true : false;
+        if ($report->report_accepted){
+            $member = Member::findOrFail($report->report_creator);
+            $check = Auth::user();
+    
+            $this->authorize('delete', [$member, $check]);
+    
+            $member->delete();
+        }
         $report->report_answer = $request->input('comment');
         
         $report->save();
