@@ -194,8 +194,4 @@
         });
 }
 
-// Run the function initially
-updateQuestionCount();
 
-// Set up an interval to run the function every 5 seconds
-setInterval(updateQuestionCount, 5000);

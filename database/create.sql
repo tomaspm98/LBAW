@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS vote;
 DROP TABLE IF EXISTS report;
 DROP TABLE IF EXISTS userfollowquestion;
+DROP TABLE IF EXISTS password_resets;
 -- DROP TYPES FROM LBAW2311 SCHEMA
 DROP TYPE IF EXISTS voteType;
 DROP TYPE IF EXISTS entityType;
@@ -280,6 +281,13 @@ CREATE TABLE userfollowquestion (
     FOREIGN KEY (user_id) REFERENCES member(user_id),
     FOREIGN KEY (question_id) REFERENCES question(question_id)
 );
+
+CREATE TABLE password_resets (
+            id SERIAL PRIMARY KEY,
+            user_email VARCHAR(255) NOT NULL,
+            token VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
 
 
 ------------------------------------------------------------------------------------------------------------------------
