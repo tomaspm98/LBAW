@@ -23,7 +23,7 @@ use App\Models\Moderator;
                 <h3 class="mb-3 p-1">
                     <strong>
                         {{ $member->username }}
-                        @if (Auth::check() && Admin::where('user_id', Auth::user()->user_id)->exists() )
+                        @if ( admin::where('user_id', $member->user_id)->exists() )
                             <i title="Admin" class="bi bi-patch-check-fill text-primary"></i>
                         @endif
                     </strong>
@@ -78,7 +78,7 @@ use App\Models\Moderator;
                         <div class="activity-content hidden-content">
                             @foreach ($member->answers as $index => $answer)
                                 <div class="activity-item bg-light border-bottom p-1">
-                                    <a href="{{ route('questions.show', $answer->question->question_id) }}">
+                                    <a href="{{ route('questions.show', $answer->question->question_id) }}#answer-{{$answer->answer_id}}">
                                         <span class="text-primary">Question title:</span> {{ Str::limit($answer->question->question_title, 80) }}
                                     </a>
                                     <p class="p-2"><span class="text-success">Your answer:</span> {{ Str::limit($answer->content_text, 150) }}</p>
@@ -93,7 +93,7 @@ use App\Models\Moderator;
                         <div class="activity-content hidden-content">
                             @foreach ($member->comments as $index => $comment)
                                 <div class="activity-item bg-light border-bottom p-1">
-                                    <a href="{{ route('questions.show', $comment->answer->question->question_id) }}">
+                                    <a href="{{ route('questions.show', $comment->answer->question->question_id) }}#comment-{{$comment->comment_id}}">
                                         <span class="text-primary">Question title:</span> {{ Str::limit($comment->answer->question->question_title, 80) }}
                                     </a>
                                     <p class="p-2"><span class="text-success">Answer:</span> {{ Str::limit($comment->answer->content_text,150) }}</p>

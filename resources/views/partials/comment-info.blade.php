@@ -22,7 +22,7 @@ use App\Models\Moderator;
         <div>
             <span>
                 <b>Commented by: </b>
-                <a class="text-dark" href="">
+                <a class="text-dark" href="{{ route('member.show', $comment->author) }}">
                     {{$comment->author->username }}
                 </a>
             </span>

@@ -84,7 +84,6 @@ use App\Models\Moderator;
             @endforeach
             <br>
             <hr >
-            <br>
             @endif
             @endforeach    
 

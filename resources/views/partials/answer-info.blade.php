@@ -3,14 +3,14 @@ use App\Models\Moderator;
 
 ?>
 
-<div id="answer-{{$answer->answer_id}}"> <!--answer-->
+<div id="answer-{{$answer->answer_id}}" class="my-4"> <!--answer-->
 
     <div class="content_bottom_container d-flex">
 
         <div id="action_buttons" class="text-center p-2">
 
             <div class="text-center">
-                <a href="">
+                <a href="{{ route('member.show', $answer->author) }}">
                     <div class="content_user_profile_photo">
                         <!-- <img src="{{ Storage::url($answer->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo"> -->
                     </div>

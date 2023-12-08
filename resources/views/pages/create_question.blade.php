@@ -3,7 +3,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container my-4">
     <h1 class="mb-4">Create a New Question</h1>
     <form action="{{ route('questions.create.post') }}" method="POST">
 
@@ -16,7 +16,7 @@
 
         <div class="mb-3">
             <label for="content_text" class="form-label">Question Content</label>
-            <textarea class="form-control" id="content_text" name="content_text" required></textarea>
+            <textarea class="form-control fixed-height" style="min-height:47vh;" id="content_text" name="content_text" required></textarea>
         </div>
 
         <div class="mb-3">
