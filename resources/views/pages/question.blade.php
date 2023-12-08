@@ -152,13 +152,13 @@ use App\Models\UserFollowQuestion;
                 </div>
 
                 <div class="content_right_container"> 
-                <form action="{{ route('votes.voteQuestion', ['question_id' => $question->question_id]) }}" method="POST">
+                <form id="voteForm" method="POST">
                     @csrf
                     @php $userVote = $question->userVote; @endphp
-                    <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                    <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                    <button type="button" data-vote="up" class="vote-btn btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                    <button type="button" data-vote="down" class="vote-btn btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                 </form>
-                    <p><b>{{$question->vote_count}}</b></p>
+                <p><b id="voteCount">{{$question->vote_count}}</b></p>
                 </div>
             </div>
         </div>
@@ -524,6 +524,64 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error:', error);
             followButton.textContent = isCurrentlyFollowing ? 'Unfollow Question' : 'Follow Question';
             followButton.classList.toggle('btn-following', isCurrentlyFollowing);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.vote-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        console.log('clicked');
+        const voteType = this.getAttribute('data-vote');
+        console.log(voteType);
+
+        const allButtons = document.querySelectorAll('.vote-btn');
+        const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
+                               this.classList.contains('btn-danger') && voteType === 'down';
+
+                               if (isUnvoting) {
+                allButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger');
+                    btn.classList.add('btn-primary');
+                });
+            } else {
+            // Reset the class of all buttons
+            allButtons.forEach(btn => {
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-primary');
+            });
+
+            // Set the class of the clicked button based on vote type
+            if (voteType === 'up') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+            } else if (voteType === 'down') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else if (voteType === 'out') {
+                this.classList.remove('btn-success', 'btn-danger');
+                this.classList.add('btn-primary');
+            }
+        }
+
+        const questionId = {{ $question->question_id }};
+        const url = `/questions/${questionId}/votes`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json', 
+            },
+            body: JSON.stringify({ upvote: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            document.querySelector('#voteCount').innerText = data.voteCount;
+        })
+        .catch(error => console.error('Error:', error));
         });
     });
 });

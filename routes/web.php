@@ -68,7 +68,7 @@ Route::controller(QuestionController::class)->group(function(){
     Route::delete('questions/{question_id}', 'delete')->name('questions.delete');
     Route::get('questions', 'list')->name('questions.list');
     Route::post('/questions/{question}/updateTag', 'updateTag')->name('questions.updateTag');
-    Route::post('/questions/{question_id}/follow', 'followQuestion')->name('questions.follow');
+    Route::post('/questions/{question_id}/follow', 'followQuestion')->name('questions.follow');  //AJAX REQUEST
 });
 
 Route::controller(AnswerController::class)->group(function(){
