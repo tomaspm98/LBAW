@@ -177,6 +177,7 @@ use App\Models\UserFollowQuestion;
         <br><h3>{{ $question->answer_count }} Answer: </h3>
         @endif
         @foreach ($question->answers as $answer)
+        <div id="answerContainer{{ $answer->answer_id }}">
         @if ($answer->content_is_visible)
         <div class="content_text_container">
                     @if($answer->content_is_edited)
@@ -273,9 +274,10 @@ use App\Models\UserFollowQuestion;
                             <button type="button" data-vote="down" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                         </form>
                     </div>
-                <p><b id="voteCountAnswer">{{$answer->vote_count}}</b></p>
+                <p><b id="voteCountAnswer{{$answer->answer_id}}">{{$answer->vote_count}}</b></p>
                 </div>
             </div>
+        </div>
         </div>
         <div class="comment_form_container">
         <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
@@ -288,6 +290,7 @@ use App\Models\UserFollowQuestion;
             </form>
         </div>    
         @foreach ($answer->comments as $comment)
+        <div id="commentContainer{{ $comment->comment_id }}">
         @if ($comment->content_is_visible)
         <div class="content_text_container">
                     @if($comment->content_is_edited)
@@ -370,9 +373,10 @@ use App\Models\UserFollowQuestion;
                             <button type="submit" data-vote="down" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                         </form>
                     </div>
-                    <p><b id ="voteCountComment">{{$comment->vote_count}}</b></p>
+                    <p><b id ="voteCountComment{{ $comment->comment_id }}">{{$comment->vote_count}}</b></p>
                 </div>
             </div>
+        </div>
         </div>
         @endif
         @endforeach
@@ -599,8 +603,10 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('clicked');
         const voteType = this.getAttribute('data-vote');
         console.log(voteType);
-
-        const allButtons = document.querySelectorAll('.vote-btn-answer');
+        const answerId = this.getAttribute('data-answer-id');
+        const questionId = {{ $question->question_id }};
+        const answerContainerId = 'answerContainer' + answerId;
+        const allButtons = document.querySelectorAll(`#${answerContainerId} .vote-btn-answer`);
         const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
                                this.classList.contains('btn-danger') && voteType === 'down';
 
@@ -627,8 +633,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        const answerId = this.getAttribute('data-answer-id');
-        const questionId = {{ $question->question_id }};
         const url = `/questions/${questionId}/answers/${answerId}/votes`;
 
         fetch(url, {
@@ -647,7 +651,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.reload();  
             } else {
                 console.log(data);
-                document.querySelector('#voteCountAnswer').innerText = data.voteCount;
+                const commentVoteCountId = 'voteCountAnswer' + answerId;
+                document.getElementById(commentVoteCountId).innerText = data.voteCount;
             }
         })
         .catch(error => console.error('Error:', error));
@@ -662,8 +667,12 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const voteType = this.getAttribute('data-vote');
         console.log(voteType);
+        const commentId = this.getAttribute('data-comment-id');
+        const answerId = this.getAttribute('data-answer-id');
+        const questionId = {{ $question->question_id }};
+        const commentContainerId = 'commentContainer' + commentId;
 
-        const allButtons = document.querySelectorAll('.vote-btn-comment');
+        const allButtons = document.querySelectorAll(`#${commentContainerId} .vote-btn-comment`);
         const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
                                this.classList.contains('btn-danger') && voteType === 'down';
 
@@ -690,9 +699,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        const commentId = this.getAttribute('data-comment-id');
-        const answerId = this.getAttribute('data-answer-id');
-        const questionId = {{ $question->question_id }};
         const url = `/questions/${questionId}/answers/${answerId}/comments/${commentId}/votes`;
 
         fetch(url, {
@@ -711,7 +717,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.reload();  
             } else {
                 console.log(data);
-                document.querySelector('#voteCountComment').innerText = data.voteCount;
+                const commentVoteCountId = 'voteCountComment' + commentId;
+                document.getElementById(commentVoteCountId).innerText = data.voteCount;
             }
         })
         .catch(error => console.error('Error:', error));

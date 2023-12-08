@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Comment;
+use App\Models\Moderator;
 
 use Illuminate\Support\Facades\Auth;
 
