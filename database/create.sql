@@ -187,6 +187,7 @@ CREATE TABLE question (
     content_text TEXT NOT NULL,
     content_is_edited BOOLEAN NOT NULL DEFAULT FALSE,
     content_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    question_closed BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (content_author) REFERENCES member(user_id)
 );
 

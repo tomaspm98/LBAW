@@ -46,5 +46,10 @@ class QuestionPolicy
 
     }
 
+    public function close(Member $user, Question $question): bool
+    {
+        return $user->user_id === $question->content_author;
+    }
+
 
 }

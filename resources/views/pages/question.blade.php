@@ -16,6 +16,17 @@ use App\Models\UserFollowQuestion;
     Answer marked as correct!
 </div>
 
+@if(!$question->question_closed && Auth::check() && Auth::id() === $question->content_author)
+    <form action="{{ route('close.question', ['question_id' => $question->question_id]) }}" method="POST">
+        @csrf
+        <button type="submit">Close Question</button>
+    </form>
+@endif
+@if ($question->question_closed)
+    <div class="question-closed">
+        <p><strong>Question Closed</strong></p>
+    </div>
+@endif
 
 @if ($question->content_is_visible)
     @if (session('error'))
@@ -52,7 +63,7 @@ use App\Models\UserFollowQuestion;
                     <p><strong>Tag:</strong> Not specified</p>
                     @endif
                     <div>
-                    @if (Auth::check())    
+                    @if (Auth::check() && !$question->question_closed)    
                     @php $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); @endphp    
                     <button id="followQuestionButton" data-question-id="{{ $question->question_id }}">
                         {{ $isFollowing ? 'Unfollow Question' : 'Follow Question' }}
@@ -162,6 +173,7 @@ use App\Models\UserFollowQuestion;
         </div>
 
         <div>
+            @if (!$question->question_closed)
             <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
                 @csrf
                 <div class="form-group">
@@ -170,6 +182,7 @@ use App\Models\UserFollowQuestion;
                 </div>
                 <button type="submit" class="btn btn-primary">Post Answer</button>
             </form>
+            @endif
 
         @if($question->answer_count !== 1)
         <br><h3>{{ $question->answer_count }} Answers: </h3>
@@ -279,6 +292,7 @@ use App\Models\UserFollowQuestion;
             </div>
         </div>
         </div>
+        @if (!$question->question_closed)
         <div class="comment_form_container">
         <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
                 @csrf
@@ -288,7 +302,8 @@ use App\Models\UserFollowQuestion;
                 </div>
                 <button type="submit" class="btn btn-primary">Post Comment</button>
             </form>
-        </div>    
+        </div> 
+        @endif   
         @foreach ($answer->comments as $comment)
         <div id="commentContainer{{ $comment->comment_id }}">
         @if ($comment->content_is_visible)

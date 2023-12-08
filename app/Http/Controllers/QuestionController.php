@@ -149,4 +149,14 @@ class QuestionController extends Controller
             $follow_create = UserFollowQuestion::create($validatedData);
             return response()->json(['isFollowing' => $isFollowing]);        }                            
     }
+
+    public function closeQuestion(Request $request, $question_id)
+    {
+        $question = Question::findOrFail($question_id);
+
+        $this->authorize('close', $question);
+        $validatedData['question_closed'] = 'true';
+        $question->update($validatedData);
+        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Question closed successfully');
+    }
 }
