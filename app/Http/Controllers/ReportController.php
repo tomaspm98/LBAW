@@ -116,6 +116,14 @@ class ReportController extends Controller{
         
         $report->report_dealt = true;
         $report->report_accepted = $request->input('punished') === 'yes' ? true : false;
+        if ($report->report_accepted){
+            $member = Member::findOrFail($report->report_creator);
+            $check = Auth::user();
+    
+            $this->authorize('delete', [$member, $check]);
+    
+            $member->delete();
+        }
         $report->report_answer = $request->input('comment');
         
         $report->save();
