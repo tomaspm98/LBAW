@@ -2,18 +2,18 @@
 /* Custom styles for vote buttons */
 
 .btn-success {
-    background-color: #5cb85c; /* Default color for Like button */
-    border-color: #5cb85c; /* Same as background-color */
+    background-color: #5cb85c; 
+    border-color: #5cb85c; 
 }
 
 .btn-danger {
-    background-color: #d9534f; /* Default color for Dislike button */
-    border-color: #d9534f; /* Same as background-color */
+    background-color: #d9534f;
+    border-color: #d9534f; 
 }
 
 .btn-cor_answer {
-    background-color: #5bc0de; /* Default color for Dislike button */
-    border-color: #5bc0de; /* Same as background-color */
+    background-color: #5bc0de; 
+    border-color: #5bc0de; 
 
 }
 
@@ -21,7 +21,57 @@
 .btn-primary:hover,
 .btn-success:hover,
 .btn-danger:hover {
-    opacity: 0.8; /* Slightly transparent on hover */
+    opacity: 0.8; 
 }
+
+.vote-btn:focus {
+    outline: none; 
+}
+
+.vote-btn.btn-primary:focus {
+    background-color: #0f4aa8;
+    border-color: #0f4aa8; 
+}
+
+.vote-btn.btn-success:focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c; 
+}
+
+.vote-btn.btn-danger:focus {
+    background-color: #d9534f;
+    border-color: #d9534f; 
+}
+
+.vote-btn-comment.btn-primary:focus {
+    background-color: #0f4aa8;
+    border-color: #0f4aa8; 
+}
+
+.vote-btn-comment.btn-success:focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c; 
+}
+
+.vote-btn-comment.btn-danger:focus {
+    background-color: #d9534f;
+    border-color: #d9534f; 
+}
+
+.vote-btn-answer.btn-primary:focus {
+    background-color: #0f4aa8;
+    border-color: #0f4aa8; 
+}
+
+.vote-btn-answer.btn-success:focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c; 
+}
+
+.vote-btn-answer.btn-danger:focus {
+    background-color: #d9534f;
+    border-color: #d9534f; 
+}
+
 
 /*# sourceMappingURL=milligram.min.css.map */

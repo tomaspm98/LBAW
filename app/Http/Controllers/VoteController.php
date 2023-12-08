@@ -15,6 +15,10 @@ class VoteController extends Controller
 {
     public function createVoteQuestion(Request $request, $question_id)
     {
+        if(Auth::check() == false) {
+            return response()->json(['message' => 'You must be logged in to vote', 'voteCount' => Question::find($question_id)->vote_count]);
+        }
+
         $validatedData = $request->validate([
             'upvote' => 'required|string',
         ]);
@@ -30,16 +34,14 @@ class VoteController extends Controller
 
         if ($currentVote) {
             if ($validatedData['upvote'] == $currentVote->upvote) {
-                // If the same button is pressed, set vote to 'out'
+            
                 $currentVote->upvote = 'out';
             } else {
-                // Change the vote type
                 $currentVote->upvote = $validatedData['upvote'];
             }
             $currentVote->vote_date = $formattedNow;
             $currentVote->save();
         } else {
-            // Create a new vote
             $vote = new Vote();
             $vote->upvote = $validatedData['upvote'];
             $vote->vote_content_question = $question_id;
@@ -47,12 +49,16 @@ class VoteController extends Controller
             $vote->vote_author = Auth::id();
             $vote->save();
         }
-    
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Vote updated successfully');
-    }
+        $updatedVoteCount = Question::find($question_id)->vote_count;
+        return response()->json(['message' => 'Vote updated successfully', 'voteCount' => $updatedVoteCount]);
+        }
 
     public function createVoteAnswer(Request $request, $question_id, $answer_id)
     {
+        if(Auth::check() == false) {
+            return response()->json(['message' => 'You must be logged in to vote', 'voteCount' => Answer::find($answer_id)->vote_count]);
+        }
+
         $validatedData = $request->validate([
             'upvote' => 'required|string',
         ]);
@@ -68,16 +74,13 @@ class VoteController extends Controller
 
         if ($currentVote) {
             if ($validatedData['upvote'] == $currentVote->upvote) {
-                // If the same button is pressed, set vote to 'out'
                 $currentVote->upvote = 'out';
             } else {
-                // Change the vote type
                 $currentVote->upvote = $validatedData['upvote'];
             }
             $currentVote->vote_date = $formattedNow;
             $currentVote->save();
         } else {
-            // Create a new vote
             $vote = new Vote();
             $vote->upvote = $validatedData['upvote'];
             $vote->vote_content_answer = $answer_id;
@@ -86,11 +89,18 @@ class VoteController extends Controller
             $vote->save();
         }
     
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Vote updated successfully');
+        $updatedVoteCount = Answer::find($answer_id)->vote_count;
+        \Log::info($updatedVoteCount);
+        $answer = Answer::find($answer_id);
+        return response()->json(['message' => 'Vote updated successfully', 'voteCount' => $updatedVoteCount]);
     }
 
     public function createVoteComment(Request $request, $question_id, $answer_id, $comment_id)
     {
+        if(Auth::check() == false) {
+            return response()->json(['message' => 'You must be logged in to vote', 'voteCount' => Comment::find($comment_id)->vote_count]);
+        }
+
         $validatedData = $request->validate([
             'upvote' => 'required|string',
         ]);
@@ -106,16 +116,13 @@ class VoteController extends Controller
 
         if ($currentVote) {
             if ($validatedData['upvote'] == $currentVote->upvote) {
-                // If the same button is pressed, set vote to 'out'
                 $currentVote->upvote = 'out';
             } else {
-                // Change the vote type
                 $currentVote->upvote = $validatedData['upvote'];
             }
             $currentVote->vote_date = $formattedNow;
             $currentVote->save();
         } else {
-            // Create a new vote
             $vote = new Vote();
             $vote->upvote = $validatedData['upvote'];
             $vote->vote_content_comment = $comment_id;
@@ -123,7 +130,9 @@ class VoteController extends Controller
             $vote->vote_author = Auth::id();
             $vote->save();
         }
-    
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Vote updated successfully');
+        
+        $updatedVoteCount = Comment::find($comment_id)->vote_count;
+
+        return response()->json(['message' => 'Vote updated successfully', 'voteCount' => $updatedVoteCount]);
     }
 }

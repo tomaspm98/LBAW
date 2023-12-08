@@ -150,13 +150,13 @@ use App\Models\UserFollowQuestion;
                 </div>
 
                 <div class="content_right_container"> 
-                <form action="{{ route('votes.voteQuestion', ['question_id' => $question->question_id]) }}" method="POST">
+                <form id="voteForm" method="POST">
                     @csrf
                     @php $userVote = $question->userVote; @endphp
-                    <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                    <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                    <button type="button" data-vote="up" class="vote-btn btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                    <button type="button" data-vote="down" class="vote-btn btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                 </form>
-                    <p><b>{{$question->vote_count}}</b></p>
+                <p><b id="voteCount">{{$question->vote_count}}</b></p>
                 </div>
             </div>
         </div>
@@ -177,6 +177,7 @@ use App\Models\UserFollowQuestion;
         <br><h3>{{ $question->answer_count }} Answer: </h3>
         @endif
         @foreach ($question->answers as $answer)
+        <div id="answerContainer{{ $answer->answer_id }}">
         @if ($answer->content_is_visible)
         <div class="content_text_container">
                     @if($answer->content_is_edited)
@@ -266,16 +267,17 @@ use App\Models\UserFollowQuestion;
                     @endif
       
                     <div>
-                        <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
+                        <form id="voteForm" method="POST">
                             @csrf
                             @php $userVote = $answer->userVote; @endphp
-                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            <button type="button" data-vote="up" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                            <button type="button" data-vote="down" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                         </form>
                     </div>
-                    <p><b>{{$answer->vote_count}}</b></p>
+                <p><b id="voteCountAnswer{{$answer->answer_id}}">{{$answer->vote_count}}</b></p>
                 </div>
             </div>
+        </div>
         </div>
         <div class="comment_form_container">
         <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
@@ -288,6 +290,7 @@ use App\Models\UserFollowQuestion;
             </form>
         </div>    
         @foreach ($answer->comments as $comment)
+        <div id="commentContainer{{ $comment->comment_id }}">
         @if ($comment->content_is_visible)
         <div class="content_text_container">
                     @if($comment->content_is_edited)
@@ -363,16 +366,17 @@ use App\Models\UserFollowQuestion;
                     @endif  
                    
                     <div>
-                        <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}" method="POST">
+                        <form id="voteForm" method="POST">
                             @csrf
                             @php $userVote = $comment->userVote; @endphp
-                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            <button type="submit" data-vote="up" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                            <button type="submit" data-vote="down" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                         </form>
                     </div>
-                    <p><b>{{$comment->vote_count}}</b></p>
+                    <p><b id ="voteCountComment{{ $comment->comment_id }}">{{$comment->vote_count}}</b></p>
                 </div>
             </div>
+        </div>
         </div>
         @endif
         @endforeach
@@ -509,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch(url, {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRF token
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
@@ -518,7 +522,6 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             console.log(data.isFollowing)
-            // Confirm and maintain the UI update
             if (data.isFollowing) {
                 followButton.textContent = 'Follow Question';
             } else {
@@ -529,6 +532,196 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error:', error);
             followButton.textContent = isCurrentlyFollowing ? 'Unfollow Question' : 'Follow Question';
             followButton.classList.toggle('btn-following', isCurrentlyFollowing);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.vote-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        console.log('clicked');
+        const voteType = this.getAttribute('data-vote');
+        console.log(voteType);
+
+        const allButtons = document.querySelectorAll('.vote-btn');
+        const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
+                               this.classList.contains('btn-danger') && voteType === 'down';
+
+                               if (isUnvoting) {
+                allButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger');
+                    btn.classList.add('btn-primary');
+                });
+            } else {
+            allButtons.forEach(btn => {
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-primary');
+            });
+
+            if (voteType === 'up') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+            } else if (voteType === 'down') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else if (voteType === 'out') {
+                this.classList.remove('btn-success', 'btn-danger');
+                this.classList.add('btn-primary');
+            }
+        }
+
+        const questionId = {{ $question->question_id }};
+        const url = `/questions/${questionId}/votes`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json', 
+            },
+            body: JSON.stringify({ upvote: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'You must be logged in to vote') {
+                alert(data.message);  
+                window.location.reload();  
+            } else {
+                console.log(data);
+                document.querySelector('#voteCount').innerText = data.voteCount;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.vote-btn-answer').forEach(button => {
+    button.addEventListener('click', function() {
+        console.log('clicked');
+        const voteType = this.getAttribute('data-vote');
+        console.log(voteType);
+        const answerId = this.getAttribute('data-answer-id');
+        const questionId = {{ $question->question_id }};
+        const answerContainerId = 'answerContainer' + answerId;
+        const allButtons = document.querySelectorAll(`#${answerContainerId} .vote-btn-answer`);
+        const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
+                               this.classList.contains('btn-danger') && voteType === 'down';
+
+                               if (isUnvoting) {
+                allButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger');
+                    btn.classList.add('btn-primary');
+                });
+            } else {
+            allButtons.forEach(btn => {
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-primary');
+            });
+
+            if (voteType === 'up') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+            } else if (voteType === 'down') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else if (voteType === 'out') {
+                this.classList.remove('btn-success', 'btn-danger');
+                this.classList.add('btn-primary');
+            }
+        }
+
+        const url = `/questions/${questionId}/answers/${answerId}/votes`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json', 
+            },
+            body: JSON.stringify({ upvote: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'You must be logged in to vote') {
+                alert(data.message);  
+                window.location.reload();  
+            } else {
+                console.log(data);
+                const commentVoteCountId = 'voteCountAnswer' + answerId;
+                document.getElementById(commentVoteCountId).innerText = data.voteCount;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.vote-btn-comment').forEach(button => {
+    button.addEventListener('click', function() {
+        console.log('clicked');
+        event.preventDefault();
+        const voteType = this.getAttribute('data-vote');
+        console.log(voteType);
+        const commentId = this.getAttribute('data-comment-id');
+        const answerId = this.getAttribute('data-answer-id');
+        const questionId = {{ $question->question_id }};
+        const commentContainerId = 'commentContainer' + commentId;
+
+        const allButtons = document.querySelectorAll(`#${commentContainerId} .vote-btn-comment`);
+        const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
+                               this.classList.contains('btn-danger') && voteType === 'down';
+
+                               if (isUnvoting) {
+                allButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger');
+                    btn.classList.add('btn-primary');
+                });
+            } else {
+            allButtons.forEach(btn => {
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-primary');
+            });
+
+            if (voteType === 'up') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+            } else if (voteType === 'down') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else if (voteType === 'out') {
+                this.classList.remove('btn-success', 'btn-danger');
+                this.classList.add('btn-primary');
+            }
+        }
+
+        const url = `/questions/${questionId}/answers/${answerId}/comments/${commentId}/votes`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json', 
+            },
+            body: JSON.stringify({ upvote: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'You must be logged in to vote') {
+                alert(data.message);  
+                window.location.reload();  
+            } else {
+                console.log(data);
+                const commentVoteCountId = 'voteCountComment' + commentId;
+                document.getElementById(commentVoteCountId).innerText = data.voteCount;
+            }
+        })
+        .catch(error => console.error('Error:', error));
         });
     });
 });
