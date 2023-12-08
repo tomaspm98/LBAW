@@ -263,14 +263,14 @@ use App\Models\UserFollowQuestion;
                     @endif
       
                     <div>
-                        <form action="{{ route('votes.voteAnswer', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST">
+                        <form id="voteForm" method="POST">
                             @csrf
                             @php $userVote = $answer->userVote; @endphp
-                            <button type="submit" name="upvote" value="up" class="btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="submit" name="upvote" value="down" class="btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            <button type="button" data-vote="up" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
+                            <button type="button" data-vote="down" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
                         </form>
                     </div>
-                    <p><b>{{$answer->vote_count}}</b></p>
+                <p><b id="voteCountAnswer">{{$answer->vote_count}}</b></p>
                 </div>
             </div>
         </div>
@@ -580,6 +580,65 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             console.log(data);
             document.querySelector('#voteCount').innerText = data.voteCount;
+        })
+        .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.vote-btn-answer').forEach(button => {
+    button.addEventListener('click', function() {
+        console.log('clicked');
+        const voteType = this.getAttribute('data-vote');
+        console.log(voteType);
+
+        const allButtons = document.querySelectorAll('.vote-btn-answer');
+        const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
+                               this.classList.contains('btn-danger') && voteType === 'down';
+
+                               if (isUnvoting) {
+                allButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger');
+                    btn.classList.add('btn-primary');
+                });
+            } else {
+            // Reset the class of all buttons
+            allButtons.forEach(btn => {
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-primary');
+            });
+
+            // Set the class of the clicked button based on vote type
+            if (voteType === 'up') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+            } else if (voteType === 'down') {
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else if (voteType === 'out') {
+                this.classList.remove('btn-success', 'btn-danger');
+                this.classList.add('btn-primary');
+            }
+        }
+
+        const answerId = this.getAttribute('data-answer-id');
+        const questionId = {{ $question->question_id }};
+        const url = `/questions/${questionId}/answers/${answerId}/votes`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json', 
+            },
+            body: JSON.stringify({ upvote: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            document.querySelector('#voteCountAnswer').innerText = data.voteCount;
         })
         .catch(error => console.error('Error:', error));
         });

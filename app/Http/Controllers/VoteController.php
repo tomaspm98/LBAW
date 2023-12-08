@@ -86,7 +86,10 @@ class VoteController extends Controller
             $vote->save();
         }
     
-        return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Vote updated successfully');
+        $updatedVoteCount = Answer::find($answer_id)->vote_count;
+        \Log::info($updatedVoteCount);
+        $answer = Answer::find($answer_id);
+        return response()->json(['message' => 'Vote updated successfully', 'voteCount' => $updatedVoteCount]);
     }
 
     public function createVoteComment(Request $request, $question_id, $answer_id, $comment_id)
