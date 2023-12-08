@@ -3,6 +3,11 @@ use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Comment;
 use App\Models\Member;
+use App\Models\Admin;
+use App\Models\Moderator;
+
+$moderators = Moderator::all();
+
 ?>
 
 @extends('layouts.app')
@@ -20,16 +25,28 @@ use App\Models\Member;
 </div>
 
 <div class="container report-container">
-    @if(!$report->handler) 
-    <form method="POST" action="{{ route('reports.assign', ['report_id' => $report->report_id]) }}">
-        @csrf
-            <button type="submit" class="btn btn-primary" onclick="showSuccess()">Assign to Me</button>
-        </form> 
-    @else
+    @if ($report->handler)
         @php $handler = Member::find($report->report_handler) @endphp
         <div class="report-handler">
             <h4>Report handler: {{ $handler->username }}</h4>
         </div>
+    @elseif(Admin::find(Auth::user()->user_id))
+        <form method="POST" action="{{ route('reports.assign', ['report_id' => $report->report_id]) }}">
+            @csrf
+            <label for="moderator_select">Assign to:</label>
+            <select name="moderator" id="moderator_select">
+                @foreach($moderators as $moderator)
+                    <option value="{{ $moderator->user_id }}">{{ $moderator->member->username }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="btn btn-primary">Assign</button>
+        </form>
+    @elseif(!$report->handler) 
+        <form method="POST" action="{{ route('reports.assign', ['report_id' => $report->report_id]) }}">
+            @csrf
+            <button type="submit" class="btn btn-primary" onclick="showSuccess()">Assign to Me</button>
+            <input type="hidden" name="assign_to_me" value="true">
+        </form> 
     @endif
         <h2><strong>Report Creator: {{ $report->creator->username ?? 'unknown' }}</strong></h2>
         <div class="report-details">
