@@ -5,7 +5,7 @@
     <div class="platform-description main-containers">
             
         <div class="image-container">
-            <!-- <img class="left-picture" src="{{ url('/pictures/about/about-us-left-picture.jpg') }}" alt="Image that alludes to communication online and interaction"> -->
+            <img class="left-picture" src="{{ url('/pictures/about/about-us-left-picture.jpg') }}" alt="Image that alludes to communication online and interaction">
         </div>
         <div class="text-description">
             <h2>Our Platform</h2>
@@ -43,7 +43,7 @@
         <div class="team-members">
             <div class="team-member">
                 <div class="team-member-image">
-                    <!-- <img src="{{ url('/pictures/about/team_member_ricardo.png') }}" alt="Ricardo Peralta"> -->
+                    <img src="{{ url('/pictures/about/team_member_ricardo.png') }}" alt="Ricardo Peralta">
                 </div>
                 <div class="team-member-description">
                     <h3>Ricardo Peralta</h3>
@@ -54,7 +54,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!-- <img src="{{ url('/pictures/about/team_member_goncalo.png') }}" alt="Gonçalo"> -->
+                    <img src="{{ url('/pictures/about/team_member_goncalo.png') }}" alt="Gonçalo">
                 </div>
                 <div class="team-member-description">
                     <h3>Gonçalo</h3>
@@ -65,7 +65,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!-- <img src="{{ url('/pictures/about/team_member_tomas.png') }}" alt="Tomas"> -->
+                    <img src="{{ url('/pictures/about/team_member_tomas.png') }}" alt="Tomas">
                 </div>
                 <div class="team-member-description">
                     <h3>Tomas</h3>

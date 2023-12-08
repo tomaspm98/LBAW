@@ -1,6 +1,6 @@
 <?php 
 use App\Models\Moderator;
-
+use App\Models\UserFollowQuestion;
 ?>
 
 <div class="d-flex mt-3"> <!--Question-->
@@ -10,7 +10,7 @@ use App\Models\Moderator;
         <div class="text-center">
             <a href="{{ route('member.show', $question->author) }} " class="text-decoration-none"> <!-- route('member.show', $question->author) -->
                 <div class="content_user_profile_photo">
-                    <!-- <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo"> -->
+                    <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
                 </div>
                 <p><b class="text-dark">{{ $question->author->username }}</b></p>
             </a>
@@ -78,16 +78,14 @@ use App\Models\Moderator;
                 <i class="bi bi-three-dots fs-5"></i>
             </button>
             <ul class="dropdown-menu">
-                <!-- TODO: -->
-                @if (Auth::check())
-                <li>
-                    <button class="btn dropdown-button text-warning" id="followQuestionButton" data-question-id="{{ $question->question_id }}">
-                        Follow featuring
-                    </button>
-                </li>
+                @if (Auth::check())    
+                @php $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); @endphp    
+                <button class="btn dropdown-button text-warning" id="followQuestionButton" data-question-id="{{ $question->question_id }}">
+                    {{ $isFollowing ? 'Unfollow Question' : 'Follow Question' }}
+                </button>
                 @endif
 
-            @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
+                @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
                 <li>
                     <form action="{{ route('questions.delete', $question->question_id) }} " 
                     method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
@@ -104,7 +102,7 @@ use App\Models\Moderator;
                         </button>
                     </form>
                 </li>
-                
+
                 @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
                 <li>
                     <form action="{{ route('questions.delete', $question->question_id) }}" 
@@ -116,7 +114,7 @@ use App\Models\Moderator;
                         </button>
                     </form>
                 </li>
-                
+
                 @else
                 <div class="btn-group dropdown text-danger">
                     <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

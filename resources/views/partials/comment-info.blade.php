@@ -6,7 +6,7 @@ use App\Models\Moderator;
 <div class="comment_container w-100 bg-light mt-3 border-bottom rounded-2 p-1 d-flex position-relative" id="comment-{{$comment->comment_id}}">
     
     <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}#comment-{{$comment->comment_id}}" 
-    method="POST" class="text-center p-2" style="width:70px"> 
+    method="POST" class="text-center p-2"> 
         @csrf
         @php $userVote = $comment->userVote; @endphp
         <button type="submit" name="upvote" value="up" class="btn p-2 rounded-top-5 {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">

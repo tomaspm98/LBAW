@@ -15,11 +15,6 @@
 
             <button type="submit" class="btn btn-primary">Update Answer</button>
         </form>
-            <form action="{{ route('answers.delete', ['question_id' => $answer->question_id, 'answer_id' => $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">Delete Answer</button>
-            </form>
     </div>
 @else 
     <?php abort(404); ?>

@@ -1,6 +1,6 @@
 <?php 
 use App\Models\Moderator;
-// use App\Models\UserFollowQuestion;
+use App\Models\UserFollowQuestion;
 ?>
 @extends('layouts.app')
 
@@ -18,22 +18,20 @@ use App\Models\Moderator;
 
 @if ($question->content_is_visible)
     @if (session('error'))
-        <div id="errorPopup" class="popup-message">
-            {{ session('error') }}
-        </div>
+    <div id="errorPopup" class="popup-message">
+        {{ session('error') }}
+    </div>
 
-        <script>
-            // Show the popup
-            let popup = document.getElementById('errorPopup');
-            popup.style.display = 'block';
+    <script>
+        let popup = document.getElementById('errorPopup');
+        popup.style.display = 'block';
 
-            // Hide the popup after 5 seconds (5000 milliseconds)
-            setTimeout(function() {
-                popup.style.display = 'none';
-            }, 5000);
-        </script>
+        setTimeout(function() {
+            popup.style.display = 'none';
+        }, 5000);
+    </script>
     @endif
-
+    
     <div class="container">
 
     @include ('partials.question-info')
@@ -86,7 +84,6 @@ use App\Models\Moderator;
             <hr >
             @endif
             @endforeach    
-
         </div>
     </div>
     @else
@@ -106,18 +103,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     const reportButton = document.getElementById('showReportForm');
-//     const reportForm = document.getElementById('reportForm');
-
-//     reportButton.addEventListener('click', function() {
-//         reportButton.style.display = 'none'; 
-//         reportForm.style.display = 'block'; 
-//     });
-
-    
-// });
-
 function showNotification() {
         var reason = document.getElementById("report_reason");
         reason = reason.value;
@@ -134,14 +119,6 @@ function showNotification() {
         }, 3000); 
     }
 
-
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const reportButton = document.getElementById('showReportAnswerForm');
     const reportForm = document.getElementById('reportAnswerForm');
@@ -151,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function() {
         reportForm.style.display = 'block';
     });
 });
-
 
 function showNotificationAnswer() {
         var reason = document.getElementById('report_reason_answer');
@@ -168,22 +144,6 @@ function showNotificationAnswer() {
             notification.style.display = 'none';
         }, 3000); 
     }
-
-
-
-
-
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     const reportButton = document.getElementById('showReportCommentForm');
-//     const reportForm = document.getElementById('reportCommentForm');
-
-//     reportButton.addEventListener('click', function() {
-//         reportButton.style.display = 'none'; 
-//         reportForm.style.display = 'block'; 
-//     });
-// });
-
 
 function showNotificationComment() {
         var reason = document.getElementById('report_reason_comment');
@@ -210,62 +170,5 @@ function showNotificationComment() {
     }, 3000); 
 }    
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     const followButton = document.getElementById('followQuestionButton');
-//     followButton.addEventListener('click', function() {
-//         const questionId = this.getAttribute('data-question-id');
-//         const url = `/questions/${questionId}/follow`; 
-//         fetch(url, {
-//             method: 'POST',
-//             headers: {
-//                 'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRF token
-//                 'Content-Type': 'application/json',
-//                 'Accept': 'application/json',
-//             },
-//             body: JSON.stringify({ question_id: questionId })
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log(data.isFollowing)
-//             // Confirm and maintain the UI update
-//             if (data.isFollowing) {
-//                 followButton.textContent = 'Follow Question';
-//             } else {
-//                 followButton.textContent = 'Unfollow Question';
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             followButton.textContent = isCurrentlyFollowing ? 'Unfollow Question' : 'Follow Question';
-//             followButton.classList.toggle('btn-following', isCurrentlyFollowing);
-//         });
-//     });
-// });
-
-
-
-
 </script>
 
-
-
-
-
-<!--
-
-    TODO:
-    1. [ ] Restrict featuring post answer (only for members)
-    2. [ ] Restrict delete featuring (only for owner (and admin?))
-    3. [ ] Restrict edit featuring (only for owner (and admin?))    
-    4. [ ] Edit (question, answer, comment) featuring
-    5. [ ] Delete question featuring dosent work correctly
-    6. [ ] Fix creation_date format
-    7. [ ] In some content when clic con a profile photo or username redirect to the owner user profile 
-
-    not high priority:
-    4. [ ] load profiles photos 
-    5. [ ] votes (not high priority)
-    6. [ ] report featuring
-    7. [ ] add icones for buttons
-
--->

@@ -14,10 +14,9 @@ use App\Models\Moderator;
 @section('content')
     <div class="container">
 
-        <div class="row mt-5">
-            <div class="col-md-3 w-1">
-                <!-- <img class="profile-picture img-fluid"  src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo> -->
-
+        <div class="row my-4">
+            <div class="col-md-2 w-1">
+                <img class="profile-picture img-fluid"  src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
             </div>
             <div class="col-md-9">
                 <h3 class="mb-3 p-1">
@@ -37,8 +36,7 @@ use App\Models\Moderator;
                         <p class="text-muted d-flex align-items-center"><i class="bi bi-cake2 m-1"></i> {{ \Carbon\Carbon::parse($member->user_birthdate)->format('Y-m-d') }}</p>
                     </div>
                     <div class="col-md-4">
-                        <h4>Score:</h4>
-                        <p class="text-muted">{{ $member->user_score }}</p>
+                        <h4>Score: <b class="text-muted">{{ $member->user_score }}</b></h4>
                     </div>
 
                 </div>

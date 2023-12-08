@@ -16,14 +16,18 @@ class HomeController extends Controller
     public function index()
     {
         $questions = Question::where('content_is_visible', true)->get();
-        // $user_id = Auth::user()->user_id;
-        // $member = Member::findOrFail($user_id);
-        // $questions_followed = $member->follows()->get();
-        // $questions_followed = $questions_followed->pluck('question_id')->toArray();
-        // for ($i = 0; $i < count($questions_followed); $i++) {
-        //     $questions_followed[$i] = Question::findOrFail($questions_followed[$i]);
-        // }
 
+        if (Auth::check()){
+            $user_id = Auth::user()->user_id;
+            $member = Member::findOrFail($user_id);
+            $questions_followed = $member->follows()->get();
+            $questions_followed = $questions_followed->pluck('question_id')->toArray();
+            for ($i = 0; $i < count($questions_followed); $i++) {
+                $questions_followed[$i] = Question::findOrFail($questions_followed[$i]);
+            }
+        } else {
+            $questions_followed = [];
+        }
 
         $totalQuestions = Question::count();
 
@@ -33,8 +37,7 @@ class HomeController extends Controller
 
         //$questions = Question::all();
         
-        // return view('pages.home', compact('questions', 'questions_followed', 'totalQuestions', 'questionsLastWeek', 'newUsersLastWeek'));
-        return view('pages.home', compact('questions', 'totalQuestions', 'questionsLastWeek', 'newUsersLastWeek'));
+        return view('pages.home', compact('questions', 'questions_followed', 'totalQuestions', 'questionsLastWeek', 'newUsersLastWeek'));
     }
 
 
