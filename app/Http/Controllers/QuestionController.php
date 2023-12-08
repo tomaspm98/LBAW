@@ -39,7 +39,6 @@ class QuestionController extends Controller
     public function updateTag(Request $request, Question $question)
     {
         $question->update(['question_tag' => $request->input('question_tag')]);
-        // Perform necessary actions after updating the tag
         return redirect()->back()->with('success', 'Tag updated successfully');
     }
 
@@ -94,7 +93,6 @@ class QuestionController extends Controller
         $questionsLastWeek = Question::where('content_creation_date', '>=', $oneWeekAgo)->count();
         $newUsersLastWeek = Member::where('user_creation_date', '>=', $oneWeekAgo)->count();
 
-        // Do not broadcast the event, just return the JSON response
         return response()->json([
             'totalQuestions' => $totalQuestions,
             'questionsLastWeek' => $questionsLastWeek,

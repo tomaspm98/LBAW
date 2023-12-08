@@ -43,5 +43,35 @@
     border-color: #d9534f; 
 }
 
+.vote-btn-comment.btn-primary:focus {
+    background-color: #0f4aa8;
+    border-color: #0f4aa8; 
+}
+
+.vote-btn-comment.btn-success:focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c; 
+}
+
+.vote-btn-comment.btn-danger:focus {
+    background-color: #d9534f;
+    border-color: #d9534f; 
+}
+
+.vote-btn-answer.btn-primary:focus {
+    background-color: #0f4aa8;
+    border-color: #0f4aa8; 
+}
+
+.vote-btn-answer.btn-success:focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c; 
+}
+
+.vote-btn-answer.btn-danger:focus {
+    background-color: #d9534f;
+    border-color: #d9534f; 
+}
+
 
 /*# sourceMappingURL=milligram.min.css.map */
