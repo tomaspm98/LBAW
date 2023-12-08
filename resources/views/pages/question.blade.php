@@ -143,6 +143,11 @@ use App\Models\UserFollowQuestion;
                 </div>
                 
                 <div class="content_text_container">
+                <div class="icon-container">
+                    <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
+                    <span class="hover-text">ok nice one</span>
+                </div>
+
                     <h3>{{ $question->content_text }}</h3>
                     @if($question->content_is_edited)
                     <p>edited</p>

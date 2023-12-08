@@ -73,5 +73,37 @@
     border-color: #d9534f; 
 }
 
+.icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #0f4aa8;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px; /* Center the tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.icon-container:hover .hover-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.fa-circle-question {
+    cursor: pointer; /* Optional: changes the cursor when hovering over the icon */
+}
+
+
 
 /*# sourceMappingURL=milligram.min.css.map */

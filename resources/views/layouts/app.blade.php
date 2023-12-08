@@ -25,6 +25,7 @@ use App\Models\Admin;
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
         <link href="{{ url('css/tags.css') }}" rel="stylesheet">	
 
+        <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
