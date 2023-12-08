@@ -11,6 +11,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoteController;
 use App\Events\QuestionUpdated;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\Auth\PasswordRecovery;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +42,19 @@ Route::controller(LoginController::class)->group(function () {
     // Logout the authenticated user. Access: MEM, ADM, MOD
     Route::post('/logout', 'logout')->name('logout');
 });
+
+Route::controller(PasswordRecovery::class)->group(function () {
+    // Account recovery
+    Route::get('/account-recovery', 'showAccountRecoveryForm')->name('account-recovery');
+    Route::post('/account-recovery', 'sendPasswordResetToken');
+
+    // Token verification
+    //Route::get('/token-verification', 'verifyTokenForm')->name('token-verification');
+    Route::post('/token-verification', 'verifyToken')->name('token-verification-post');
+    Route::post('/password-reset', 'resetPassword')->name('password-reset');
+});
+
+Route::post('/send', [MailController::class, 'send']);
 
  
 // REGISTRATION

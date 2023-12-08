@@ -13,6 +13,7 @@
     @endif
 
     <label for="password" >Password</label>
+    <a href="/account-recovery">Forgot password?</a>
     <input id="password" type="password" name="password" required>
     @if ($errors->has('password'))
         <span class="error">
