@@ -103,3 +103,17 @@
 
 
 
+.question-closed {
+    background-color: #f8d7da; /* Change the background color */
+    color: #721c24; /* Change the text color */
+    border: 1px solid #f5c6cb; /* Add a border if desired */
+    padding: 10px; /* Adjust padding as needed */
+    margin-bottom: 15px; /* Adjust margin as needed */
+    /* Add more styles as per your design */
+    width: 50%;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+

@@ -69,6 +69,7 @@ Route::controller(QuestionController::class)->group(function(){
     Route::get('questions', 'list')->name('questions.list');
     Route::post('/questions/{question}/updateTag', 'updateTag')->name('questions.updateTag');
     Route::post('/questions/{question_id}/follow', 'followQuestion')->name('questions.follow');  //AJAX REQUEST
+    Route::post('/questions/{question_id}/close', 'closeQuestion')->name('close.question'); 
 });
 
 Route::controller(AnswerController::class)->group(function(){

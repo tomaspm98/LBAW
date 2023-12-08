@@ -26,6 +26,7 @@ class Question extends Model
         'content_text',
         'content_is_edited',
         'content_is_visible',
+        'question_closed',
         'tsvectors '
     ];
 
