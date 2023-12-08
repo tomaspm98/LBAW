@@ -6,6 +6,8 @@ use App\Models\Member;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Log;
+use App\Models\Moderator;
+use App\Models\Admin;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -25,8 +27,8 @@ class MemberPolicy
 }
 
     public function delete(Member $member): bool
-    {
-        return Auth::user()->user_id === $member->user_id;
+    {    
+        return Auth::user()->user_id === $member->user_id || Moderator::where('user_id', Auth::user()->user_id)->exists() || Admin::where('user_id', Auth::user()->user_id)->exists();
     }
 
 }
