@@ -25,6 +25,7 @@ use App\Models\Admin;
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
         <link href="{{ url('css/tags.css') }}" rel="stylesheet">	
 
+        <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -57,11 +58,12 @@ use App\Models\Admin;
             </section>
         </main>
         <footer>
-            <p class="site-moto">The best Q&A Platform for thechnology questions</p>
+            <p class="site-moto">The best Q&A Platform for technology questions</p>
             <p>&copy; Query Stack!</p>
             <div class="site-map">
                 <a class="button" href="{{ route('about') }}"> About </a>
                 <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
+                <a class="button" href="{{ route('about') }}#faqs"> FAQ </a>
             </div>
         </footer>
     </body>

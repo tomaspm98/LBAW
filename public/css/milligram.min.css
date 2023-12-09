@@ -73,5 +73,89 @@
     border-color: #d9534f; 
 }
 
+.hover-container {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-container-down {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-text {
+    display: none;
+    position: absolute;
+    left: 100%; /* Align with the left side of 'Top Questions' */
+    bottom: 100%; /* Just below 'Top Questions' */
+    background-color: #f9f9f9; /* Light grey background */
+    border: 1px solid #ddd; /* Grey border */
+    padding: 5px;
+    margin-top: 5px; /* Slight space between 'Top Questions' and the box */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds a shadow effect */
+    z-index: 1; /* Ensures the box appears above other content */
+    width: 250px;
+    height: 120px;
+    text-align: left;
+    font-size: small;
+}
+
+.hover-text-down {
+    display: none;
+    position: absolute;
+    left: 100%; /* Align with the left side of 'Top Questions' */
+    top: 100%; /* Just below 'Top Questions' */
+    background-color: #f9f9f9; /* Light grey background */
+    border: 1px solid #ddd; /* Grey border */
+    padding: 5px;
+    margin-top: 5px; /* Slight space between 'Top Questions' and the box */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds a shadow effect */
+    z-index: 1; /* Ensures the box appears above other content */
+    width: 250px;
+    height: 120px;
+    text-align: left;
+    font-size: small;
+}
+
+.hover-container:hover .hover-text {
+    display: block;
+}
+
+.hover-container-down:hover .hover-text-down {
+    display: block;
+}
+
+.faq-section {
+    margin-bottom: 10px;
+}
+
+.faq-question {
+    padding: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    background: none;
+}
+
+.faq-answer {
+    padding: 0 15px;
+    display: none;
+    overflow: hidden;
+    text-align: left;
+    background-color: #f1f1f1;
+}
+
+.arrow {
+    cursor: pointer;
+    display: inline-block;
+    transition: 0.4s;
+}
+
+.arrow.rotate {
+    transform: rotate(90deg);
+}
+
+
 
 /*# sourceMappingURL=milligram.min.css.map */

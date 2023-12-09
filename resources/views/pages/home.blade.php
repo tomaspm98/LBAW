@@ -26,9 +26,12 @@
     </div>
 
     @if (Auth::check())
-    <a class="button" class="login-button" href="{{ url('/questions/create') }}"> Create a question </a> 
+    <a class="button" class="login-button" href="{{ url('/questions/create') }}"  style="float:right;"> Create a question </a> 
     @endif
-    <h2>Top Questions</h2>
+    <div class="hover-container">
+        <h2>Top Questions</h2>
+        <span class="hover-text">Here you can see the Top Questions in this platform, and if you click on one of them, you will be redirected to the question page to access to more details of the question.</span>
+    </div>
     <ul>
         @foreach ($questions as $question)
          @if($question->content_is_visible)

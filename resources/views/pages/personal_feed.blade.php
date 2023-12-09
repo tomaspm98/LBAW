@@ -1,12 +1,13 @@
 
 <div class="container">   
-
-    <h2>Personal Feed</h2>
+    <div class="hover-container">
+        <h2>Personal Feed</h2>
+        <span class="hover-text">Personal Feed presents you the questions you follow, so that you have more interest. It eases the way to access the more interesting questions according to each user.</span>
+    </div>
     <ul>
         @foreach ($questions_followed as $question)
          @if($question->content_is_visible)
             <li class="question_card">
-
                 <div class="question_user_container">
                     <a href="{{ route('member.show', $question->author) }}"> 
                         <div class="question_user_photo">

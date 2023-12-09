@@ -98,5 +98,59 @@
             <li>Physical support: FEUP - Porto, Portugal </li>
         </ul>
     </div>
+
+    <div class="platform-faqs main-containers" id="faqs">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-section">
+        <span class="faq-question">How do I register for an account? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>To register, click on the 'Register' button on the top right corner. Fill in your details in the registration form and follow the instructions to complete the process.</p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <span class="faq-question">How do I ask a question? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>To ask a question, click on the 'Create Question' button on the homepage. Make sure your question is clear and understandable so that others can answer it inside the context.</p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <span class="faq-question"> What kind of questions can I ask? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>You can ask any question that follow community guidelines. Avoid offensive, inappropriate, or overly personal content. Check the tags we have available for the questions.</p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <span class="faq-question">How do I answer a question? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>To answer, click on the question and write your answer in th provided space. Make sure it is informative, respectful, and respects to our community guidelines.</p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <span class="faq-question">How can I report inappropriate content or behavior? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>If you see content or behavior that violates our community guidelines, please use the 'Report' button associated with the content and fill the reason and an optional text to provide more details.</p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <span class="faq-question">How does the voting system work? <span class="arrow" onclick="toggleAnswer(this)">&#9654;</span></span>
+        <div class="faq-answer">
+            <p>Users can upvote or downvote questions, answers and comments based on their accuracy and helpfulness. Voting increases your personal score.</p>
+        </div>
+    </div>
+</div>
 </section>
+
+<script>
+    function toggleAnswer(arrow) {
+        var answer = arrow.parentNode.nextElementSibling;
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            arrow.classList.remove("rotate");
+        } else {
+            answer.style.display = "block";
+            arrow.classList.add("rotate");
+        }
+    }
+</script>
+
 @endsection
