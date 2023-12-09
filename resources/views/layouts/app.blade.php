@@ -58,11 +58,12 @@ use App\Models\Admin;
             </section>
         </main>
         <footer>
-            <p class="site-moto">The best Q&A Platform for thechnology questions</p>
+            <p class="site-moto">The best Q&A Platform for technology questions</p>
             <p>&copy; Query Stack!</p>
             <div class="site-map">
                 <a class="button" href="{{ route('about') }}"> About </a>
                 <a class="button" href="{{ route('about') }}#platform-contacts"> Contacts </a>
+                <a class="button" href="{{ route('about') }}#faqs"> FAQ </a>
             </div>
         </footer>
     </body>

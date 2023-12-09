@@ -73,35 +73,87 @@
     border-color: #d9534f; 
 }
 
-.icon-container {
+.hover-container {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-container-down {
     position: relative;
     display: inline-block;
 }
 
 .hover-text {
-    visibility: hidden;
-    width: 120px;
-    background-color: #0f4aa8;
-    color: #fff;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px 0;
+    display: none;
     position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px; /* Center the tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
+    left: 100%; /* Align with the left side of 'Top Questions' */
+    bottom: 100%; /* Just below 'Top Questions' */
+    background-color: #f9f9f9; /* Light grey background */
+    border: 1px solid #ddd; /* Grey border */
+    padding: 5px;
+    margin-top: 5px; /* Slight space between 'Top Questions' and the box */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds a shadow effect */
+    z-index: 1; /* Ensures the box appears above other content */
+    width: 250px;
+    height: 120px;
+    text-align: left;
+    font-size: small;
 }
 
-.icon-container:hover .hover-text {
-    visibility: visible;
-    opacity: 1;
+.hover-text-down {
+    display: none;
+    position: absolute;
+    left: 100%; /* Align with the left side of 'Top Questions' */
+    top: 100%; /* Just below 'Top Questions' */
+    background-color: #f9f9f9; /* Light grey background */
+    border: 1px solid #ddd; /* Grey border */
+    padding: 5px;
+    margin-top: 5px; /* Slight space between 'Top Questions' and the box */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds a shadow effect */
+    z-index: 1; /* Ensures the box appears above other content */
+    width: 250px;
+    height: 120px;
+    text-align: left;
+    font-size: small;
 }
 
-.fa-circle-question {
-    cursor: pointer; /* Optional: changes the cursor when hovering over the icon */
+.hover-container:hover .hover-text {
+    display: block;
+}
+
+.hover-container-down:hover .hover-text-down {
+    display: block;
+}
+
+.faq-section {
+    margin-bottom: 10px;
+}
+
+.faq-question {
+    padding: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    background: none;
+}
+
+.faq-answer {
+    padding: 0 15px;
+    display: none;
+    overflow: hidden;
+    text-align: left;
+    background-color: #f1f1f1;
+}
+
+.arrow {
+    cursor: pointer;
+    display: inline-block;
+    transition: 0.4s;
+}
+
+.arrow.rotate {
+    transform: rotate(90deg);
 }
 
 
