@@ -80,9 +80,11 @@ use App\Models\UserFollowQuestion;
             <ul class="dropdown-menu">
                 @if (Auth::check())    
                 @php $isFollowing = UserFollowQuestion::where('user_id', Auth::id())->where('question_id', $question->question_id)->exists(); @endphp    
-                <button class="btn dropdown-button text-warning" id="followQuestionButton" data-question-id="{{ $question->question_id }}">
-                    {{ $isFollowing ? 'Unfollow Question' : 'Follow Question' }}
-                </button>
+                <li>
+                    <button class="dropdown-item text-warning" id="followQuestionButton" data-question-id="{{ $question->question_id }}">
+                        {{ $isFollowing ? 'Unfollow Question' : 'Follow Question' }}
+                    </button>
+                </li>
                 @endif
 
                 @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
@@ -91,7 +93,7 @@ use App\Models\UserFollowQuestion;
                     method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
                         @csrf
                         @method('DELETE')
-                        <button class="btn dropdown-item text-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+                        <button class="dropdown-item text-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                     </form>
                 </li>
                 <li>
@@ -109,41 +111,59 @@ use App\Models\UserFollowQuestion;
                     method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
                         @csrf
                         @method('DELETE')
-                        <button class="btn dropdown-item text-danger" type="submit" onclick="return confirm('Are you sure you want to delete this question?')">
+                        <button class="dropdown-item text-danger" type="submit" 
+                        onclick="return confirm('Are you sure you want to delete this question?')">
                             Delete
                         </button>
                     </form>
                 </li>
 
                 @else
-                <div class="btn-group dropdown text-danger">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Report Question
-                    </button>
-                    <ul class="dropdown-menu p-1" style="width:300px;">
-                                
-                        <form class="p-2" id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}">
-                            <div class="form-group mb-1">
-                                @csrf
-                                <select class="form-select" name="report_reason" id="report_reason" required>
-                                    <option value="" disabled selected>Select reason</option>
-                                    <option value="spam">Spam</option>
-                                    <option value="offensive">Offensive</option>
-                                    <option value="Rules Violation">Rules Violation</option>
-                                    <option value="Inappropriate tag">Inappropriate tag</option>
-                                </select>
-                            </div>
-                            <div class="form-group my-2">
-                                <textarea class="form-control" name="report_text" placeholder="Additional text (optional)" rows="4"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit Report</button>
-                        </form>
-
-                    </ul>
-                </div>  
+                <li>
+                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#QuestionModal" data-bs-whatever="@mdo">
+                    Report Question
+                </button>
+                </li>  
                 @endif    
 
             </ul>
+
+            <div class="modal fade" id="QuestionModal" tabindex="-1" aria-labelledby="QuestionModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="QuestionModalLabel">Report Question</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form class="p-2" id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}">
+                                @csrf
+                                <div class="mb-3">
+                                    <select class="form-select" name="report_reason" id="report_reason_answer" required>
+                                        <option value="" disabled selected>Select reason</option>
+                                        <option value="spam">Spam</option>
+                                        <option value="offensive">Offensive</option>
+                                        <option value="Rules Violation">Rules Violation</option>
+                                        <option value="Inappropriate tag">Inappropriate tag</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="report_text">Answer Content</label>
+                                    <textarea class="form-control fixed-height" style="min-height:200px;" name="report_text"  placeholder="Additional text (optional)" rows="4"></textarea>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="button_report btn btn-primary" data-bs-dismiss="modal" onclick="showNotificationAnswer()">Submit Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
 </div>

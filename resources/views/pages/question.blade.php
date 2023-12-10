@@ -63,15 +63,22 @@ use App\Models\UserFollowQuestion;
             @include ('partials.answer-info')       
    
             <!--COMMENTS FORM-->
-            <div class="comment_form_container p-4">
-                <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <textarea class="form-control fixed-height" style="height:70px" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required placeholder="Post Comment..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">submit</button>
-                </form>
-            </div>  
+
+            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+                <i class="bi bi-caret-down-fill">Comment</i>
+                </button>
+            <div class=" border-top">
+
+                <div class="collapse comment_form_container p-4" id="collapseComment">
+                    <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <textarea class="form-control fixed-height" style="height:70px" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required placeholder="Post Comment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">submit</button>
+                    </form>
+                </div>
+            </div>
 
             @foreach ($answer->comments as $comment)
             @if ($comment->content_is_visible)
@@ -119,15 +126,15 @@ function showNotification() {
         }, 3000); 
     }
 
-document.addEventListener("DOMContentLoaded", function() {
-    const reportButton = document.getElementById('showReportAnswerForm');
-    const reportForm = document.getElementById('reportAnswerForm');
+// document.addEventListener("DOMContentLoaded", function() {
+//     const reportButton = document.getElementById('showReportAnswerForm');
+//     const reportForm = document.getElementById('reportAnswerForm');
 
-    reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; 
-        reportForm.style.display = 'block';
-    });
-});
+//     reportButton.addEventListener('click', function() {
+//         reportButton.style.display = 'none'; 
+//         reportForm.style.display = 'block';
+//     });
+// });
 
 function showNotificationAnswer() {
         var reason = document.getElementById('report_reason_answer');
