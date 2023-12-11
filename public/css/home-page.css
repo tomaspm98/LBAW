@@ -47,26 +47,26 @@
     text-decoration: underline;
 }
 
-.notification-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .notification-item {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-  }
-  
-  .notification-content {
-    font-weight: bold;
-  }
-  
-  .notification-read {
-    color: #555;
-  }
-  
-  .notification-unread {
-    color: #007bff;
-  }
+#dropdown-menu {
+  max-width: 30vw;
+  max-height: 50vh;
+  background-color: #fff;
+  position: absolute;
+  z-index: 1000; /* Set a high z-index value */
+  overflow: auto;
+  padding: 1em
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  display: block; 
+}
+
+.notification-read {
+  color: #ccc;
+}
+
+.notification-unread {
+  color: #000;
+}

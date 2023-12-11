@@ -58,7 +58,7 @@ function createNotificationDropdown() {
 
 	const readNotificationsDiv = document.createElement('div');
 	readNotificationsDiv.id = 'read-notifications';
-	createNotificationItems(window.readNotifications, readNotificationsDiv,5);
+	createNotificationItems(window.readNotifications, readNotificationsDiv);
 	notificationDropdown.appendChild(readNotificationsDiv);
 
 	notificationDropdownContainer.appendChild(notificationDropdown);
@@ -85,7 +85,7 @@ function createNotificationItems(notifications, container, limit = Infinity) {
 
 		slicedNotifications.forEach(notification => {
 			const listItem = document.createElement('div');
-			listItem.className = 'notification-item';
+			listItem.className = 'notification-item hover-container-down';
 
 			const link = document.createElement('a');
 
@@ -93,12 +93,16 @@ function createNotificationItems(notifications, container, limit = Infinity) {
 			link.className = notification.notification_is_read ? 'notification-read' : 'notification-unread';
 
 			link.innerText = notification.notification_content;
-
-			// Add a click event to the notification item
-			link.addEventListener('click', () => {
-				markIndividualAsRead(notification.notification_id);
-			});
-
+			// If notification_id is in unread add event
+			if (!notification.notification_is_read ) {
+				link.addEventListener('click', () => {
+					markIndividualAsRead(notification.notification_id);
+				});
+				//const hoverText = document.createElement('span');
+                //hoverText.className = 'hover-text-down';
+                //hoverText.innerText = 'Mark as read';
+                //link.appendChild(hoverText);
+			}
 			listItem.appendChild(link);
 			container.appendChild(listItem);
 		});
@@ -113,29 +117,29 @@ function markIndividualAsRead(notificationId) {
 
 
 function markAsReadHandler() {
-	try {
-		const response = JSON.parse(this.responseText);
+    try {
+        const response = JSON.parse(this.responseText);
 
-		if (response.success) {
-			updateUnreadNotifications();
-			const unreadNotificationsContainer = document.getElementById('unread-notifications');
-			if (unreadNotificationsContainer) {
-				// Delete content of the parent of unreadNotificationsContainer
-				unreadNotificationsContainer.parentNode.innerHTML = '';
-			}
-			const notificationDropdown = document.createElement('ul');
-			const readNotificationsDiv = document.createElement('div');
-			readNotificationsDiv.id = 'read-notifications';
-			createNotificationItems(window.readNotifications, readNotificationsDiv,5);
-			notificationDropdown.appendChild(readNotificationsDiv);
-
-			notificationDropdownContainer.appendChild(notificationDropdown);
-		} else {
-			showError('An error occurred while marking notifications as read.');
-		}
-	} catch (error) {
-		showError('An error occurred while processing the response.');
-	}
+        if (response.success) {
+            updateUnreadNotifications().then(() => {
+                const unreadNotificationsContainer = document.getElementById('unread-notifications');
+                if (unreadNotificationsContainer) {
+                    // Delete full parent of unreadNotificationsContainer
+                    unreadNotificationsContainer.parentNode.remove();
+                }
+                // Delay the execution to allow the status to update
+                return new Promise(resolve => setTimeout(resolve, 100));
+            }).then(() => {
+                createNotificationDropdown();
+				const notificationCountBadge = document.getElementById('notification-count-badge');
+				notificationCountBadge.textContent = window.unreadNotifications.length;
+            });
+        } else {
+            showError('An error occurred while marking notifications as read.');
+        }
+    } catch (error) {
+        showError('An error occurred while processing the response.');
+    }
 }
 
 function markIndividualAsReadHandler() {
@@ -143,8 +147,19 @@ function markIndividualAsReadHandler() {
 		const response = JSON.parse(this.responseText);
 
 		if (response.success) {
-		updateUnreadNotifications();
-		console.log('Notification marked as read successfully');
+			updateUnreadNotifications().then(() => {
+                const unreadNotificationsContainer = document.getElementById('unread-notifications');
+                if (unreadNotificationsContainer) {
+                    // Delete full parent of unreadNotificationsContainer
+                    unreadNotificationsContainer.parentNode.remove();
+                }
+                // Delay the execution to allow the status to update
+                return new Promise(resolve => setTimeout(resolve, 100));
+            }).then(() => {
+                createNotificationDropdown();
+				const notificationCountBadge = document.getElementById('notification-count-badge');
+				notificationCountBadge.textContent = window.unreadNotifications.length;
+            });
 		} else {
 		showError('An error occurred while marking the notification as read.');
 		}
@@ -155,34 +170,38 @@ function markIndividualAsReadHandler() {
 }
 
 function updateUnreadNotifications() {
-    const notificationCountBadge = document.getElementById('notification-count-badge');
-    if (notificationCountBadge) {
-		authUserReadNotifications();
-        notificationCountBadge.textContent = authUserUnreadNotifications().length;
-    }
-    
+    return new Promise((resolve) => {
+        const notificationCountBadge = document.getElementById('notification-count-badge');
+        if (notificationCountBadge) {
+            authUserReadNotifications();
+            notificationCountBadge.textContent = authUserUnreadNotifications().length;
+        }
+        resolve();
+    });
 }
 
 function updateUnreadNotificationsVar(){
-	try {
-		const response = JSON.parse(this.responseText);
-
-		window.unreadNotifications = response;
+    try {
+        const response = JSON.parse(this.responseText);
 		
-	} catch (error) {
-	showError('An error occurred while processing the response: ' + error.message);
-	}
+        window.unreadNotifications = response;
+
+    } catch (error) {
+        showError('An error occurred while processing the response: ' + error.message);
+    }
 }
+
 function updateReadNotificationsVar(){
-	try {
-		const response = JSON.parse(this.responseText);
+    try {
+        const response = JSON.parse(this.responseText);
 
-		window.readNotifications = response;
-		
-	} catch (error) {
-	showError('An error occurred while processing the response: ' + error.message);
-	}
+        window.readNotifications = response;
+
+    } catch (error) {
+        showError('An error occurred while processing the response: ' + error.message);
+    }
 }
+
 
 function showError(errorMessage) {
   	console.error(errorMessage);

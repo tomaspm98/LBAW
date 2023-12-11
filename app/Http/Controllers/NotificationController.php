@@ -48,6 +48,7 @@ class NotificationController extends Controller
             $notification->notification_is_read = true;
             $notification->save();
 
+
             return response()->json(['success' => true]);
         }
 
@@ -68,13 +69,27 @@ class NotificationController extends Controller
 
     public function getUnreadNotifications(Request $request)
     {
-        return response()->json(Auth::user()->notifications->where('notification_is_read', false));
+        $readNotifications = Auth::user()->notifications
+            ->where('notification_is_read', false)
+            ->values()
+            ->toArray();
+
+        return response()->json($readNotifications);
     }
 
+    
     public function getReadNotifications(Request $request)
     {
-        return response()->json(Auth::user()->notifications->where('notification_is_read', true));
+        $readNotifications = Auth::user()->notifications
+            ->where('notification_is_read', true)
+            ->values()
+            ->toArray();
+
+        return response()->json($readNotifications);
     }
+
+    
+
 
     // Delete a notification
     public function delete($notification_id)
