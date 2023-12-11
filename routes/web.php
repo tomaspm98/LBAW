@@ -13,6 +13,7 @@ use App\Events\QuestionUpdated;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\Auth\PasswordRecovery;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,13 @@ Route::controller(PasswordRecovery::class)->group(function () {
 
 Route::post('/send', [MailController::class, 'send']);
 
+Route::controller(NotificationController::class) ->group(function(){
+    Route::get('/notifications/show', 'show')->name('notifications.show');
+    Route::post('/mark-as-read', 'markAllAsRead')->name('mark-as-read');
+    Route::post('/mark-as-read-individual/{notification_id}', 'markAsRead')->name('mark-as-read-individual');
+    Route::post('/get-unread-notifications', 'getUnreadNotifications')->name('get-unread-notifications')->middleware('auth');
+    Route::post('/get-read-notifications', 'getReadNotifications')->name('get-read-notifications')->middleware('auth');
+});
  
 // REGISTRATION
 Route::controller(RegisterController::class)->group(function () {

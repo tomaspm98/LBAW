@@ -16,6 +16,11 @@ class Notification extends Model
 
     public function member()
     {
-        return $this->belongsTo(Member::class, 'notification_user');
+        return $this->belongsTo(Member::class, 'notification_user','notification_user');
     }
+    public function user()
+    {
+        return $this->belongsTo(Member::class, 'notification_user','notification_user' );
+    }
+    
 }

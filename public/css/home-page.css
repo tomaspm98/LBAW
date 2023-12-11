@@ -46,3 +46,27 @@
     color: rgb(15, 15, 164);
     text-decoration: underline;
 }
+
+#dropdown-menu {
+  max-width: 30vw;
+  max-height: 50vh;
+  background-color: #fff;
+  position: absolute;
+  z-index: 1000; /* Set a high z-index value */
+  overflow: auto;
+  padding: 1em
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  display: block; 
+}
+
+.notification-read {
+  color: #ccc;
+}
+
+.notification-unread {
+  color: #000;
+}
