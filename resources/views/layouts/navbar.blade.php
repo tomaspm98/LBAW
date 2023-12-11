@@ -1,7 +1,7 @@
 <?php 
 use App\Models\Admin; 
 use App\Models\Moderator; 
-
+use App\Models\Member;
 ?>
 
 <nav class="">
@@ -52,8 +52,7 @@ use App\Models\Moderator;
                 </div>
             </div>  
             @endif  
-            <a class="button" href="">Notifications</a>
-                    
+            @include('partials.notifications')
                      
             @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
                 <a class="button" href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>

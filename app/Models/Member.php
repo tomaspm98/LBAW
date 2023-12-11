@@ -53,9 +53,18 @@ class Member extends Authenticatable
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'user_id');
+        return $this->hasMany(Notification::class, 'notification_user');
+    }
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('notification_is_read', false);
     }
 
+    public function readNotifications()
+    {
+        return $this->notifications()->where('notification_is_read', true);
+    }
+    
     public function questions()
     {
         return $this->hasMany(Question::class, 'content_author');
