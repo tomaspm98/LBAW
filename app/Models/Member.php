@@ -92,7 +92,7 @@ class Member extends Authenticatable
 }
 
     public function follows(){
-        return $this->hasMany(UserFollowQuestion::class, 'user_id');
+        return $this->hasMany(UserFollowQuestion::class, 'user_id')->where('follow', true);
     }
 
 }
