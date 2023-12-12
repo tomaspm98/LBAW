@@ -7,50 +7,49 @@
             @csrf
             @method('PUT')
 
-            <div class="form-group">
-                <label for="username">Username</label>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter your new username"> 
             </div>
 
-            <div class="form-group">
-                <label for="user_email">Email</label>
-                <input class="form-control" id="user_email" name="user_email" placeholder="Enter your new email"> 
+            <div class="mb-3">
+                <label for="user_email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="user_email" name="user_email" placeholder="Enter your new email"> 
             </div>
 
-            <div class="form-group">
-                <label for="user_password">Password</label>
-                <input class="form-control" id="user_password" name="user_password" placeholder="Enter your new password"> 
+            <div class="mb-3">
+                <label for="user_password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Enter your new password"> 
             </div>
             
-
-
-            <div class="form-group">
-                <label for="user_password_confirmation">Confirm Password</label>
-                <input class="form-control" id="user_password2" name="user_password_confirmation" placeholder="Confirm your new password"> 
+            <div class="mb-3">
+                <label for="user_password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="user_password2" name="user_password_confirmation" placeholder="Confirm your new password"> 
             </div>
 
-
-            <div class="form-group">
-                <label for="user_birthdate">Birthdate</label>
-                <input type="date" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
+            <div class="mb-3">
+                <label for="user_birthdate" class="form-label">Birthdate</label>
+                <input type="date" id="user_birthdate" name="user_birthdate" class="form-control"> 
             </div>
 
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <ol> {{ $error }}</ol>
-                    @endforeach
-                </ul>
-            </div>
-          @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
-        <form action="{{ route('user.delete', $member->user_id) }}" method="post">
+        
+        <form class="my-2" action="{{ route('user.delete', $member->user_id) }}" method="post">
             @csrf
             @method('delete')
         
-            <button type="submit" onclick="return confirm('Are you sure you want to delete your profile?')">Delete Profile</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete your profile?')">Delete Profile</button>
         </form>
     </div>
 @endsection

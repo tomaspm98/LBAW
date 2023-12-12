@@ -11,13 +11,15 @@ class SearchController extends Controller
     public function search(Request $request)
     {   
         // Inputs
-        $searchTerm = strtolower($request->input('search')); 
+        $searchTerm = $request->input('search'); 
+        // Save the search value
+        Session::put('searchTerm', $searchTerm);
+        $searchTerm = strtolower($searchTerm); 
+
         $selectedTag = $request->input('tag'); 
         $orderBy = $request->input('orderBy');
         $orderDirection = $request->input('orderDirection');
 
-        // Save the search value
-        Session::put('searchTerm', $searchTerm);
 
         $questions = Question::filter([
             'search' => $searchTerm,
