@@ -7,7 +7,6 @@ use App\Models\UserFollowQuestion;
 @section('content')
 
 <div id="success-message" style="display: none">
-
     Report submitted successfully!
 </div>
 
@@ -30,22 +29,21 @@ use App\Models\UserFollowQuestion;
 
 @if ($question->content_is_visible)
     @if (session('error'))
-        <div id="errorPopup" class="popup-message">
-            {{ session('error') }}
-        </div>
+    <div id="errorPopup" class="popup-message">
+        {{ session('error') }}
+    </div>
 
-        <script>
-            let popup = document.getElementById('errorPopup');
-            popup.style.display = 'block';
+    <script>
+        let popup = document.getElementById('errorPopup');
+        popup.style.display = 'block';
 
-            setTimeout(function() {
-                popup.style.display = 'none';
-            }, 5000);
-        </script>
+        setTimeout(function() {
+            popup.style.display = 'none';
+        }, 5000);
+    </script>
     @endif
+    
     <div class="container">
-        <div class="content_container">
-            <div class="content_top_container">
 
                 <div class="content_left_container">
                     <a href="{{ route('member.show', $question->author) }}"> 
@@ -102,63 +100,23 @@ use App\Models\UserFollowQuestion;
                 </form>
                     <form method="GET" action="{{ route('questions.edit', $question->question_id) }}">
                         @csrf
-                        @method('GET')
-                        <button> 
-                            Edit
-                        </button>
-                    </form>    
-                </div>
-                @elseif (Auth::check())
-                <div>
-                    <button class="button_report" id="showReportForm"> 
-                        Report
-                    </button>
-                    <form id="reportForm" method="GET" action="{{ route('report.question', ['question_id' => $question->question_id]) }}" style="display: none">
-                        <div class="form-group"> 
-                            @csrf
-                            <select name="report_reason" id="report_reason" required>
-                                <option value="" disabled selected>Select reason</option>
-                                <option value="spam">Spam</option>
-                                <option value="offensive">Offensive</option>
-                                <option value="Rules Violation">Rules Violation</option>
-                                <option value="Inappropriate tag">Inappropriate tag</option>
-                            </select>
-                        </div>
                         <div class="form-group">
-                            <label for="report_text">Question Content</label>
-                            <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
+                            <textarea class="form-control fixed-height" id="content_text" name="content_text" rows="8" required placeholder="Post Answer..."></textarea>
                         </div>
-                        <button type="submit" class="button_report" onclick="showNotification()">Submit Report</button>
+                        <button type="submit" class="btn btn-primary mt-2">Post Answer</button>
                     </form>
                 </div>
-
-
-                @endif
-                @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                <div class="content_right_container"> 
-                    <form method="POST" action="{{ route('questions.delete', $question->question_id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                    </form>
-                </div>
-                
-                @endif
-
             </div>
 
-            <div class="content_bottom_container">
+            @if($question->answer_count !== 1)
+            <br><h3>{{ $question->answer_count }} Answers: </h3>
+            @else
+            <br><h3>{{ $question->answer_count }} Answer: </h3>
+            @endif
 
-                <div class="content_left_container">    
 
-                </div>
-                
-                <div class="content_text_container">
-                    <h3>{{ $question->content_text }}</h3>
-                    @if($question->content_is_edited)
-                    <p>edited</p>
-                    @endif
-                </div>
+            @foreach ($question->answers as $answer)
+            @if ($answer->content_is_visible)
 
                 <div class="content_right_container"> 
                 <form id="voteForm" method="POST">
@@ -416,18 +374,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const reportButton = document.getElementById('showReportForm');
-    const reportForm = document.getElementById('reportForm');
-
-    reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; 
-        reportForm.style.display = 'block'; 
-    });
-
-    
-});
-
 function showNotification() {
         var reason = document.getElementById("report_reason");
         reason = reason.value;
@@ -444,14 +390,6 @@ function showNotification() {
         }, 3000); 
     }
 
-
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const reportButton = document.getElementById('showReportAnswerForm');
     const reportForm = document.getElementById('reportAnswerForm');
@@ -461,7 +399,6 @@ document.addEventListener("DOMContentLoaded", function() {
         reportForm.style.display = 'block';
     });
 });
-
 
 function showNotificationAnswer() {
         var reason = document.getElementById('report_reason_answer');
@@ -478,22 +415,6 @@ function showNotificationAnswer() {
             notification.style.display = 'none';
         }, 3000); 
     }
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    const reportButton = document.getElementById('showReportCommentForm');
-    const reportForm = document.getElementById('reportCommentForm');
-
-    reportButton.addEventListener('click', function() {
-        reportButton.style.display = 'none'; 
-        reportForm.style.display = 'block'; 
-    });
-});
-
 
 function showNotificationComment() {
         var reason = document.getElementById('report_reason_comment');
@@ -746,27 +667,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-
-
-
-
-<!--
-
-    TODO:
-    1. [ ] Restrict featuring post answer (only for members)
-    2. [ ] Restrict delete featuring (only for owner (and admin?))
-    3. [ ] Restrict edit featuring (only for owner (and admin?))    
-    4. [ ] Edit (question, answer, comment) featuring
-    5. [ ] Delete question featuring dosent work correctly
-    6. [ ] Fix creation_date format
-    7. [ ] In some content when clic con a profile photo or username redirect to the owner user profile 
-
-    not high priority:
-    4. [ ] load profiles photos 
-    5. [ ] votes (not high priority)
-    6. [ ] report featuring
-    7. [ ] add icones for buttons
-
-
-
--->

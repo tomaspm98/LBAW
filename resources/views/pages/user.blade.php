@@ -5,28 +5,41 @@ use App\Models\UserBadge;
 
 @extends('layouts.app')
 
+<?php 
+use App\Models\Admin; 
+use App\Models\Moderator; 
+
+?>
+
 @section('content')
     <div class="container">
 
-        <div class="profile-header">
-            <h2><strong>{{ $member->username }} Profile Page</strong></h2>
-            <img class="profile-picture" src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
-        </div>
-        
-        <div class="profile-details">
-            <div class="detail-section">
-                <h3>Email:</h3>
-                <p>{{ $member->user_email }}</p>
+        <div class="row my-4">
+            <div class="col-md-2 w-1">
+                <img class="profile-picture img-fluid"  src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
             </div>
+            <div class="col-md-9">
+                <h3 class="mb-3 p-1">
+                    <strong>
+                        {{ $member->username }}
+                        @if ( admin::where('user_id', $member->user_id)->exists() )
+                            <i title="Admin" class="bi bi-patch-check-fill text-primary"></i>
+                        @endif
+                    </strong>
+                </h3>
 
-            <div class="detail-section">
-                <h3>Score:</h3>
-                <p>{{ $member->user_score }}</p>
-            </div>
+                <div class="row profile-details">
+                    <div class="col-md-4">
+                        <p class="text-muted d-flex align-items-center"><i class="bi bi-envelope m-1"></i> {{ $member->user_email }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-muted d-flex align-items-center"><i class="bi bi-cake2 m-1"></i> {{ \Carbon\Carbon::parse($member->user_birthdate)->format('Y-m-d') }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Score: <b class="text-muted">{{ $member->user_score }}</b></h4>
+                    </div>
 
-            <div class="detail-section">
-                <h3>Birthdate:</h3>
-                <p>{{ \Carbon\Carbon::parse($member->user_birthdate)->format('Y-m-d') }}</p>
+                </div>
             </div>
         </div>
 
@@ -43,51 +56,53 @@ use App\Models\UserBadge;
             </div>
         </div>
 
-
-
-        <div class="user-activity">
-            <div class="activity-section">
-                <h3 class="toggle-section"> {{ $member->questions_count }} Questions <span class="arrow">&#9660;</span></h3>
-                <div class="activity-content hidden-content">
-                    @foreach ($member->questions as $index => $question)
-                    <div class="activity-item" style="background-color: {{ $index % 2 === 0 ? '#f0f0f0' : '#e0e0e0' }}">
-                        <a href="{{ route('questions.show', $question->question_id) }}"> {{ $question->question_title }}</a>     
-                        </div>                
-                    @endforeach 
-                </div>
-            </div>
-
-            <div class="activity-section">
-                <h3 class="toggle-section"> {{ $member->answer_count }} Answers <span class="arrow">&#9660;</span></h3>
-                <div class="activity-content hidden-content">
-                    @foreach ($member->answers as $index => $answer)
-                        <div class="activity-item" style="background-color: {{ $index % 2 === 0 ? '#f0f0f0' : '#e0e0e0' }}">
-                            <a href="{{ route('questions.show', $answer->question->question_id) }}">
-                                <span class="question-title">Question title:</span> {{ $answer->question->question_title }}
-                            </a>
-                            <p><span class="your-answer">Your answer:</span> {{ $answer->content_text }}</p>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="activity-section">
+                        <h4 class="toggle-section"> {{ $member->questions_count }} Questions <span class="arrow">&#9660;</span></h4>
+                        <div class="activity-content hidden-content">
+                            @foreach ($member->questions as $index => $question)
+                            <div class="activity-item bg-light border-bottom p-1">
+                                <a href="{{ route('questions.show', $question->question_id) }}"> {{ Str::limit($question->question_title, 100) }}</a>     
+                            </div>
+                            @endforeach 
                         </div>
-                    @endforeach
-                
+                    </div>
                 </div>
-            </div>
-
-            <div class="activity-section">
-                <h3 class="toggle-section"> {{ $member->comments_count }} Comments <span class="arrow">&#9660;</span></h3>
-                <div class="activity-content hidden-content">
-                    @foreach ($member->comments as $index => $comment)
-                        <div class="activity-item" style="background-color: {{ $index % 2 === 0 ? '#f0f0f0' : '#e0e0e0' }}">
-                            <a href="{{ route('questions.show', $comment->answer->question->question_id) }}">
-                                <span class="question-title">Question title:</span> {{ $comment->answer->question->question_title }}
-                            </a>
-                            <p><span class="your-answer">Answer:</span> {{ $comment->answer->content_text }}</p>
-                            <p><span class="your-comment">Your comment:</span> {{ $comment->content_text }}</p>
+                <div class="col-md-4">
+                    <div class="activity-section">
+                        <h4 class="toggle-section"> {{ $member->answer_count }} Answers <span class="arrow">&#9660;</span></h4>
+                        <div class="activity-content hidden-content">
+                            @foreach ($member->answers as $index => $answer)
+                                <div class="activity-item bg-light border-bottom p-1">
+                                    <a href="{{ route('questions.show', $answer->question->question_id) }}#answer-{{$answer->answer_id}}">
+                                        <span class="text-primary">Question title:</span> {{ Str::limit($answer->question->question_title, 80) }}
+                                    </a>
+                                    <p class="p-2"><span class="text-success">Your answer:</span> {{ Str::limit($answer->content_text, 150) }}</p>
+                                </div>
+                            @endforeach
                         </div>
-                    @endforeach
-                
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="activity-section">
+                        <h4 class="toggle-section"> {{ $member->comments_count }} Comments <span class="arrow">&#9660;</span></h4>
+                        <div class="activity-content hidden-content">
+                            @foreach ($member->comments as $index => $comment)
+                                <div class="activity-item bg-light border-bottom p-1">
+                                    <a href="{{ route('questions.show', $comment->answer->question->question_id) }}#comment-{{$comment->comment_id}}">
+                                        <span class="text-primary">Question title:</span> {{ Str::limit($comment->answer->question->question_title, 80) }}
+                                    </a>
+                                    <p class="p-2"><span class="text-success">Answer:</span> {{ Str::limit($comment->answer->content_text,150) }}</p>
+                                    <p class="p-2"><span class="text-info">Your comment:</span> {{ Str::limit($comment->content_text,150) }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
-
+        </div>
 
 
         </div>

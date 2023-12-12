@@ -16,6 +16,7 @@ class HomeController extends Controller
     public function index()
     {
         $questions = Question::where('content_is_visible', true)->get();
+
         if (Auth::check()){
             $user_id = Auth::user()->user_id;
             $member = Member::findOrFail($user_id);
@@ -27,7 +28,6 @@ class HomeController extends Controller
         } else {
             $questions_followed = [];
         }
-
 
         $totalQuestions = Question::count();
 
