@@ -109,15 +109,16 @@ class Question extends Model
                 });
             }
         });
-
+        
         // Search by total or partial words without distinction of uppercase and lowercase letters
         $query->when(isset($filters['search']), function ($query) use ($filters) {
             $search = $filters['search'];
             $query->where(function ($query) use ($search) {
-                $query->whereRaw('tsvectors @@ plainto_tsquery(?)', "%$search%")
-                    ->orWhereRaw('LOWER(question_title) LIKE ?', "%$search%")
-                    ->orWhereRaw('LOWER(content_text) LIKE ?', "%$search%");
-            });
+                $query->whereRaw('tsvectors @@ plainto_tsquery(?)', ["%$search%"])
+                    ->orWhereRaw('LOWER(question_title) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(content_text) LIKE ?', ["%$search%"]);
+                    
+            })->orderByRaw("ts_rank(tsvectors, plainto_tsquery(?)) DESC, ts_rank_cd(tsvectors, plainto_tsquery(?)) DESC", [$search, $search]);
         });
 
         // Sorting by creation date

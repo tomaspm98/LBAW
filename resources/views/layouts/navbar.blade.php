@@ -16,7 +16,7 @@ use App\Models\Member;
     @if(\Request::route()->getName() !== "search")
     <div class="search_container hover-container-down">
         <form action="{{ route('search') }}" method="GET">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search...">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." required>
             <span class="hover-text-down">Here you can search for the questions you want using words, and having the chance of finding one that solves your problem.</span>
             <button type="submit">Search</button>
         </form>

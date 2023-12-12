@@ -9,7 +9,7 @@
     <form class="search_form" action="{{ route('search') }}" method="GET">
 
         <span for="search">Search:</span>
-        <input type="text" name="search" value="{{ Session::get('searchTerm') }}" placeholder="Search...">
+        <input type="text" name="search" value="{{ Session::get('searchTerm') }}" placeholder="Search..." required>
 
         <span for="tag">Filter by Tag name:</span>
         <select name="tag">
@@ -20,7 +20,8 @@
                 </option>
             @endforeach
         </select>
-
+        <label for="exactMatch">Exact Question Match:
+        <input type="checkbox" name="exactMatch" {{ request('exactMatch') ? 'checked' : '' }}></label>
         <button type="submit">Search</button>
     </form>
 
