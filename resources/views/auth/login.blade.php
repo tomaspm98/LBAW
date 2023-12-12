@@ -1,37 +1,38 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('login') }}" class="login-form">
+<form method="POST" action="{{ route('login') }}">
     {{ csrf_field() }}
 
-    <div class="mb-3">
-        <label for="email" class="form-label">E-mail</label>
-        <input id="email" type="email" name="user_email" value="{{ old('email') }}" required autofocus class="form-control input-field">
-        @if ($errors->has('email'))
-            <span class="error">{{ $errors->first('email') }}</span>
-        @endif
-    </div>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" placeholder="E-mail" name="user_email" value="{{ old('email') }}" required autofocus>
+    @if ($errors->has('email'))
+        <span class="error">
+          {{ $errors->first('email') }}
+        </span>
+    @endif
 
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <a href="/account-recovery">Forgot password?</a>
-        <input id="password" type="password" name="password" required class="form-control input-field">
-        @if ($errors->has('password'))
-            <span class="error">{{ $errors->first('password') }}</span>
-        @endif
-    </div>
+    <label for="password" >Password</label>
+    <a href="/account-recovery">Forgot password?</a>
+    <input id="password" type="password" placeholder="Insert the password" name="password" required>
+    @if ($errors->has('password'))
+        <span class="error">
+            {{ $errors->first('password') }}
+        </span>
+    @endif
 
-    <div class="form-check mb-3 p-1">
-        <input type="checkbox" id="rememberMe" name="remember" {{ old('remember') ? 'checked' : '' }} class="form-check-input">
-        <label for="rememberMe" class="form-check-label">Remember me</label>
-    </div>
+    <label>
+        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+    </label>
 
-    <button type="submit" class="btn btn-primary btn-login">Login</button>
-    <a class="btn btn-outline-primary btn-register" href="{{ route('register') }}">Register</a>
-
+    <button type="submit">
+        Login
+    </button>
+    <a class="button button-outline" href="{{ route('register') }}">Register</a>
     @if (session('success'))
-        <p class="success">{{ session('success') }}</p>
+        <p class="success">
+            {{ session('success') }}
+        </p>
     @endif
 </form>
-
 @endsection

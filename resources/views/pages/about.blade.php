@@ -76,7 +76,7 @@
             </div>
             <div class="team-member">
                 <div class="team-member-image">
-                    <!-- <img src="{{ url('/pictures/about/team_member_antonio.png') }}" alt="António"> -->
+                    <img src="{{ url('/pictures/about/team_member_antonio.png') }}" alt="António">
                 </div>
                 <div class="team-member-description">
                     <h3>António</h3>

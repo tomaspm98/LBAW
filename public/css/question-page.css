@@ -2,12 +2,13 @@
      The term content refers to any of the following three entities: 
      questions, answers or comments
 */
-/* 
+
 .content_container button, .comment_container button{
     width: 90%;
 }
 
 .content_top_container{
+    /* background-color: rebeccapurple; */
     justify-content: space-between;
     display:flex;
     padding: 10px;
@@ -15,6 +16,7 @@
 }
 
 .question_tittle_container{
+   /* background-color: #ececff;  */
    display: flex;
    flex-direction: column;
    border-bottom: 1px solid gray;
@@ -25,15 +27,16 @@
 }
 
 .content_left_container{
+    /* background-color: blue; */
     text-align: center;
     width: 15%;
 
-} */
+}
 
 .content_user_profile_photo {
     background-color: rgb(204, 202, 202);
-    width: 70px;
-    height: 70px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     overflow: hidden;
     margin: auto;
@@ -45,8 +48,9 @@
     height: 100%;
     object-fit: cover;
 }
-/* 
+
 .content_right_container{
+    /* background-color: yellow; */
     width: 12%;
     text-align: center;
 }
@@ -56,6 +60,7 @@
 }
 
 .content_bottom_container{
+    /* background-color: rebeccapurple; */
     justify-content: space-between;
     display:flex;
     padding: 10px;
@@ -64,6 +69,7 @@
 }
 
 .content_text_container{
+/* background-color: #ececff;  */
    padding: 2px;
    padding-bottom: 0px;
    width: 100%;
@@ -72,6 +78,7 @@
 }
 
 .comment_container{
+    /* background-color: RED ; */
     width: 90%;
     margin-left: auto;
     box-shadow: 2px 2px 3px rgb(160, 160, 160);    
@@ -95,7 +102,6 @@
 }
 
 
- */
 
 .question-closed {
     background-color: #f8d7da; /* Change the background color */
@@ -111,9 +117,3 @@
     text-align: center;
 }
 
- /* create answer text area fixed */
-.fixed-height {
-    height: 150px; 
-    resize: none; 
-    overflow-y: auto; 
-}
