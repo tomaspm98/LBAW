@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Edit Profile</h1>
-        <form action="{{ route('user.update', $member->user_id) }}" method="POST">
+        <form action="{{ route('user.update', $member->user_id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -19,20 +19,26 @@
 
             <div class="form-group">
                 <label for="user_password">Password</label>
-                <input class="form-control" id="user_password" name="user_password" placeholder="Enter your new password"> 
+                <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Enter your new password"> 
             </div>
             
 
 
             <div class="form-group">
                 <label for="user_password_confirmation">Confirm Password</label>
-                <input class="form-control" id="user_password2" name="user_password_confirmation" placeholder="Confirm your new password"> 
+                <input type="password" class="form-control" id="user_password2" name="user_password_confirmation" placeholder="Confirm your new password"> 
             </div>
 
 
             <div class="form-group">
                 <label for="user_birthdate">Birthdate</label>
                 <input type="date" id="user_birthdate" name="user_birthdate" placeholder="Enter your birthdate"> 
+            </div>
+
+            <div class="form-group">
+                <label for="picture" class="form-label">Profile Picture</label>
+                <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png" class="form-control">
+                <p class="accepted-formats">Accepted formats: png</p>
             </div>
 
             @if ($errors->any())

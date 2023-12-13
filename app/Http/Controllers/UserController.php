@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class UserController extends Controller
@@ -19,8 +21,18 @@ class UserController extends Controller
     {
         $this->authorize('show', Member::class);
         $member = Member::findOrFail($user_id);
+
+        $filePath = 'public/pictures/' . $member->username . '/profile_picture.png';
+
+        $fileExists = Storage::exists($filePath);
+
+        $profilePicture = $fileExists
+                                ? asset('storage/pictures/' . $member->username . '/profile_picture.png')
+                                : asset('storage/pictures/default/profile_picture.png');
+
         return view('pages.user', [
             'member' => $member,
+            'profilePicture' => $profilePicture,
         ]);
         
         
@@ -45,12 +57,15 @@ class UserController extends Controller
         $memberBeingEdited = Member::findOrFail($user_id);
         $authenticatedMember = Auth::user();
 
+        \Log::info("Member being edited: $memberBeingEdited"); 
+
         $this->authorize('edit', [$memberBeingEdited, $authenticatedMember]);
 
         $validatedData = $request->validate([
             'username' => 'nullable|string|max:255|unique:member,username,' . $user_id . ',user_id',
             'user_email' => 'nullable|email|unique:member,user_email,' . $user_id . ',user_email',
-            'user_password' => 'nullable|string|max:255|confirmed',
+            'password' => 'nullable|string|min:8|confirmed',
+            'picture' => 'nullable|image|mimes:png|max:10240',
             'user_birthdate' => 'nullable|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d'), Carbon::parse($request->user_birthdate)->toDateTimeString()
         ],
 
@@ -69,18 +84,40 @@ class UserController extends Controller
             'password.confirmed' => 'The password confirmation does not match.',
             
             'picture.image' => 'The uploaded file must be an image.',
-            'picture.mimes' => 'Only PNG, JPEG, and SVG formats are allowed.',
+            'picture.mimes' => 'Only PNG format is allowed.',
             'picture.max' => 'The file size must not exceed 10 megabytes.',
 
             'user_birthdate.date' => 'The birthdate must be a valid date.',
             'user_birthdate.before_or_equal' => 'The birthdate must be at least 12 years ago.',
         ]);
 
-
         $member = Member::findOrFail($user_id);
-        $check = Auth::user();        
+        $check = Auth::user();    
+        
         $attributes = array_filter($request->all());
         
+        if ($request->hasFile('picture')) {
+
+            $username = $member->username;
+
+            $filename = 'profile_picture.png';
+
+            $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
+
+            $request->merge(['picture' => $path]);
+
+            $attributes['picture'] = $path;
+        }
+        
+        if (array_key_exists('username', $attributes)) {
+            $oldDirectory = 'public/pictures/' . $memberBeingEdited->username;
+            $newDirectory = 'public/pictures/' . $attributes['username'];
+
+            if (Storage::exists($oldDirectory)) {
+                Storage::move($oldDirectory, $newDirectory);
+        }
+    }
+
         $member->update($attributes);
 
         return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
