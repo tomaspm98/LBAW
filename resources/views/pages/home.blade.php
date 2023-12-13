@@ -28,16 +28,18 @@
     </div>
 
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-md-between my-1 py-2 border-top">
-        <h2 class="me-md-3 mb-2 mb-md-0">Top Questions</h2>
         @if (Auth::check())
-    <a class="button" class="login-button" href="{{ url('/questions/create') }}"  style="float:right;"> Create a question </a> 
         <a class="btn btn-primary" href="{{ url('/questions/create') }}"> Create a question </a> 
         @endif
     </div>
     <div class="hover-container">
-        <h2>Top Questions</h2>
-        <span class="hover-text">Here you can see the Top Questions in this platform, and if you click on one of them, you will be redirected to the question page to access to more details of the question.</span>
+        <div class="header-container">
+                <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
+                <span class="hover-text">Here you can see the Top Questions in this platform, and if you click on one of them, you will be redirected to the question page to access more details of the question.</span>
+                <h2 class="me-md-3 mb-2 mb-md-0">Top Questions</h2>
+        </div>
     </div>
+
 
     <ul class="top_questions">
     @foreach ($questions as $question)

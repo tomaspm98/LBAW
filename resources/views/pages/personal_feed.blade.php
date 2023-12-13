@@ -1,8 +1,11 @@
 
 <div class="container">   
     <div class="hover-container">
-        <h2>Personal Feed</h2>
-        <span class="hover-text">Personal Feed presents you the questions you follow, so that you have more interest. It eases the way to access the more interesting questions according to each user.</span>
+        <div class="header-container">
+                <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
+                <span class="hover-text">Personal Feed presents you the questions you follow, so that you have more interest. It eases the way to access the more interesting questions according to each user.</span>
+                <h2>Personal Feed</h2>
+        </div>
     </div>
     <ul>
         @foreach ($questions_followed as $question)
