@@ -70,14 +70,14 @@ use App\Models\Admin;
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                 <p class="site-motto mb-0">The best Q&A Platform for technology questions</p>
-                <a class="button" href="{{ route('about') }}#faqs"> FAQ </a>
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <div class="d-flex justify-content-center justify-content-md-end">
                     <p class="mb-0">&copy; Query Stack!</p>
                     <div class="site-map ms-3">
                         <a class="btn btn-outline-light me-2 mb-md-0" href="{{ route('about') }}">About</a>
-                        <a class="btn btn-outline-light" href="{{ route('about') }}#platform-contacts">Contacts</a>
+                        <a class="btn btn-outline-light me-2 mb-md-0" href="{{ route('about') }}#platform-contacts">Contacts</a>
+                        <a class="btn btn-outline-light" href="{{ route('about') }}#faqs">FAQ</a>
                     </div>
                 </div>
             </div>
