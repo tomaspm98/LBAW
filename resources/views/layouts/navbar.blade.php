@@ -60,6 +60,7 @@ use App\Models\Member;
                             <a class="dropdown-item" href="{{ route('admin.users') }}">Assign Moderator</a>
                             <a class="dropdown-item" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
                             <a class="dropdown-item" href="{{ route('tags.show') }}">Tags</a>
+                            <a class="dropdown-item" href="{{ route('reports') }}">Reports</a>
                         </div>
                     </div>                   
                     @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists() )

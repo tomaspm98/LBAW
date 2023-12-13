@@ -16,7 +16,7 @@ use App\Models\Moderator;
 
         <div class="row my-4">
             <div class="col-md-2 w-1">
-                <img class="profile-picture img-fluid"  src="{{ asset($member->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                <img class="profile-picture img-fluid"  src="{{$profilePicture}}" alt="Profile Photo">
             </div>
             <div class="col-md-9">
                 <h3 class="mb-3 p-1">

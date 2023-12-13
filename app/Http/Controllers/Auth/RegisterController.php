@@ -36,7 +36,7 @@ class RegisterController extends Controller
             'username' => 'required|string|max:255|unique:member',
             'user_email' => 'required|string|email|max:255|unique:member',
             'password' => 'required|string|min:8|confirmed',
-            'picture' => 'nullable|image|mimes:png,jpeg,svg|max:10240',
+            'picture' => 'nullable|image|mimes:png|max:10240',
             'user_birthdate' => 'required|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d')
         ],
         [ // Custom error messages
@@ -57,7 +57,7 @@ class RegisterController extends Controller
             'password.confirmed' => 'The password confirmation does not match.',
             
             'picture.image' => 'The uploaded file must be an image.',
-            'picture.mimes' => 'Only PNG, JPEG, and SVG formats are allowed.',
+            'picture.mimes' => 'Only PNG format is allowed.',
             'picture.max' => 'The file size must not exceed 10 megabytes.',
 
             'user_birthdate.required' => 'The birthdate field is required.',
@@ -68,10 +68,9 @@ class RegisterController extends Controller
         if ($request->hasFile('picture')) {
 
             $username = $request->input('username');
-            $fileExtension = $request->file('picture')->getClientOriginalExtension();
 
             // Save the image to a storage disk within a folder named after the username
-            $filename = 'profile_picture.' . $fileExtension;
+            $filename = 'profile_picture.png';
 
             $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
 

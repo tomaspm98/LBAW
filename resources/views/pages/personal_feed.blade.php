@@ -14,7 +14,11 @@
                 <div class="question_user_container">
                     <a href="{{ route('member.show', $question->author) }}"> 
                         <div class="question_user_photo">
-                            <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                            @php
+                                $authorPicturePath = 'public/pictures/' . $question->author->username . '/profile_picture.png';
+                                $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $question->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
+                            @endphp
+                            <img src="{{ $authorPicture }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username ?? 'Unknown' }}</b></p>

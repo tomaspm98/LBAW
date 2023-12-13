@@ -31,8 +31,8 @@
     
     <div class="mb-3">
         <label for="picture" class="form-label">Profile Picture</label>
-        <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png, image/jpeg, image/svg+xml" class="form-control">
-        <p class="accepted-formats">Accepted formats: png, jpeg, svg</p>
+        <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png" class="form-control">
+        <p class="accepted-formats">Accepted formats: png</p>
     </div>
 
     @if ($errors->any())

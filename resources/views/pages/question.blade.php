@@ -50,7 +50,11 @@ use App\Models\UserFollowQuestion;
                 <div class="content_left_container">
                     <a href="{{ route('member.show', $question->author) }}"> 
                         <div class="content_user_profile_photo">
-                            <img src="{{ asset($question->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                        @php
+                            $authorPicturePath = 'public/pictures/' . $question->author->username . '/profile_picture.png';
+                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $question->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
+                        @endphp
+                        <img src="{{ $authorPicture }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{ $question->author->username }}</b></p>
@@ -203,7 +207,11 @@ use App\Models\UserFollowQuestion;
                 <div class="content_left_container">
                     <a href="{{ route('member.show', $answer->author) }}">
                         <div class="content_user_profile_photo">
-                            <img src="{{ asset($answer->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
+                        @php
+                            $authorPicturePath = 'public/pictures/' . $answer->author->username . '/profile_picture.png';
+                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $answer->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
+                        @endphp
+                        <img src="{{ $authorPicture }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$answer->author->username }}</b></p>
@@ -317,8 +325,11 @@ use App\Models\UserFollowQuestion;
                 <div class="content_left_container">
                     <a href="{{ route('member.show', $comment->author) }}">
                       <div class="content_user_profile_photo">
-                        <img src="{{ asset($comment->author->picture) ?? asset('pictures/default/profile_picture.png') }}" alt="Profile Photo">
-                        </div>
+                      @php
+                            $authorPicturePath = 'public/pictures/' . $comment->author->username . '/profile_picture.png';
+                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $comment->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
+                      @endphp
+                    <img src="{{ $authorPicture }}" alt="Profile Photo">                        </div>
                     </a>
                     <p><b>{{$comment->author->username }}</b></p>
                 </div>
