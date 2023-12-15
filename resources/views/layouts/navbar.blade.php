@@ -61,12 +61,14 @@ use App\Models\Member;
                             <a class="dropdown-item" href=" {{ route('admin.moderators') }}">Remove Moderator</a>
                             <a class="dropdown-item" href="{{ route('tags.show') }}">Tags</a>
                             <a class="dropdown-item" href="{{ route('reports') }}">Reports</a>
+                            <a class="dropdown-item" href="{{ route('user.blocked') }}">Blocked Users</a>
                         </div>
                     </div>                   
                     @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists() )
                     <div class="admin-area">
                         <div class="admin-buttons">
                             <a class="dropdown-item" href="{{ route('reports') }}">Reports</a>
+                            <a class="dropdown-item" href="{{ route('user.blocked') }}">Blocked Users</a>
                         </div>
                     </div>  
                     @endif  

@@ -31,4 +31,14 @@ class MemberPolicy
         return Auth::user()->user_id === $member->user_id || Moderator::where('user_id', Auth::user()->user_id)->exists() || Admin::where('user_id', Auth::user()->user_id)->exists();
     }
 
+    public function block(): bool
+    {
+        return Moderator::where('user_id', Auth::user()->user_id)->exists() || Admin::where('user_id', Auth::user()->user_id)->exists();
+    }
+
+    public function showBlocked(): bool
+    {
+        return Moderator::where('user_id', Auth::user()->user_id)->exists() || Admin::where('user_id', Auth::user()->user_id)->exists();
+    }
+
 }

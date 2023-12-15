@@ -85,7 +85,7 @@ if (Moderator::find(Auth::user()->user_id)){
                             @endif
                         @endif
                     @else 
-                        @if (!$report->report_dealt)
+                        @if ($report->report_dealt)
                             @if($report->content_reported_question)
                                 @php $question = Question::find($report->content_reported_question) @endphp
                                 @if ($moderator->tag_id === $question->tag->tag_id)

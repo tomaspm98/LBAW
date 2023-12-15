@@ -139,5 +139,41 @@ class UserController extends Controller
     }
 
 
+    public function block($user_id, $report_id)
+    {
+        $member = Member::findOrFail($user_id);
+        $this->authorize('delete', Member::class);
+        $member->user_blocked = true;
+
+        $member->save();
+
+        
+        return redirect()->route('report.view', ['report_id' => $report_id])->with('success', 'User deleted successfully');
+
+
+    }
+
+    public function showBlockedUsers(Request $request)
+    {
+        $this->authorize('showBlocked', Member::class);
+        $users = Member::where('user_blocked', true)->get();
+        return view('pages.users_blocked', ['users' => $users]);
+    }
+
+
+    public function Unblock($user_id)
+    {
+        $member = Member::findOrFail($user_id);
+        $this->authorize('delete', Member::class);
+        $member->user_blocked = false;
+
+        $member->save();
+
+        
+        return redirect()->route('user.blocked')->with('success', 'User deleted successfully');
+
+
+    }
+
 
 }

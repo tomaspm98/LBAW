@@ -25,6 +25,9 @@ use App\Models\Moderator;
                         @if ( admin::where('user_id', $member->user_id)->exists() )
                             <i title="Admin" class="bi bi-patch-check-fill text-primary"></i>
                         @endif
+                        @if ($member->user_blocked)
+                            User Currently Blocked
+                        @endif
                     </strong>
                 </h3>
 
