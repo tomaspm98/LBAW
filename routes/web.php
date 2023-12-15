@@ -134,6 +134,8 @@ Route::controller(UserController::class)->group(function(){
     Route::get('member/{user_id}/edit', 'editShow')->name('member.edit');
     Route::put('member/{user_id}', 'update')->name('user.update');
     Route::delete('member/{user_id}/delete', 'delete')->name('user.delete');
+    Route::get('members/blocked', 'showBlockedUsers')->name('user.blocked');
+    Route::post('member/{user_id}/unblock', 'Unblock')->name('user.unblock');
 });
 
 // SEARCH PAGE

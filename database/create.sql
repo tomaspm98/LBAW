@@ -111,6 +111,7 @@ CREATE TABLE member (
     user_birthdate TIMESTAMP NOT NULL,
     user_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     user_score INT DEFAULT 0,
+    user_blocked BOOLEAN NOT NULL DEFAULT FALSE,
     remember_token VARCHAR,
 	CONSTRAINT check_time CHECK (EXTRACT(YEAR FROM user_creation_date) - EXTRACT(YEAR FROM user_birthdate) > 12 )
 );

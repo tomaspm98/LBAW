@@ -121,25 +121,34 @@ $reported_person = Member::find($person);
         <form method="POST" action="{{ route('report.close', ['report_id' => $report->report_id]) }}" onsubmit="return validateForm()">
             @csrf
             @method('POST') 
-        
+
             <label for="punished_yes">
-                <input type="radio" id="punished_yes" name="punished" value="yes" required>
+                <input type="radio" id="punished_yes" name="punished" value="yes">
                 Punished
             </label><br>
-        
+
+            <div id="punishment_options" style="display: none;">
+                <label for="block">
+                    <input type="radio" id="block" name="punishment" value="block">
+                    Block
+                </label><br>
+
+                <label for="delete">
+                    <input type="radio" id="delete" name="punishment" value="delete">
+                    Delete
+                </label><br>
+            </div>
+            
             <label for="punished_no">
-                <input type="radio" id="punished_no" name="punished" value="no" required>
+                <input type="radio" id="punished_no" name="punished" value="no">
                 Not Punished
             </label><br>
-        
+
             <label for="comment">Brief Comment:</label><br>
             <textarea id="comment" name="comment" rows="4" cols="50" required placeholder="Introduce a brief comment on the report"></textarea><br>
-        
+
             <input type="submit" value="Submit">
         </form>
-
-
-
     </div>
     @endif
 
@@ -155,29 +164,42 @@ function showSuccess(){
     
 }
 
+function showPunishmentOptions() {
+            var punishmentOptions = document.getElementById('punishment_options');
+            punishmentOptions.style.display = 'block';
+        }
+
 function validateForm() {
-    var punishedYes = document.getElementById('punished_yes').checked;
-    var punishedNo = document.getElementById('punished_no').checked;
-    var comment = document.getElementById('comment').value.trim();
+            var punishedYes = document.getElementById('punished_yes').checked;
+            var punishmentBlock = document.getElementById('block').checked;
+            var punishmentDelete = document.getElementById('delete').checked;
+            var comment = document.getElementById('comment').value.trim();
 
-    if (!(punishedYes || punishedNo)) {
-        alert("Please select whether the user was punished or not.");
-        return false;
-    }
+            if (!punishedYes) {
+                alert("Please select whether the user was punished.");
+                return false;
+            }
 
-    if (comment === '') {
-        alert("Please provide a brief comment.");
-        return false;
-    }
+            if (!(punishmentBlock || punishmentDelete)) {
+                alert("Please select the type of punishment: Block or Delete.");
+                return false;
+            }
 
-    displaySuccessMessageClose();
-    setTimeout(function() {
-        hideSuccessMessageClose();
-    }, 3000);
+            if (comment === '') {
+                alert("Please provide a brief comment.");
+                return false;
+            }
 
+            displaySuccessMessageClose();
+            setTimeout(function () {
+                hideSuccessMessageClose();
+            }, 3000);
 
-    return true;
-}
+            return true;
+        }
+        
+        // Function to show punishment options when "Punished" is selected
+        document.getElementById('punished_yes').addEventListener('click', showPunishmentOptions);
 
 
 

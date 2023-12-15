@@ -148,10 +148,15 @@ class ReportController extends Controller{
     
             $this->authorize('delete', [$member, $check]);
             
+
             $userController = new UserController();
-            $userController->delete($author);
-            // $member->delete();
-            // $url = route('user.delete', ['user_id' => $author]);
+
+            if ($request->input('punishment') === "block"){
+                $userController->block($author, $report_id);
+            }
+            else{
+                $userController->delete($author);
+            }
         }
         $report->report_answer = $request->input('comment');
         
