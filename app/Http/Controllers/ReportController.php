@@ -124,12 +124,34 @@ class ReportController extends Controller{
         $report->report_dealt = true;
         $report->report_accepted = $request->input('punished') === 'yes' ? true : false;
         if ($report->report_accepted){
-            $member = Member::findOrFail($report->report_creator);
+            if ($report->content_reported_question){
+                // find the question with report->content_reported_question
+                $question = Question::findOrFail($report->content_reported_question);
+                $author = $question->content_author;
+            }
+
+            elseif ($report->content_reported_answer){
+                // find the answer with report->content_reported_answer
+                $answer = Answer::findOrFail($report->content_reported_answer);
+                $author = $answer->content_author;
+            }
+
+            else{
+                // find the comment with report->content_reported_comment
+                $comment = Comment::findOrFail($report->content_reported_comment);
+                $author = $comment->content_author;
+            }
+
+            
+            $member = Member::findOrFail($author);
             $check = Auth::user();
     
             $this->authorize('delete', [$member, $check]);
-    
-            $member->delete();
+            
+            $userController = new UserController();
+            $userController->delete($author);
+            // $member->delete();
+            // $url = route('user.delete', ['user_id' => $author]);
         }
         $report->report_answer = $request->input('comment');
         

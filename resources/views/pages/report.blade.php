@@ -8,6 +8,23 @@ use App\Models\Moderator;
 
 $moderators = Moderator::all();
 
+if($report->content_reported_question){
+    $q1 = Question::find($report->content_reported_question);
+    $person = $q1->content_author;
+}
+elseif ($report->content_reported_answer) {
+    $q1 = Answer::find($report->content_reported_answer);
+    $person = $q1->content_author;
+}
+else{
+    $q1 = Comment::find($report->content_reported_comment);
+    $person = $q1->content_author;
+}
+
+$reported_person = Member::find($person);
+
+
+
 ?>
 
 @extends('layouts.app')
@@ -54,6 +71,8 @@ $moderators = Moderator::all();
             <h3>Reason: {{ $report->report_reason }}</h3>
             <br>
             <h3>Text: {{ $report->report_text }}</h3>
+            <br>
+            <h3>Reported Person: </h3><a href="{{ route('member.show', $reported_person->user_id) }}"><h3>{{ $reported_person->username }}</h3></a>     
             <br>
             <strong><h3>Reported content:</h3></strong>
             @if($report->content_reported_question)
