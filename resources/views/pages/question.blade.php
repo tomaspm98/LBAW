@@ -88,7 +88,20 @@ use App\Models\UserFollowQuestion;
                                 <button type="submit">Save</button>
                             </form>
                         </div>
+                    @elseif (Auth::check() && Auth::id() === $question->content_author)
+                    <button id="editTagButton">Edit Tag</button>
 
+                        <div id="tagEditSection" style="display: none;">
+                            <form id="tagEditForm" action="{{ route('questions.updateTag', $question->question_id) }}" method="POST">
+                                @csrf
+                                <select name="question_tag">
+                                    @foreach($tags as $tag)
+                                        <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit">Save</button>
+                            </form>
+                        </div>
                     @endif
 
                     <h1>{{ $question->question_title }}</h1>
