@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\Member;
+
 class LoginController extends Controller
 {
 
@@ -35,6 +37,12 @@ class LoginController extends Controller
 
         if ($this->isSpecialUser($credentials['user_email'])) {
             return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
+        }
+
+        $user = Member::where('user_email', $credentials['user_email'])->first();
+
+        if ($user && $user->user_blocked) {
+            return back()->withErrors(['email' => 'Your account is blocked.']);
         }
 
         if (Auth::attempt($credentials, $request->filled('remember'))) { // , $request->filled('remember'))
