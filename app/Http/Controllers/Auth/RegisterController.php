@@ -38,7 +38,8 @@ class RegisterController extends Controller
         $validator = $request->validate([
             'username' => 'required|string|max:255|unique:member',
             'user_email' => 'required|string|email|max:255|unique:member',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[.@$!%*#?&]/',
+            //Password includes at least one lowercase letter, one uppercase letter, one number, and one special character respectively.
             'picture' => 'nullable|image|mimes:png|max:10240',
             'user_birthdate' => 'required|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d')
         ],
@@ -55,9 +56,10 @@ class RegisterController extends Controller
             'user_email.unique' => 'The email is already taken.',
             
             'password.required' => 'The password field is required.',
-            'password.string' => 'The password must be a string.',
+            'password.string' => 'The password must be text.',
             'password.min' => 'The password must be at least 8 characters.',
             'password.confirmed' => 'The password confirmation does not match.',
+            'password.regex' => 'The password must include at least one lowercase letter, one uppercase letter, one number, and one special character (.@$!%*#?&).',
             
             'picture.image' => 'The uploaded file must be an image.',
             'picture.mimes' => 'Only PNG format is allowed.',
@@ -65,7 +67,7 @@ class RegisterController extends Controller
 
             'user_birthdate.required' => 'The birthdate field is required.',
             'user_birthdate.date' => 'The birthdate must be a valid date.',
-            'user_birthdate.before_or_equal' => 'The birthdate must be at least 12 years ago.',
+            'user_birthdate.before_or_equal' => 'You must be at least 12 years old to register.',
         ]);
         //Register the profile picture either with default of the one from request
         
@@ -79,7 +81,7 @@ class RegisterController extends Controller
             // Save the image to a storage disk within a folder named after the username
             $request->merge(['picture' => $path]);
         } else {
-            $profilePicture = 'storage/app/public/pictures/default/profile_picture.png';
+            $profilePicture = 'pictures/default/profile_picture.png';
             $request->merge(['picture' => $profilePicture]);
         }
     
