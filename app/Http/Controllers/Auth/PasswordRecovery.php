@@ -100,7 +100,7 @@ class PasswordRecovery extends Controller
         ]);
          
 
-        // Send the email synchronously
+        // TODO: Send the email asynchronously
         SendPasswordResetEmail::dispatch($emailToken, $request->user_email);
 
         $request->session()->put('password_reset_email', $request->user_email);
