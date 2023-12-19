@@ -17,6 +17,7 @@ use App\Mail\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use App\Jobs\SendPasswordResetEmail;
 
 class PasswordRecovery extends Controller
 {
@@ -99,8 +100,8 @@ class PasswordRecovery extends Controller
         ]);
          
 
-        // Send the email
-        Mail::to($request->user_email)->send(new PasswordReset($emailToken));
+        // Send the email synchronously
+        SendPasswordResetEmail::dispatch($emailToken, $request->user_email);
 
         $request->session()->put('password_reset_email', $request->user_email);
         $request->session()->put('password_reset_token', $secureToken);
