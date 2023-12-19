@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('password-reset') }}">
+<form method="POST" action="{{ route('password-reset-post') }}">
     @csrf
-
     <div>
         <label for="password">New Password</label>
         <input id="password" type="password" name="password" required>
@@ -15,17 +14,14 @@
     </div>
 
     @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div id="errorPopup" class="popup-message alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
         </div>
     @endif
-
-    @if (session('success'))
-        <div>
+    @if(session('success'))
+        <div class="alert alert-success mt-3">
             {{ session('success') }}
         </div>
     @endif

@@ -30,18 +30,21 @@
     </div>
     
     <div class="mb-3">
-        <label for="picture" class="form-label">Profile Picture</label>
+        <label for="picture" class="form-label">Profile Picture [Optional]</label>
         <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png" class="form-control">
         <p class="accepted-formats">Accepted formats: png</p>
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div id="errorPopup" class="popup-message alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success mt-3">
+            {{ session('success') }}
         </div>
     @endif
 

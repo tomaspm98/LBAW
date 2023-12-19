@@ -12,20 +12,17 @@
         Send recovery email
     </button>
 
-    @error('email')
-        <span class="error">
-            {{ $message }}
-        </span>
-    @enderror
-
-    @if(session('status') === 'success')
-        <div class="success">Recovery email sent successfully!</div>
-    @elseif(session('status') === 'error')
-        <div class="error">{{ session('message') }}</div>
-        
-        @if(session('error'))
-            <div class="error">{{ session('error') }}</div>
-        @endif
+    @if ($errors->any())
+        <div id="errorPopup" class="popup-message alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success mt-3">
+            {{ session('success') }}
+        </div>
     @endif
 </form>
 @endsection

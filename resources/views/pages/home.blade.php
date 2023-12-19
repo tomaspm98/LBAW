@@ -20,6 +20,11 @@
             }, 5000);
         </script>    
     @endif    
+    @if(session('success'))
+        <div class="alert alert-success mt-3">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-md-between mt-1">
         <p class="me-3 mb-2 mb-md-0">Total Questions: <b id="totalQuestions">{{ $totalQuestions }}</b></p>
