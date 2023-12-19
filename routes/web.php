@@ -47,12 +47,12 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(PasswordRecovery::class)->group(function () {
     // Account recovery
     Route::get('/account-recovery', 'showAccountRecoveryForm')->name('account-recovery');
+    Route::get('/token-recovery/{token}', 'showTokenRecoveryForm')->name('token-recovery');
+    Route::get('/password-reset/{token}', 'showPasswordResetForm')->name('password-reset');
     Route::post('/account-recovery', 'sendPasswordResetToken');
-
-    // Token verification
-    //Route::get('/token-verification', 'verifyTokenForm')->name('token-verification');
+    Route::post('/token-verification-resend', 'resend_email')->name('token-verification-resend');
     Route::post('/token-verification', 'verifyToken')->name('token-verification-post');
-    Route::post('/password-reset', 'resetPassword')->name('password-reset');
+    Route::post('/password-reset', 'resetPassword')->name('password-reset-post');
 });
 
 Route::post('/send', [MailController::class, 'send']);
