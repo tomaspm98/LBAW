@@ -51,7 +51,7 @@ class NotificationsUpdated implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'notifications' => $this->notifications
+            'notifications' => $this->notifications->toArray(),
         ];
     }
 }

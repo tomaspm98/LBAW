@@ -1,33 +1,22 @@
-<li class="nav-item dropdown">
-    <a id="navbarDropdown" class="nav-link" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+<div class="custom-dropdown">
+    <button class="dropdown-toggle" id="customDropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-bell"></i>
-        <span id="notification-count-badge" class="badge badge-light bg-success badge-xs">{{ Auth::user()->notifications->where('notification_is_read', false)->count() }}</span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end w-30" id="notificationDropdownContainer">
-        @if (auth()->user()->unreadNotifications)
-        <li class="d-flex justify-content-end mx-1 my-2">
-            <a href="" class="btn btn-success btn-sm">Mark All as Read</a>
-        </li>
-        @endif
-
+        <span class="badge badge-light bg-success badge-xs">4</span>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="customDropdown">
+        <div class="dropdown-header">Notifications</div>
+        <a id="mark-all-as-read" class="btn btn-success btn-sm">Mark All as Read</a>
+        <div class="dropdown-divider"></div>
+        <div id="success-message" class="alert alert-success" style="display: none;"></div>
+        <div id="error-message" class="alert alert-danger" style="display: none;"></div>
         @foreach (auth()->user()->notifications as $notification)
-        <a class="text" href="">
-            @if ($notification->notification_is_read == false)
-            <li class="unread-notification notification-box p-2 mb-2 border rounded bg-blue-200">
-                <span style="text-decoration: none;">{{ $notification->notification_content }}</span><br>
-                <span class="justify-content-end">{{ \Carbon\Carbon::parse($notification->notification_date)->format('M d, Y H:i:s') }}</span>
-            </li>
-            @elseif ($notification->notification_is_read == true)
-            <li class="read-notification notification-box p-2 mb-2 border rounded bg-gray-200">
-                <span style="text-decoration: none;">{{ $notification->notification_content }}</span><br>
-                <span class="justify-content-end">{{ \Carbon\Carbon::parse($notification->notification_date)->format('M d, Y H:i:s') }}</span>
-            </li>
-            @endif
-        </a>
-        
+            <a id="notification-{{$notification->notification_id}}" class="notification-box {{ $notification->notification_is_read ? 'read' : 'unread' }}">
+                <span>{{ $notification->notification_content }}</span><br>
+                <span>{{ \Carbon\Carbon::parse($notification->notification_date)->format('M d, Y H:i:s') }}</span>
+            </a>
         @endforeach
-    </ul>
-</li>
+    </div>
+</div>
 <script>
     var userId = {{ Auth::user()->user_id }};
     var channel = pusher.subscribe('notifications.'+userId);
