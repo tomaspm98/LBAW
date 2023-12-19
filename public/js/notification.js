@@ -27,20 +27,47 @@ function markAllAsRead(){
 }
 
 function markIndividualAsRead(notificationId) {
-    sendAjaxRequest('post', `/mark-as-read-individual/${notificationId}`, null, markIndividualAsReadHandler(notificationId));
+    sendAjaxRequest('post', `/mark-as-read-individual/${notificationId}`, null, markIndividualAsReadHandler);
 }
 
 function markAllAsReadHandler() {
     // Changes the color of all the notifications to grey by changing the class
     const notificationItems = document.querySelectorAll('[id^="notification-"]');
     notificationItems.forEach(function(item) {
-        item.classList.remove("notification-unread");
-        item.classList.add("notification-read");
+        item.classList.remove("unread");
+        item.classList.add("read");
     });
+    const response = JSON.parse(this.responseText);
+    console.log(response);
+    displayMessage(response);
 }
-function markIndividualAsReadHandler($notificationId) {
+function markIndividualAsReadHandler() {
+    const response = JSON.parse(this.responseText);
+    console.log(response);
     // Changes the color of the notification to grey by changing the class
+    const notificationId = response.notification_id;
     const notificationItem = document.getElementById(`notification-${notificationId}`);
-    notificationItem.classList.remove("notification-unread");
-    notificationItem.classList.add("notification-read");
+    notificationItem.classList.remove("unread");
+    notificationItem.classList.add("read");
+    displayMessage(response);
+}
+
+// Display success or error message based on the response
+function displayMessage(response) {
+    const successMessage = document.getElementById('acceptance-message');
+    const errorMessage = document.getElementById('error-message');
+
+    if (response.success) {
+        successMessage.textContent = response.message;
+        successMessage.hidden = false;
+        // Hide error message
+        errorMessage.innerHTML = '';
+        errorMessage.hidden = true;
+    } else {
+        errorMessage.textContent = response.message;
+        errorMessage.hidden = false;
+        // Hide success message
+        successMessage.innerHTML = '';
+        successMessage.hidden = true;
+    }
 }

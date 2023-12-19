@@ -1,20 +1,26 @@
 <div class="custom-dropdown">
     <button class="dropdown-toggle" id="customDropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-bell"></i>
-        <span class="badge badge-light bg-success badge-xs">4</span>
+        <span class="badge badge-light bg-success badge-xs">{{Auth::user()->unreadNotifications->count()}}</span>
     </button>
     <div class="dropdown-menu" aria-labelledby="customDropdown">
-        <div class="dropdown-header">Notifications</div>
-        <a id="mark-all-as-read" class="btn btn-success btn-sm">Mark All as Read</a>
+        <div class="header-container">
+            <div class="header">Notifications</div>
+            <a id="mark-all-as-read" class="btn btn-primary">Mark All as Read</a>
+        </div>
         <div class="dropdown-divider"></div>
-        <div id="success-message" class="alert alert-success" style="display: none;"></div>
-        <div id="error-message" class="alert alert-danger" style="display: none;"></div>
         @foreach (auth()->user()->notifications as $notification)
             <a id="notification-{{$notification->notification_id}}" class="notification-box {{ $notification->notification_is_read ? 'read' : 'unread' }}">
-                <span>{{ $notification->notification_content }}</span><br>
-                <span>{{ \Carbon\Carbon::parse($notification->notification_date)->format('M d, Y H:i:s') }}</span>
+                <div class="notification-content">
+                    <span>{{ $notification->notification_content }}</span>
+                </div>
+                <div class="notification-date">
+                    <span>{{ \Carbon\Carbon::parse($notification->notification_date)->format('M d, Y H:i:s') }}</span>
+                </div>
             </a>
         @endforeach
+        <div id="acceptance-message" class="alert alert-success" hidden></div>
+        <div id="error-message" class="popup-message alert alert-danger" hidden></div>
     </div>
 </div>
 <script>

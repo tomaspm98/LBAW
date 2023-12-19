@@ -11,7 +11,7 @@
 .dropdown-toggle i {
     color: #333; 
     background-color: #fff; 
-    padding: 5px; /* Adjust padding as needed */
+    padding: 5px; 
     border-radius: 50%; 
 }
 .dropdown-menu {
@@ -20,17 +20,25 @@
     top: 100%;
     right: 0;
     background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
+    border: 1px solid #ccc !important;
+    padding: 2em;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 200%; /* Double the width */
+    width: 250% ;
 }
 
 .notification-box {
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     text-decoration: none;
     color: #333;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.notification-content {
+    margin-bottom: 5px; /* Adjust as needed */
 }
 
 .notification-box.unread {
@@ -43,4 +51,34 @@
 
 .custom-dropdown:hover .dropdown-menu {
     display: block;
+}
+#mark-all-as-read {
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 0.5em;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    
+}
+
+.dropdown-header {
+    margin-right: 0.5em;
+}
+
+.notification-date {
+    text-align: right;
+    color: #666;
+    font-size: 0.8em;
+}
+
+.header{
+    margin-left: 0.5em;
 }

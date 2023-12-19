@@ -35,7 +35,6 @@ class NotificationsUpdated implements ShouldBroadcast
     {
         $this->user = $user;
         $this->notifications = $user->unreadNotifications;
-        Log::info('Unread notifications: ',$this->notifications);
     }
     /**
      * Get the channels the event should broadcast on.
