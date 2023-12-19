@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Notification;
 use Psy\Readline\Hoa\Console;
 use Illuminate\Support\Facades\Auth;
+use App\Events\NotificationsUpdated;
 
 class NotificationController extends Controller
 {
@@ -52,6 +53,8 @@ class NotificationController extends Controller
             return response()->json(['success' => true]);
         }
 
+        event(new NotificationsUpdated(Auth::user()));
+
         return response()->json(['success' => false]);
     }
     // Mark all notifications as read
@@ -63,6 +66,7 @@ class NotificationController extends Controller
         ->where('notification_is_read', false)
         ->update(['notification_is_read' => true]);
         //Response
+        event(new NotificationsUpdated(Auth::user()));
         return response()->json(['success' => true]);
 
     }
@@ -73,7 +77,7 @@ class NotificationController extends Controller
             ->where('notification_is_read', false)
             ->values()
             ->toArray();
-
+        event(new NotificationsUpdated(Auth::user()));
         return response()->json($readNotifications);
     }
 
@@ -84,7 +88,9 @@ class NotificationController extends Controller
             ->where('notification_is_read', true)
             ->values()
             ->toArray();
-
+        
+        event(new NotificationsUpdated(Auth::user()));
+        
         return response()->json($readNotifications);
     }
 

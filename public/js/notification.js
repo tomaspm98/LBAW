@@ -1,0 +1,184 @@
+// Functions for the notifications
+
+/*
+const navbarDropdown = document.getElementById('navbarDropdown');
+const notificationDropdownContainer = document.getElementById('notificationDropdownContainer');
+
+navbarDropdown.addEventListener('click', function () {
+	updateUnreadNotifications();
+	// Toggle visibility
+	if (notificationDropdownContainer.hasChildNodes()) {
+		notificationDropdownContainer.innerHTML = ''; // Remove content if exists
+	} else {
+		createNotificationDropdown(); // Create content if not exists
+	}
+}
+);
+
+function createNotificationDropdown() {
+	const notificationDropdown = document.createElement('ul');
+	notificationDropdown.className = 'dropdown-menu';
+	notificationDropdown.id = 'dropdown-menu';
+
+	if (authUserHasUnreadNotifications()) {
+		const markAsReadButton = document.createElement('button');
+		markAsReadButton.type = 'button';
+		markAsReadButton.id = 'mark-as-read';
+		markAsReadButton.innerText = 'Mark All as Read';
+		notificationDropdown.appendChild(markAsReadButton);
+
+		markAsReadButton.addEventListener('click', () => {
+			sendAjaxRequest('post', '/mark-as-read', null, markAsReadHandler);
+			
+		});
+	}
+	const unreadNotificationsDiv = document.createElement('div');
+	unreadNotificationsDiv.id = 'unread-notifications';
+	createNotificationItems(window.unreadNotifications, unreadNotificationsDiv);
+	notificationDropdown.appendChild(unreadNotificationsDiv);
+
+	const readNotificationsDiv = document.createElement('div');
+	readNotificationsDiv.id = 'read-notifications';
+	createNotificationItems(window.readNotifications, readNotificationsDiv);
+	notificationDropdown.appendChild(readNotificationsDiv);
+
+	notificationDropdownContainer.appendChild(notificationDropdown);
+	}
+
+function authUserHasUnreadNotifications() {
+  	return window.unreadNotifications.length > 0;
+}
+
+function authUserUnreadNotifications() {
+	sendAjaxRequest('post', '/get-unread-notifications', null, updateUnreadNotificationsVar);
+	return window.unreadNotifications;
+}
+
+function authUserReadNotifications() {
+	sendAjaxRequest('post', '/get-read-notifications', null, updateReadNotificationsVar);
+	return window.readNotifications;
+}
+
+
+function createNotificationItems(notifications, container, limit = Infinity) {
+	try {
+		const slicedNotifications = notifications.slice(0, limit);
+
+		slicedNotifications.forEach(notification => {
+			const listItem = document.createElement('div');
+			listItem.className = 'notification-item hover-container-down';
+
+			const link = document.createElement('a');
+
+			// Set the class based on whether the notification is read or unread
+			link.className = notification.notification_is_read ? 'notification-read' : 'notification-unread';
+
+			link.innerText = notification.notification_content;
+			// If notification_id is in unread add event
+			if (!notification.notification_is_read ) {
+				link.addEventListener('click', () => {
+					markIndividualAsRead(notification.notification_id);
+				});
+				//const hoverText = document.createElement('span');
+                //hoverText.className = 'hover-text-down';
+                //hoverText.innerText = 'Mark as read';
+                //link.appendChild(hoverText);
+			}
+			listItem.appendChild(link);
+			container.appendChild(listItem);
+		});
+	} catch (error) {
+		console.error('Error creating notification items:', error);
+	}
+}
+
+function markIndividualAsRead(notificationId) {
+  	sendAjaxRequest('post', `/mark-as-read-individual/${notificationId}`, null, markIndividualAsReadHandler);
+}
+
+
+function markAsReadHandler() {
+    try {
+        const response = JSON.parse(this.responseText);
+
+        if (response.success) {
+            updateUnreadNotifications().then(() => {
+                const unreadNotificationsContainer = document.getElementById('unread-notifications');
+                if (unreadNotificationsContainer) {
+                    // Delete full parent of unreadNotificationsContainer
+                    unreadNotificationsContainer.parentNode.remove();
+                }
+                // Delay the execution to allow the status to update
+                return new Promise(resolve => setTimeout(resolve, 100));
+            }).then(() => {
+                createNotificationDropdown();
+				const notificationCountBadge = document.getElementById('notification-count-badge');
+				notificationCountBadge.textContent = window.unreadNotifications.length;
+            });
+        } else {
+            showError('An error occurred while marking notifications as read.');
+        }
+    } catch (error) {
+        showError('An error occurred while processing the response.');
+    }
+}
+
+function markIndividualAsReadHandler() {
+	try {
+		const response = JSON.parse(this.responseText);
+
+		if (response.success) {
+			updateUnreadNotifications().then(() => {
+                const unreadNotificationsContainer = document.getElementById('unread-notifications');
+                if (unreadNotificationsContainer) {
+                    // Delete full parent of unreadNotificationsContainer
+                    unreadNotificationsContainer.parentNode.remove();
+                }
+                // Delay the execution to allow the status to update
+                return new Promise(resolve => setTimeout(resolve, 100));
+            }).then(() => {
+                createNotificationDropdown();
+				const notificationCountBadge = document.getElementById('notification-count-badge');
+				notificationCountBadge.textContent = window.unreadNotifications.length;
+            });
+		} else {
+		showError('An error occurred while marking the notification as read.');
+		}
+	} catch (error) {
+		console.error('Error parsing JSON response:', error);
+		showError('An error occurred while processing the response: ' + error.message);
+	}
+}
+
+function updateUnreadNotifications() {
+    return new Promise((resolve) => {
+        const notificationCountBadge = document.getElementById('notification-count-badge');
+        if (notificationCountBadge) {
+            authUserReadNotifications();
+            notificationCountBadge.textContent = authUserUnreadNotifications().length;
+        }
+        resolve();
+    });
+}
+
+function updateUnreadNotificationsVar(){
+    try {
+        const response = JSON.parse(this.responseText);
+		
+        window.unreadNotifications = response;
+
+    } catch (error) {
+        showError('An error occurred while processing the response: ' + error.message);
+    }
+}
+
+function updateReadNotificationsVar(){
+    try {
+        const response = JSON.parse(this.responseText);
+
+        window.readNotifications = response;
+
+    } catch (error) {
+        showError('An error occurred while processing the response: ' + error.message);
+    }
+}*/

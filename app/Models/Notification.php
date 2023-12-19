@@ -11,16 +11,28 @@ class Notification extends Model
 
     protected $table = 'notification';
     protected $primaryKey = 'notification_id';
+    protected $fillable = [
+        'notification_user',
+        'notification_content',
+        'notification_date',
+        'notification_is_read',
+        'notification_type'
+    ];
 
     public $timestamps = false;
 
-    public function member()
+    public function author()
     {
-        return $this->belongsTo(Member::class, 'notification_user','notification_user');
+        return $this->belongsTo(Member::class, 'notification_user');
     }
-    public function user()
+    public function is_unread($notification_id)
     {
-        return $this->belongsTo(Member::class, 'notification_user','notification_user' );
+        $notification = Notification::find($notification_id);
+        if ($notification->notification_is_read == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
 }

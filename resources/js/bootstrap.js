@@ -20,35 +20,15 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
-
+ 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    encrypted: true,
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true
 });
 
-window.Echo.channel('updates')
-    .listen('QuestionUpdated', (event) => {
-        // Update real-time counters
-        console.log(response.data.message);
-
-        document.getElementById('totalQuestions').innerText = event.totalQuestions;
-        document.getElementById('questionsLastWeek').innerText = event.questionsLastWeek;
-        document.getElementById('newUsersLastWeek').innerText = event.newUsersLastWeek;
-        
-    })
-    .catch(error => {
-        console.error(error);
+Echo.private(`notifications.${window.user.id}`)
+    .listen('.notifications.updated.count', (e) => {
+        console.log(e); 
     });
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-//     wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-//     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-//     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
-//     enabledTransports: ['ws', 'wss'],
-// });
