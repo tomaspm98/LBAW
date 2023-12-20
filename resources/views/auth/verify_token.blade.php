@@ -56,7 +56,7 @@
                 _token: '{{ csrf_token() }}'
             }, function() {
                 try{
-                    console.log("Response text:", this.responseText);
+                    //console.log("Response text:", this.responseText);
                     const response = JSON.parse(this.responseText);
                     const successMessage = document.querySelector('.alert-success');
                     const errorMessage = document.querySelector('.alert-danger');

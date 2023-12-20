@@ -23,7 +23,8 @@ use App\Models\Admin;
         <link href="{{ url('css/admin-page.css') }}" rel="stylesheet">
         <link href="{{ url('css/user.css') }}" rel="stylesheet">
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
-        <link href="{{ url('css/tags.css') }}" rel="stylesheet">	
+        <link href="{{ url('css/tags.css') }}" rel="stylesheet">
+        <link href="{{ url('css/notification.css') }}" rel="stylesheet">	
 
         <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
@@ -39,8 +40,10 @@ use App\Models\Admin;
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>   
-        <script type="text/javascript" src={{ url('js/app.js') }} defer>
-        </script>
+        <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
+        @if (Auth::check())
+        <script type="text/javascript" src={{ url('js/notification.js') }} defer></script>
+        @endif
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 if (window.location.pathname === '/about' && window.location.hash === '#platform-contacts') {
@@ -53,6 +56,15 @@ use App\Models\Admin;
                         });
                     }
                 }
+            });
+        </script>
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script>
+            // Enable pusher logging - don't include this in production
+            //Pusher.logToConsole = true;
+        
+            var pusher = new Pusher('833280c9b0db39c0f30d', {
+                cluster: 'eu'
             });
         </script>
     </head>

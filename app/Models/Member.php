@@ -53,16 +53,16 @@ class Member extends Authenticatable
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'notification_user');
+        return $this->hasMany(Notification::class, 'notification_user')->orderBy('notification_date', 'asc');
     }
     public function unreadNotifications()
     {
-        return $this->notifications()->where('notification_is_read', false);
+        return $this->notifications()->where('notification_is_read', false)->orderBy('notification_date', 'asc');
     }
 
     public function readNotifications()
     {
-        return $this->notifications()->where('notification_is_read', true);
+        return $this->notifications()->where('notification_is_read', true)->orderBy('notification_date', 'asc');
     }
     
     public function questions()

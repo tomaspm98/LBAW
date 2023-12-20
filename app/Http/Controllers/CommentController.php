@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationsUpdated;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -24,7 +26,12 @@ class CommentController extends Controller
             $comment->answer_id = $answer_id;
             $comment->content_author = Auth::user()->user_id;
             $comment->save();
-    
+
+            //TODO
+            $userId = Auth::id();  
+            $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+            event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+
             return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Comment created successfully');
     }
 
