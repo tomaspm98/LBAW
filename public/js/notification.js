@@ -38,12 +38,12 @@ function markAllAsReadHandler() {
         item.classList.add("read");
     });
     const response = JSON.parse(this.responseText);
-    console.log(response);
+    //console.log(response);
     displayMessage(response);
 }
 function markIndividualAsReadHandler() {
     const response = JSON.parse(this.responseText);
-    console.log(response);
+    //console.log(response);
     // Changes the color of the notification to grey by changing the class
     const notificationId = response.notification_id;
     const notificationItem = document.getElementById(`notification-${notificationId}`);

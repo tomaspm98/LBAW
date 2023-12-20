@@ -82,3 +82,11 @@
 .header{
     margin-left: 0.5em;
 }
+#acceptance-message{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+#error-message{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}

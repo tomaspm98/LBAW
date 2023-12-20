@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationsUpdated;
 use Illuminate\Http\Request;
 use App\Models\Answer;
+use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
@@ -24,7 +26,13 @@ class AnswerController extends Controller
         $answer->question_id = $question_id;
         $answer->content_author = Auth::user()->user_id;
         $answer->save();
-
+        
+        // TODO
+        // $userId = Question::findOrFail($question_id)->content_author;
+        $userId = Auth::id();  
+        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+        
         return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer created successfully');
     
 }

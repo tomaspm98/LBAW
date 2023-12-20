@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\Vote;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class VoteController extends Controller
 {
@@ -90,7 +91,7 @@ class VoteController extends Controller
         }
     
         $updatedVoteCount = Answer::find($answer_id)->vote_count;
-        \Log::info($updatedVoteCount);
+        Log::info($updatedVoteCount);
         $answer = Answer::find($answer_id);
         return response()->json(['message' => 'Vote updated successfully', 'voteCount' => $updatedVoteCount]);
     }

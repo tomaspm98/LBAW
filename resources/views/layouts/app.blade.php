@@ -61,7 +61,7 @@ use App\Models\Admin;
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
         <script>
             // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
+            //Pusher.logToConsole = true;
         
             var pusher = new Pusher('833280c9b0db39c0f30d', {
                 cluster: 'eu'
