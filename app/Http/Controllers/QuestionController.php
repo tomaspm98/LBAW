@@ -110,6 +110,7 @@ class QuestionController extends Controller
             'question_tag' => 'required|integer',
         ]);
 
+
         $this->authorize('create', Question::class);
         $validatedData['content_author'] = Auth::user()->user_id;
 
