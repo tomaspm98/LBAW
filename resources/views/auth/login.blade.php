@@ -13,22 +13,22 @@
     </div>
 
     <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-    <a href="/account-recovery">Forgot password?</a>
-        <input id="password" type="password" name="password" required class="form-control input-field">
+        <label class="" for="password" class="form-label">Password</label>
+        <input id="password" type="password" name="password" required class="form-control input-field mb-2">
+        <a class="" style="display: block; margin-bottom:0.5em; text-align:right; margin-right:0.5em" href="/account-recovery">Forgot password?</a>
         @if ($errors->has('password'))
             <span class="error">{{ $errors->first('password') }}</span>
         @endif
     </div>
 
-    <div class="form-check mb-3 p-1">
+    <div class="form-check mb-3 px-2">
         <input type="checkbox" id="rememberMe" name="remember" {{ old('remember') ? 'checked' : '' }} class="form-check-input">
         <label for="rememberMe" class="form-check-label">Remember me</label>
     </div>
-
-    <button type="submit" class="btn btn-primary btn-login">Login</button>
-    <a class="btn btn-outline-primary btn-register" href="{{ route('register') }}">Register</a>
-
+    <div class="button-container d-flex justify-content-around" >
+        <button type="submit" class="btn btn-primary btn-login">Login</button>
+        <a class="btn btn-outline-primary btn-register" href="{{ route('register') }}">Register</a>
+    </div>
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
