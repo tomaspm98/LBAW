@@ -10,18 +10,16 @@
             {{ session('error') }}
         </div>    
             <script>
-            // Show the popup
             let popup = document.getElementById('errorPopup');
             popup.style.display = 'block';
 
-            // Hide the popup after 5 seconds (5000 milliseconds)
             setTimeout(function() {
                 popup.style.display = 'none';
             }, 5000);
         </script>    
     @endif    
     @if(session('success'))
-        <div class="alert alert-success mt-3">
+        <div id="success-alert-login" class="alert alert-success mt-3">
             {{ session('success') }}
         </div>
     @endif
@@ -105,3 +103,15 @@
     @endif    
 </div>
 @endsection
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var successAlert = document.getElementById('success-alert-login');
+        
+        if (successAlert) {
+            setTimeout(function() {
+                successAlert.style.display = 'none';
+            }, 3000); 
+        }
+    });
+</script>
