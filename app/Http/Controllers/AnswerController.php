@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Events\NotificationsUpdated;
 use Illuminate\Http\Request;
 use App\Models\Answer;
+use App\Models\Member;
 use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
+use Illuminate\Support\Facades\Log;
 
 class AnswerController extends Controller
 {
+    public function pusherNotification($userIdQuestion){
+        $user = Member::where('user_id', $userIdQuestion)->first();
+        $pusherNotifications = Notification::where('notification_user', $userIdQuestion)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated($user, $pusherNotifications));
+    }
     public function createAnswer(Request $request, $question_id)
     {
 
@@ -27,11 +34,12 @@ class AnswerController extends Controller
         $answer->content_author = Auth::user()->user_id;
         $answer->save();
         
-        // TODO
-        // $userId = Question::findOrFail($question_id)->content_author;
-        $userId = Auth::id();  
-        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+        try{
+            $userIdQuestion = Question::where('question_id', $question_id)->first()->content_author;
+            AnswerController::pusherNotification($userIdQuestion);
+        }catch(\Exception $e){
+            Log::error($e);
+        }
         
         return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Answer created successfully');
     
