@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -57,14 +59,15 @@ class UserController extends Controller
         $memberBeingEdited = Member::findOrFail($user_id);
         $authenticatedMember = Auth::user();
 
-        \Log::info("Member being edited: $memberBeingEdited"); 
+        Log::info("Member being edited: $memberBeingEdited"); 
 
         $this->authorize('edit', [$memberBeingEdited, $authenticatedMember]);
 
+        try {
         $validatedData = $request->validate([
             'username' => 'nullable|string|max:255|unique:member,username,' . $user_id . ',user_id',
             'user_email' => 'nullable|email|unique:member,user_email,' . $user_id . ',user_email',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[.@$!%*#?&]/',
             'picture' => 'nullable|image|mimes:png|max:10240',
             'user_birthdate' => 'nullable|date|before_or_equal:' . now()->subYears(12)->format('Y-m-d'), Carbon::parse($request->user_birthdate)->toDateTimeString()
         ],
@@ -91,36 +94,50 @@ class UserController extends Controller
             'user_birthdate.before_or_equal' => 'The birthdate must be at least 12 years ago.',
         ]);
 
-        $member = Member::findOrFail($user_id);
-        $check = Auth::user();    
-        
-        $attributes = array_filter($request->all());
-        
-        if ($request->hasFile('picture')) {
 
-            $username = $member->username;
 
-            $filename = 'profile_picture.png';
 
-            $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
+            $member = Member::findOrFail($user_id);
+            
+            $attributes = array_filter($request->all());
+            
+            if ($request->hasFile('picture')) {
 
-            $request->merge(['picture' => $path]);
+                $username = $member->username;
 
-            $attributes['picture'] = $path;
+                $filename = 'profile_picture.png';
+
+                $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
+
+                $request->merge(['picture' => $path]);
+
+                $attributes['picture'] = $path;
+            }
+            
+            if (array_key_exists('username', $attributes)) {
+                $oldDirectory = 'public/pictures/' . $memberBeingEdited->username;
+                $newDirectory = 'public/pictures/' . $attributes['username'];
+
+                if (Storage::exists($oldDirectory)) {
+                    Storage::move($oldDirectory, $newDirectory);
+            }
+
+            if ($request->password != null){
+                $attributes['password'] = Hash::make($request->password);
+            }
+
+            
+
+        }
+
+            $member->update($attributes);
+
+            return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
+        }
+        catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator->getMessageBag())->withInput();
         }
         
-        if (array_key_exists('username', $attributes)) {
-            $oldDirectory = 'public/pictures/' . $memberBeingEdited->username;
-            $newDirectory = 'public/pictures/' . $attributes['username'];
-
-            if (Storage::exists($oldDirectory)) {
-                Storage::move($oldDirectory, $newDirectory);
-        }
-    }
-
-        $member->update($attributes);
-
-        return redirect()->route('member.show', ['user_id' => $user_id])->with('success', 'User updated successfully');
     }
 
 

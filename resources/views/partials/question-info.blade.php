@@ -132,6 +132,11 @@ use App\Models\UserFollowQuestion;
                         </button>
                     </form>
                 </li>
+                <li class="btn-group text-danger">
+                    <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#QuestionModal" data-bs-whatever="@mdo">
+                        Report Question
+                    </button>
+                </li> 
 
                 @elseif (Auth::check())
                 <li class="btn-group text-danger">

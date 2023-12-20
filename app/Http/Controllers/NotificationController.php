@@ -10,6 +10,11 @@ use App\Events\NotificationsUpdated;
 use Illuminate\Support\Facades\Log;
 class NotificationController extends Controller
 {
+    public function pusherNotification(){
+        $userId = Auth::id();
+        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+    }
     
     // Show all unread notifications of a user
     public function showUnread()
@@ -47,12 +52,11 @@ class NotificationController extends Controller
         if ($notification) {
             $notification->notification_is_read = true;
             $notification->save();
-
-            $userId = Auth::id();
-            
-            $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-            event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
-
+            try{
+                NotificationController::pusherNotification();
+            }catch(\Exception $e){
+                Log::error($e);
+            }
             return response()->json(['success' => true, 'message'=> 'Notification marked as read.', 'notification_id' => $notification_id]);
         }
 
@@ -67,8 +71,11 @@ class NotificationController extends Controller
         ->where('notification_is_read', false)
         ->update(['notification_is_read' => true]);
         //Response
-        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+        try{
+            NotificationController::pusherNotification();
+        }catch(\Exception $e){
+            Log::error($e);
+        }
         return response()->json(['success' => true, 'message'=> 'Notification marked as read.']);
     }
 
@@ -78,9 +85,11 @@ class NotificationController extends Controller
             ->where('notification_is_read', false)
             ->values()
             ->toArray();
-        $userId = Auth::id();
-        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+        try{
+            NotificationController::pusherNotification();
+        }catch(\Exception $e){
+            Log::error($e);
+        }
         return response()->json($readNotifications);
     }
 
@@ -91,9 +100,11 @@ class NotificationController extends Controller
             ->where('notification_is_read', true)
             ->values()
             ->toArray();
-        $userId = Auth::id();
-        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+        try{
+            NotificationController::pusherNotification();
+        }catch(\Exception $e){
+            Log::error($e);
+        }
         return response()->json($readNotifications);
     }
 

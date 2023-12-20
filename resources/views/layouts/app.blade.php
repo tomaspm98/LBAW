@@ -1,5 +1,6 @@
 <?php 
 use App\Models\Admin; 
+error_reporting(E_ALL); //TODO
 ?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
