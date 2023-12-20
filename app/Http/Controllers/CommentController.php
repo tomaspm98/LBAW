@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotificationsUpdated;
+use App\Models\Answer;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
+    public function pusherNotification($userIdAnswer){
+        $user = Member::where('user_id', $userIdAnswer)->first();
+        $pusherNotifications = Notification::where('notification_user', $userIdAnswer)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated($user, $pusherNotifications));
+    }
     public function createComment(Request $request, $question_id, $answer_id)
     {
             
@@ -27,10 +34,12 @@ class CommentController extends Controller
             $comment->content_author = Auth::user()->user_id;
             $comment->save();
 
-            //TODO
-            $userId = Auth::id();  
-            $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
-            event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+            try{
+                $userIdAnswer = Answer::where('answer_id', $answer_id)->first()->content_author;
+                CommentController::pusherNotification($userIdAnswer);
+            }catch(\Exception $e){
+                Log::error($e);
+            }
 
             return redirect()->route('questions.show', ['question_id' => $question_id])->with('success', 'Comment created successfully');
     }
