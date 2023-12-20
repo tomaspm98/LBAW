@@ -82,7 +82,7 @@ use App\Models\Moderator;
                                     <a href="{{ route('questions.show', $answer->question->question_id) }}#answer-{{$answer->answer_id}}">
                                         <span class="text-primary">Question title:</span> {{ Str::limit($answer->question->question_title, 80) }}
                                     </a>
-                                    <p class="p-2"><span class="text-success">Your answer:</span> {{ Str::limit($answer->content_text, 150) }}</p>
+                                    <p class="p-2"><span class="text-success">Answer:</span> {{ Str::limit($answer->content_text, 150) }}</p>
                                 </div>
                             @endforeach
                         </div>
@@ -98,7 +98,7 @@ use App\Models\Moderator;
                                         <span class="text-primary">Question title:</span> {{ Str::limit($comment->answer->question->question_title, 80) }}
                                     </a>
                                     <p class="p-2"><span class="text-success">Answer:</span> {{ Str::limit($comment->answer->content_text,150) }}</p>
-                                    <p class="p-2"><span class="text-info">Your comment:</span> {{ Str::limit($comment->content_text,150) }}</p>
+                                    <p class="p-2"><span class="text-info">Comment:</span> {{ Str::limit($comment->content_text,150) }}</p>
                                 </div>
                             @endforeach
                         </div>
