@@ -47,9 +47,12 @@ class NotificationController extends Controller
         if ($notification) {
             $notification->notification_is_read = true;
             $notification->save();
-            Log::info('Notification marked as read.');
-            event(new NotificationsUpdated(Auth::user()));
-            Log::info('NotificationsUpdated event fired.');
+
+            $userId = Auth::id();
+            
+            $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+            event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
+
             return response()->json(['success' => true, 'message'=> 'Notification marked as read.', 'notification_id' => $notification_id]);
         }
 
@@ -64,7 +67,8 @@ class NotificationController extends Controller
         ->where('notification_is_read', false)
         ->update(['notification_is_read' => true]);
         //Response
-        event(new NotificationsUpdated(Auth::user()));
+        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
         return response()->json(['success' => true, 'message'=> 'Notification marked as read.']);
     }
 
@@ -74,7 +78,9 @@ class NotificationController extends Controller
             ->where('notification_is_read', false)
             ->values()
             ->toArray();
-        event(new NotificationsUpdated(Auth::user()));
+        $userId = Auth::id();
+        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
         return response()->json($readNotifications);
     }
 
@@ -85,9 +91,9 @@ class NotificationController extends Controller
             ->where('notification_is_read', true)
             ->values()
             ->toArray();
-        
-        event(new NotificationsUpdated(Auth::user()));
-        
+        $userId = Auth::id();
+        $pusherNotifications = Notification::where('notification_user', $userId)->where('notification_is_read', false)->get();
+        event(new NotificationsUpdated(Auth::user(), $pusherNotifications));
         return response()->json($readNotifications);
     }
 

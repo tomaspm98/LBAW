@@ -22,19 +22,18 @@ class NotificationsUpdated implements ShouldBroadcast
      */
     public $user;
     /**
-     * The authenticated user.
+     * The notifications.
      *
-     * @var \App\Models\Notification
-     * 
+     * @var array    Insert a new notification into your PostgreSQL database and check if the NotificationsUpdated event is triggered. You can use the Laravel broadcast artisan command to test it:
      */
     public $notifications;
     /**
      * Create a new event instance.
      */
-    public function __construct($user)
+    public function __construct($user,$notifications)
     {
         $this->user = $user;
-        $this->notifications = $user->unreadNotifications;
+        $this->notifications = $notifications->toArray();
     }
     /**
      * Get the channels the event should broadcast on.
@@ -44,13 +43,18 @@ class NotificationsUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('notifications'.$this->user->id)
+            'notifications.'.$this->user->user_id,
         ];
+        // TODO: return new PrivateChannel('private-notifications.'.$this->user->user_id);
     }
     public function broadcastWith(): array
     {
         return [
-            'notifications' => $this->notifications->toArray(),
+            'notifications' => $this->notifications,
         ];
+    }
+    public function broadcastAs(): string
+    {
+        return 'notifications.updated';
     }
 }

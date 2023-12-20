@@ -71,3 +71,68 @@ function displayMessage(response) {
         successMessage.hidden = true;
     }
 }
+// Function to update unread count in the UI
+function updateUnreadCount(count) {
+    // Assuming you have an element with ID 'unread-count' to display the count
+    document.getElementById('unread-count').innerText = count;
+}
+
+// Function to create a new notification element
+function createNotification(notificationId, notificationContent, notificationDate, notificationIsRead, notificationType) {
+    // Create a new <a> element with the necessary classes and attributes
+    const notificationElement = document.createElement('a');
+    notificationElement.id = `notification-${notificationId}`;
+    notificationElement.classList.add('notification-box', notificationIsRead ? 'read' : 'unread');
+
+    // Create inner elements for content and date
+    const contentElement = document.createElement('div');
+    contentElement.classList.add('notification-content');
+    contentElement.innerText = notificationContent;
+
+    const dateElement = document.createElement('div');
+    dateElement.classList.add('notification-date');
+    const formattedDate = new Date(notificationDate).toLocaleString();
+    dateElement.innerText = formattedDate;
+
+    // Append content and date to the notification element
+    notificationElement.appendChild(contentElement);
+    notificationElement.appendChild(dateElement);
+
+    // Append the notification element to the notifications container
+    const notificationsContainer = document.getElementById('notifications-container');
+    notificationsContainer.appendChild(notificationElement);
+}
+
+
+// Pusher code
+
+channel.bind('notifications.updated', function(data) {
+    //alert(JSON.stringify(data));
+
+    //Actual Method
+    //Update unread count
+    updateUnreadCount(data.notifications.length);
+
+    //Create new notifications not already displayed by if not displayed
+    data.notifications.forEach(function(notification) {
+        var notificationId = notification.notification_id;
+        var notificationContent = notification.notification_content;
+        var notificationDate = notification.notification_date;
+        var notificationIsRead = notification.notification_is_read;
+        var notificationType = notification.notification_type;
+
+        //Check if notification is already displayed
+        if($('#notification-'+notificationId).length == 0) {
+            createNotification(notificationId, notificationContent, notificationDate, notificationIsRead, notificationType);
+        }
+    });
+    
+});
+
+/*channel.bind('pusher:subscription_succeeded', function() {
+    console.log('Subscription to notifications channel succeeded.');
+});*/
+    
+channel.bind('pusher:error', function(error) {
+    console.error('Pusher Error:', error);
+});
