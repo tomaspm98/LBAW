@@ -42,6 +42,7 @@ use App\Models\UserFollowQuestion;
         
 
             <!--__________ANSWER FORM__________-->
+            @if (Auth::check() && Auth::id()!=$question->content_author)
             <div class="container mt-4 p-4">
                 <div class="card-body">
                     <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
@@ -53,6 +54,7 @@ use App\Models\UserFollowQuestion;
                     </form>
                 </div>
             </div>
+            @endif
 
 
 
