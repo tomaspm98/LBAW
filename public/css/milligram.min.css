@@ -236,31 +236,33 @@
 .badge-grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Adjust this as needed */
+    align-items: stretch; /* This will ensure that all the child elements have the same height */
+    justify-content: flex-start;
 }
 
 .badge-unique {
-    flex: 0 0 calc(16.666% - 10px); /* Adjust the percentage as needed */
-    margin: 5px; /* Add some spacing between badges */
-    width: 150px; /* Set a fixed width for each badge-unique container */
+    flex: 0 0 calc(16.666% - 10px); /* Adjust the percentage for 3 badges per row */
+    margin: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 10px; /* Add padding for spacing */
-    border: 1px solid #ccc; /* Optional: Add a border for separation */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow for a card-like effect */
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+   
 }
 
 .badge-content {
-    margin-bottom: 10px;
+    margin-bottom: auto; /* Pushes the image to the bottom */
 }
 
 .badge-picture {
     max-width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    max-height: 100px; /* Set a max-height for the image to fit within the container */
+    max-height: 130px; /* Keep your max-height if you want to limit the image size */
 }
+
+
 
 
 
