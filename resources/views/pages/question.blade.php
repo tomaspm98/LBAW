@@ -24,6 +24,43 @@ use App\Models\UserFollowQuestion;
 <div id="errorPopup" class="popup-message">
     {{ session('error') }}
 </div>
+@if (session('error'))
+    <div id="errorPopup" class="popup-message">
+        {{ session('error') }}
+    </div>
+
+    <script>
+        let popup = document.getElementById('errorPopup');
+        popup.style.display = 'block';
+
+        setTimeout(function() {
+            popup.style.display = 'none';
+        }, 5000);
+    </script>
+@endif
+<div class="container">
+    
+    <!--__________Question__________-->
+    @include ('partials.question-info')
+    
+
+    <!--__________ANSWER FORM__________-->
+    @if (Auth::check() && Auth::id()!=$question->content_author)
+    <div class="container mt-4 p-4">
+        <div class="card-body">
+            <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
+                @csrf
+                <div class="form-group">
+                    <textarea class="form-control fixed-height" id="content_text" name="content_text" rows="8" required placeholder="Post Answer..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Post Answer</button>
+            </form>
+        </div>
+    </div>
+    @endif
+</div>
+
+
 
 <script>
     let popup = document.getElementById('errorPopup');

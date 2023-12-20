@@ -19,14 +19,14 @@
 
             <div class="form-group">
                 <label for="user_password">Password</label>
-                <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Enter your new password"> 
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your new password"> 
             </div>
             
 
 
             <div class="form-group">
                 <label for="user_password_confirmation">Confirm Password</label>
-                <input type="password" class="form-control" id="user_password2" name="user_password_confirmation" placeholder="Confirm your new password"> 
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your new password"> 
             </div>
 
 

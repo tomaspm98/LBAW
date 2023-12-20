@@ -1,5 +1,6 @@
 <?php 
 use App\Models\Admin; 
+error_reporting(E_ALL); //TODO
 ?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
@@ -77,7 +78,7 @@ use App\Models\Admin;
                 @yield('content')
             </section>
         </main>
-        <footer class="bg-dark text-light py-4">
+        <footer class="bg-dark text-light py-4 fixed-bottom ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
