@@ -90,3 +90,7 @@
     margin-left: 0.5em;
     margin-right: 0.5em;
 }
+#notifications-container{
+    max-height: 40vh;
+    overflow-y: auto;
+}
