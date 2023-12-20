@@ -14,169 +14,91 @@ use App\Models\UserFollowQuestion;
 </div>
 
 @if ($question->question_closed)
-    <div class="question-closed">
-        <p><strong>Question Closed</strong></p>
-    </div>
+<div class="question-closed">
+    <p><strong>Question Closed</strong></p>
+</div>
 @endif
 
 @if ($question->content_is_visible)
-    @if (session('error'))
-        <div id="errorPopup" class="popup-message">
-            {{ session('error') }}
-        </div>
+@if (session('error'))
+<div id="errorPopup" class="popup-message">
+    {{ session('error') }}
+</div>
 
-        <script>
-            let popup = document.getElementById('errorPopup');
-            popup.style.display = 'block';
+<script>
+    let popup = document.getElementById('errorPopup');
+    popup.style.display = 'block';
 
-            setTimeout(function() {
-                popup.style.display = 'none';
-            }, 5000);
-        </script>
-    @endif
-    <div class="container">
-        
-        <!--__________ QUESTION __________-->
-        @include ('partials.question-info')
-        
+    setTimeout(function() {
+        popup.style.display = 'none';
+    }, 5000);
+</script>
+@endif
 
-        <!--__________ ANSWER FORM __________-->
-        <div class="container mt-4 p-4">
-            <div class="card-body">
-                <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
-                    @csrf
-                    <div class="form-group">
-                        <textarea class="form-control fixed-height" id="content_text" name="content_text" rows="8" required placeholder="Post Answer..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">Post Answer</button>
-                </form>
-            </div>
-        </div>
+<div class="container">
+    
+    <!--__________ QUESTION __________-->
+    @include ('partials.question-info')
 
-        @if($question->answer_count !== 1)
-        <br><h3>{{ $question->answer_count }} Answers: </h3>
-        @else
-        <br><h3>{{ $question->answer_count }} Answer: </h3>
-        @endif
-
-        @foreach ($question->answers as $answer)
-
-        <!--__________ ANSWER __________-->
-        @if ($answer->content_is_visible)
-        @include ('partials.answer-info')
-
-        <!--__________ COMMENT FORM __________-->
-        @if (!$question->question_closed)
-            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
-                <i class="bi bi-caret-down-fill">Comment</i>
-                </button>
-            <div class=" border-top">
-
-                <div class="collapse comment_form_container p-4" id="collapseComment">
-                    <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <textarea class="form-control fixed-height" style="height:70px" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required placeholder="Post Comment..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-2">submit</button>
-                    </form>
+    <!--__________ ANSWER FORM __________-->
+    @if (!$question->question_closed)
+    <div class="container mt-4 p-4">
+        <div class="card-body">
+            <form action="{{ route('answers.create', $question->question_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to submit this answer?')">
+                @csrf
+                <div class="form-group">
+                    <textarea class="form-control fixed-height" id="content_text" name="content_text" rows="8" required placeholder="Post Answer..."></textarea>
                 </div>
-            </div>
-        @endif   
-
-        
-        @foreach ($answer->comments as $comment)
-        <div id="commentContainer{{ $comment->comment_id }}">
-        @if ($comment->content_is_visible)
-        <div class="content_text_container">
-                    @if($comment->content_is_edited)
-                    <p>edited</p>
-                    @endif
+                <button type="submit" class="btn btn-primary mt-2">Post Answer</button>
+            </form>
         </div>
-        <div class="comment_container">
-            <div class="content_top_container">
-                <div class="content_left_container">
-                    <a href="{{ route('member.show', $comment->author) }}">
-                      <div class="content_user_profile_photo">
-                      @php
-                            $authorPicturePath = 'public/pictures/' . $comment->author->username . '/profile_picture.png';
-                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $comment->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                      @endphp
-                    <img src="{{ $authorPicture }}" alt="Profile Photo">                        </div>
-                    </a>
-                    <p><b>{{$comment->author->username }}</b></p>
-                </div>
-                
-                <div class="content_text_container">
-                    <p>
-                        <h4>Comment : {{ $comment->content_text }}</h4>
-                    </p>
-                    <p>
-                        <strong>Created at: </strong>{{$comment->content_creation_date}}
-                    </p>
-                </div>
-
-                @if(Auth::check() && Auth::id()===$comment->content_author) 
-                    <div class="content_right_container"> 
-                        <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Delete</button>
-                        </form>
-                        <form method="GET" action="{{ route('comments.edit', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}">
-                            @csrf
-                            <button> 
-                                Edit
-                            </button>
-                    </form> 
-                    </div>  
-                    @elseif (Auth::check())
-                    <div>
-                        <button class="button_report" id="showReportCommentForm"> 
-                            Report
-                        </button>
-                        <form id="reportCommentForm" method="POST" action="{{ route('report.comment', ['answer_id' =>$comment->answer->answer_id, 'comment_id' => $comment->comment_id]) }}" style="display: none">
-                            <div class="form-group"> 
-                                @csrf
-                                <select name="report_reason" id="report_reason_comment" required>
-                                    <option value="" disabled selected>Select reason</option>
-                                    <option value="spam">Spam</option>
-                                    <option value="offensive">Offensive</option>
-                                    <option value="Rules Violation">Rules Violation</option>
-                                    <option value="Inappropriate tag">Inappropriate tag</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="report_text">Question Content</label>
-                                <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                            </div>
-                            <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
-                        </form>
-                    </div>
-                    @endif
-
-                   
-                @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
-                    </form>
-                    @endif  
-
-                </div>
-            </div>
-        </div>
-        </div>
-        @endif
-        @endforeach
-        <hr>
-        @endif
-        @endforeach    
     </div>
+    @endif   
+
+    @if($question->answer_count !== 1)
+    <br><h3>{{ $question->answer_count }} Answers: </h3>
     @else
-     <?php abort(404); ?>
-  @endif    
+    <br><h3>{{ $question->answer_count }} Answer: </h3>
+    @endif
+
+    @foreach ($question->answers as $answer)
+
+    <!--__________ ANSWER __________-->
+    @if ($answer->content_is_visible)
+    @include ('partials.answer-info')
+
+    <!--__________ COMMENT FORM __________-->
+    @if (!$question->question_closed)
+    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComment{{$answer->answer_id}}" aria-expanded="false" aria-controls="collapseComment">
+        <i class="bi bi-caret-down-fill">Comment</i>
+    </button>
+    <div class="border-top">
+        <div class="collapse comment_form_container p-4" id="collapseComment{{$answer->answer_id}}">
+            <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <textarea class="form-control fixed-height" style="height:70px" id="comment_content_text_{{ $answer->answer_id }}" name="content_text" required placeholder="Post Comment..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">submit</button>
+            </form>
+        </div>
+    </div>
+    @endif   
+
+    @foreach ($answer->comments as $comment)
+    <!--__________ COMMENT __________-->
+    @if ($comment->content_is_visible)
+    @include ('partials.comment-info')
+
+    @endif
+    @endforeach
+    <hr>
+    @endif
+    @endforeach    
+</div>
+@else
+    <?php abort(404); ?>
+@endif    
 @endsection
 
 <script>

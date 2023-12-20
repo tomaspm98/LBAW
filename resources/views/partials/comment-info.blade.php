@@ -3,22 +3,21 @@ use App\Models\Moderator;
 
 ?>
 
-<div class="comment_container w-100 bg-light mt-3 border-bottom rounded-2 p-1 d-flex position-relative" id="comment-{{$comment->comment_id}}">
+<div id="commentContainer{{ $comment->comment_id }}" class="comment_container w-60 bg-light mt-3 border-bottom rounded-2 p-1 d-flex position-relative" id="comment-{{$comment->comment_id}}">
     
-    <form action="{{ route('votes.voteComment', ['question_id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment -> comment_id]) }}#comment-{{$comment->comment_id}}" 
-    method="POST" class="text-center p-2"> 
+    <form id="voteForm" method="POST" class="text-center p-2">            
         @csrf
         @php $userVote = $comment->userVote; @endphp
-        <button type="submit" name="upvote" value="up" class="btn p-2 rounded-top-5 {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">
+        <button type="button" data-vote="up" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn p-2 rounded-top-5 {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">
             <i class="bi bi-caret-up-fill"></i> <!--like-->
         </button>
-        <p class="mt-3"><b>{{$comment->vote_count}}</b></p>
-        <button type="submit" name="upvote" value="down" class="btn p-2 rounded-bottom-5 {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">
+        <p class="mt-3"><b id="voteCountComment{{$comment->comment_id}}">{{$comment->vote_count}}</b></p>
+        <button type="button" data-vote="down" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn p-2 rounded-bottom-5 {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">
             <i class="bi bi-caret-down-fill"></i> <!--dislike-->
         </button>
     </form>
 
-    <div>
+    <div class="m-3">
         <div>
             <span>
                 <b>Commented by: </b>
@@ -74,7 +73,7 @@ use App\Models\Moderator;
                 </form>
             </li>
             
-            @else
+            @elseif (Auth::check())
             <div class="btn-group dropdown text-danger">
                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Report Comment
@@ -102,7 +101,15 @@ use App\Models\Moderator;
             </div>  
             @endif    
 
+            @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
+            <li>
+                <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+            @endif  
         </ul>
     </div>
-
 </div>

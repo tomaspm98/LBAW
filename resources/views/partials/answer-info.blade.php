@@ -155,7 +155,7 @@ use App\Models\Moderator;
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="AnswerModalLabel">Report Question</h1>
+                        <h1 class="modal-title fs-5" id="AnswerModalLabel">Report Answer</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -179,12 +179,11 @@ use App\Models\Moderator;
                             <button type="submit" class="button_report_answer btn btn-primary" data-bs-dismiss="modal" onclick="showNotificationAnswer()">Submit Report</button>
                         </div>
                     </form>
-                    </div>
                 </div>
             </div>
         </div>
-
-        @endif
     </div>
+    @endif
 </div>
+
     
