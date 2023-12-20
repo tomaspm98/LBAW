@@ -13,16 +13,18 @@ use App\Models\Member;
     @endif
           
     @if(\Request::route()->getName() !== "search")
-    <div class="nav_search_container align-items-center hover-container-down">
+    <div class="nav_search_container align-items-center hover-container-down position-absolute top-50 start-50 translate-middle" style="width: 30vh;">
         <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
-        <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
-        <div class="icon-container">
+            <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
+            <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
+            <div class="icon-container">
                 <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
-                <span class="hover-text-down">Here you can search for the questions you want using words, and having the chance of finding one that solves your problem.</span>                </div>
-        <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
+                <span class="hover-text-down">Here you can search for the questions you want using words, and having the chance of finding one that solves your problem.</span>
+            </div>
         </form>
     </div>
-    @endif
+@endif
+
 
     <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
 
