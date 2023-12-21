@@ -28,15 +28,17 @@ use App\Models\Member;
 
     <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
 
+        @if (Auth::check())
         @include('partials.notifications')
+        @endif
         <ul class="navbar-nav">
 
             @if (Auth::guest())
             <li class="nav-item active p-1">
-                <a class="nav-link" class="login-button" href="{{ url('/login') }}"> Login </a> 
+                <a class="nav-link login-button" href="{{ url('/login') }}"> Login </a> 
             </li>
             <li class="nav-item active p-1">
-                <a class="nav-link" class="register-button" href="{{ url('/register') }}"> Register </a>
+                <a class="nav-link register-button" href="{{ url('/register') }}"> Register </a>
             </li>
             @endif
 
