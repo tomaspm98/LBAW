@@ -18,8 +18,8 @@
             </div>
             <!-- Clear search  -->
             <div class="col-md-3 mt-2">
-                <button type="button" class="btn btn-primary w-100" onclick="window.location.href='{{ route('search') }}'">
-                    <i class='fa fa-remove' style='color:white'></i> Clear Search
+                <button type="button" class="btn btn-primary w-100" onclick="window.location.href='{{ route('search') }}'" style="background-color: #cc0033; border-color:#cc0033;">
+                    <i class='fa fa-remove' style='color:white' ></i> Clear Search
                 </button>
             </div>
         </div>

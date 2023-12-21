@@ -3,7 +3,7 @@ use App\Models\Admin;
 use App\Models\Moderator; 
 use App\Models\Member;
 ?>
-<nav class="navbar navbar-expand-lg navbar-light bg-light flex-container" style="padding-top: 1em;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light flex-container" style="padding-top: 1em; padding-bottom:1em;">
     <a class="navbar-brand" href="{{ url ('/') }}"><h1>QueryStack!</h1></a>
     
     @if(\Request::route()->getName() !== "login" && \Request::route()->getName() !== "register")
@@ -12,10 +12,14 @@ use App\Models\Member;
         </button>
     @endif
     
-    @if(\Request::route()->getName() !== "search")
+    
+
+
+    <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent" style="padding-right: 2em;">
+        @if(\Request::route()->getName() !== "search")
         <div class="nav_search_container align-items-center hover-container-down" >
             <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
-                <label class="mb-2" for="search">Search:</label>
+                <label class="mb-2" for="search"></label>
                 <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
                 <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
                 <div class="icon-container">
@@ -25,12 +29,10 @@ use App\Models\Member;
             </form>
         </div>
     @endif
-
-
-    <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent" style="padding-right: 2em;">
-
         @if (Auth::check())
+        <ul style="width:fit-content; margin:auto;">
         @include('partials.notifications')
+        </ul>
         @endif
         <ul class="navbar-nav">
 
