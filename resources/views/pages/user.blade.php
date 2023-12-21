@@ -46,14 +46,22 @@ use App\Models\Moderator;
             </div>
         </div>
 
-        <div classs="badges-section">
+        <div class="badges-section">
             <h3><b>Badges:</b></h3>
-            <div class="badges">
+            <div class="badge-grid">
             @foreach ($member->badges as $badge)
+            @php
+                $badgePicturePath = asset('storage/badges/badge_' . $badge->badge_id . '.jpg');
+            @endphp
                 <div class="badge-unique" >
-                    <b>badge name: </b>{{ $badge->badge_name }}
-                    <b>badge description: </b>{{ $badge->badge_description }}
+                <div class="badge-content">
+                    <b>{{ $badge->badge_name }}</b><br>
+                    <b>Description: </b>{{ $badge->badge_description }}
+                    </div>
+                <div class="badge-picture">
+                    <p><img class="badge-picture" src="{{ $badgePicturePath }}" style="width: 150px; height: 150px;"></p>
                 </div>
+            </div>
                 
             @endforeach
             </div>
