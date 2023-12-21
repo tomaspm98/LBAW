@@ -1,5 +1,6 @@
 <?php 
 use App\Models\Admin; 
+error_reporting(E_ALL); //TODO
 ?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
@@ -25,7 +26,7 @@ use App\Models\Admin;
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
         <link href="{{ url('css/tags.css') }}" rel="stylesheet">
         <link href="{{ url('css/notification.css') }}" rel="stylesheet">
-        <link href="{{ url('css/blocked_users.css') }}" rel="stylesheet">
+        <link href="{{ url('css/recover-password.css') }}" rel="stylesheet">	
 
         <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
@@ -78,7 +79,7 @@ use App\Models\Admin;
                 @yield('content')
             </section>
         </main>
-        <footer class="bg-dark text-light py-4">
+        <footer class="bg-dark text-light py-4 ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">

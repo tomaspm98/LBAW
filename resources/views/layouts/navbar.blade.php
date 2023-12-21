@@ -3,26 +3,28 @@ use App\Models\Admin;
 use App\Models\Moderator; 
 use App\Models\Member;
 ?>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ url ('/') }}" ><h1>QueryStack!</h1></a>
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light flex-container">
+    <a class="navbar-brand" href="{{ url ('/') }}"><h1>QueryStack!</h1></a>
+    
     @if(\Request::route()->getName() !== "login" && \Request::route()->getName() !== "register")
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     @endif
-          
+    
     @if(\Request::route()->getName() !== "search")
-    <div class="nav_search_container align-items-center hover-container-down">
-        <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
-        <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
-        <div class="icon-container">
-                <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
-                <span class="hover-text-down">Here you can search for the questions you want using words, and having the chance of finding one that solves your problem.</span>                </div>
-        <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
-        </form>
-    </div>
+        <div class="nav_search_container align-items-center hover-container-down" >
+            <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
+                <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
+                <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
+                <div class="icon-container">
+                    <i class="fa-solid fa-circle-question" style="color: #0f4aa8;"></i>
+                    <span class="hover-text-down">Here you can search for the questions you want using words, and having the chance of finding one that solves your problem.</span>
+                </div>
+            </form>
+        </div>
     @endif
+
 
     <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
 

@@ -19,7 +19,7 @@
         </script>    
     @endif    
     @if(session('success'))
-        <div class="alert alert-success mt-3">
+        <div id="success-alert-login" class="alert alert-success mt-3">
             {{ session('success') }}
         </div>
     @endif
@@ -103,3 +103,15 @@
     @endif    
 </div>
 @endsection
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var successAlert = document.getElementById('success-alert-login');
+        
+        if (successAlert) {
+            setTimeout(function() {
+                successAlert.style.display = 'none';
+            }, 3000); 
+        }
+    });
+</script>
