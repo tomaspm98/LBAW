@@ -643,27 +643,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-
-
-
-
-<!--
-
-    TODO:
-    1. [ ] Restrict featuring post answer (only for members)
-    2. [ ] Restrict delete featuring (only for owner (and admin?))
-    3. [ ] Restrict edit featuring (only for owner (and admin?))    
-    4. [ ] Edit (question, answer, comment) featuring
-    5. [ ] Delete question featuring dosent work correctly
-    6. [ ] Fix creation_date format
-    7. [ ] In some content when clic con a profile photo or username redirect to the owner user profile 
-
-    not high priority:
-    4. [ ] load profiles photos 
-    5. [ ] votes (not high priority)
-    6. [ ] report featuring
-    7. [ ] add icones for buttons
-
-
-
--->

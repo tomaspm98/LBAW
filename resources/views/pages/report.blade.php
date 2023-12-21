@@ -198,7 +198,6 @@ function validateForm() {
             return true;
         }
         
-        // Function to show punishment options when "Punished" is selected
         document.getElementById('punished_yes').addEventListener('click', showPunishmentOptions);
 
 

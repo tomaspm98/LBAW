@@ -10,11 +10,9 @@
             {{ session('error') }}
         </div>    
             <script>
-            // Show the popup
             let popup = document.getElementById('errorPopup');
             popup.style.display = 'block';
 
-            // Hide the popup after 5 seconds (5000 milliseconds)
             setTimeout(function() {
                 popup.style.display = 'none';
             }, 5000);
