@@ -25,7 +25,8 @@ error_reporting(E_ALL); //TODO
         <link href="{{ url('css/user.css') }}" rel="stylesheet">
         <link href="{{ url('css/report.css') }}" rel="stylesheet">
         <link href="{{ url('css/tags.css') }}" rel="stylesheet">
-        <link href="{{ url('css/notification.css') }}" rel="stylesheet">	
+        <link href="{{ url('css/notification.css') }}" rel="stylesheet">
+        <link href="{{ url('css/recover-password.css') }}" rel="stylesheet">	
 
         <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
@@ -78,7 +79,7 @@ error_reporting(E_ALL); //TODO
                 @yield('content')
             </section>
         </main>
-        <footer class="bg-dark text-light py-4 fixed-bottom ">
+        <footer class="bg-dark text-light py-4 ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
