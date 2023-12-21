@@ -3,6 +3,7 @@
 @section('content')
 <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="register-form">
     {{ csrf_field() }}
+    <h1>Register</h1>
 
     <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -31,7 +32,7 @@
     
     <div class="mb-3">
         <label for="picture" class="form-label">Profile Picture [Optional]</label>
-        <input id="picture" type="file" name="picture" value="{{ old('picture') }}" accept="image/png" class="form-control">
+        <input id="picture" type="file" name="picture" accept="image/png" class="form-control">
         <p class="accepted-formats">Accepted formats: png</p>
     </div>
 

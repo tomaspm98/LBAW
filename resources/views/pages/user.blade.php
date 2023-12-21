@@ -59,7 +59,7 @@ use App\Models\Moderator;
                     <b>Description: </b>{{ $badge->badge_description }}
                     </div>
                 <div class="badge-picture">
-                    <p><img class="badge-picture" src="{{ $badgePicturePath }}" style="width: 150px; height: 150px;"></p>
+                    <p><img class="badge-picture" src="{{ $badgePicturePath }}" style="width: 150px; height: 150px;" alt="Badge picture"></p>
                 </div>
             </div>
                 
@@ -120,10 +120,6 @@ use App\Models\Moderator;
 
 
 
-
-
-
-    </div>
 
 
 
