@@ -90,3 +90,14 @@
 .notification-unread {
   color: #000;
 }
+
+.nav-profile-photo{
+    object-fit: scale-down;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    margin-right: 1em;
+    margin-bottom: 5px;
+}

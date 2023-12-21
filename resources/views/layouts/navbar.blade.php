@@ -3,7 +3,7 @@ use App\Models\Admin;
 use App\Models\Moderator; 
 use App\Models\Member;
 ?>
-<nav class="navbar navbar-expand-lg navbar-light bg-light flex-container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light flex-container" style="padding-top: 1em;">
     <a class="navbar-brand" href="{{ url ('/') }}"><h1>QueryStack!</h1></a>
     
     @if(\Request::route()->getName() !== "login" && \Request::route()->getName() !== "register")
@@ -27,7 +27,7 @@ use App\Models\Member;
     @endif
 
 
-    <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent" style="padding-right: 2em;">
 
         @if (Auth::check())
         @include('partials.notifications')
@@ -44,17 +44,22 @@ use App\Models\Member;
             @endif
 
             @if (Auth::check())
-            <li class="nav-item active">
-            </li>
-            
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                </a>
-                    <span>{{ Auth::user()->username }}</span>
-                <div class="dropdown-menu dropdown_user_menu" aria-labelledby="navbarDropdown">
-
-                        <a class="dropdown-item"  href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
+            <div class="custom-dropdown">
+                <button class="dropdown-toggle" id="customDropdown" style="color: black;">
+                    @php
+                        $authorPicturePath = 'public/pictures/' . Auth::user()->username . '/profile_picture.png';
+                        $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . Auth::user()->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
+                    @endphp
+                    <img class="nav-profile-photo" src="{{ $authorPicture }}" alt="Profile Photo">
+                </button>
+                <div class="dropdown-menu dropdown_user_menu" aria-labelledby="navbarDropdown" style="padding: 0.5em;">
+                    <div class="header-container">
+                        <div class="header" style="font-size: 1.2em;">Your options, <span style="font-style:italic;">{{ Auth::user()->username }}</span></div>
+                        
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item"  href="{{ route('member.edit', ['user_id' => Auth::user()->user_id]) }}">Edit Profile</a>
                     @if(Route::currentRouteName() === 'member.show' && Route::current()->parameter('user_id') == Auth::user()->user_id)
                     @else
                         <a class="dropdown-item"  href="{{ route('member.show', ['user_id' => Auth::user()->user_id]) }}">Profile</a>
@@ -86,7 +91,7 @@ use App\Models\Member;
                     </form>
                 
                 </div>
-            </li>
+            </div>
             @endif
 
         </ul>
