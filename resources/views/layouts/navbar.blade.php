@@ -50,6 +50,18 @@ use App\Models\Member;
             <div class="custom-dropdown">
                 <button class="dropdown-toggle" id="customDropdown" style="color: black;">
                     <img class="nav-profile-photo" src="{{ Auth::user()->getProfileImage() }}" alt="Profile Photo">
+                    <style>
+                        .nav-profile-photo{
+                            object-fit: scale-down;
+                            width: 2em;
+                            height: 2em;
+                            border-radius: 50%;
+                            overflow: hidden;
+                            margin: auto;
+                            margin-right: 1em;
+                            margin-bottom: 5px;
+                        }
+                        </style>
                 </button>
                 <div class="dropdown-menu dropdown_user_menu" aria-labelledby="navbarDropdown" style="padding: 0.5em;">
                     <div class="header-container">
