@@ -62,9 +62,9 @@ use App\Models\UserFollowQuestion;
         <br><h3>{{ $question->answer_count }} Answer: </h3>
         @endif
         @foreach ($question->answers as $answer)
-        <div class="container position-relative" id="answerContainer{{ $answer->answer_id }}">
         @if ($answer->content_is_visible)
-        <div class="content_text_container">
+        <div class="container position-relative mt-5" id="answerContainer{{ $answer->answer_id }}">
+        <div class="content_text_container text-warning">
                     @if($answer->content_is_edited)
                     <p>edited</p>
                     @endif
@@ -112,7 +112,7 @@ use App\Models\UserFollowQuestion;
                     @elseif (Auth::check())
                     {{-- Verificar se a tag da pergunta é diferente da tag pela qual o moderator é responsavel --}}
                     {{-- @if (Moderator::where('user_id', Auth::user()->user_id)->exists() && $question->tag->tag_name !== Auth::user()->moderator->tag->tag_name) --}}
-                    <div style="margin-left:10rem">
+                    <div style="margin-left:10rem" class="d-flex align-items-start gap-2">
                         <button class="button_report" id="showReportAnswerForm"> 
                             Report
                         </button>
@@ -133,17 +133,15 @@ use App\Models\UserFollowQuestion;
                             </div>
                             <button type="submit" class="button_report_answer" onclick="showNotificationAnswer()">Submit Report</button>
                         </form>
-                    </div> 
                     {{-- @endif  --}}
-                    @endif
 
                     @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <div class="content_right_container"> 
-                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
+                        <form class="ml-5" action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit">Delete</button>
                         </form>
+                        @endif
                     </div> 
                     @endif 
                     
@@ -173,30 +171,29 @@ use App\Models\UserFollowQuestion;
                 </div>
             </div>
         </div>
-        </div>
         @if (!$question->question_closed)
-        <div class="comment_form_container">
+        <div class="comment_form_container mt-3">
         <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
                 @csrf
-                <div class="form-group">
+                <div class="form-group mt-5">
                     <label for="comment_content_text_{{ $answer->answer_id }}">Post Comment:</label>
                     <textarea class="form-control" id="comment_content_text_{{ $answer->answer_id }}" placeholder="Write comment..." name="content_text" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Post Comment</button>
+                <button type="submit" class="btn btn-primary mt-3">Post Comment</button>
             </form>
         </div> 
         @endif   
         @foreach ($answer->comments as $comment)
-        <div class ="container" id="commentContainer{{ $comment->comment_id }}">
         @if ($comment->content_is_visible)
-        <div class="content_text_container">
+        <div class ="container col-md-10 mt-5" id="commentContainer{{ $comment->comment_id }}">
+        <div class="content_text_container text-warning">
                     @if($comment->content_is_edited)
                     <p>edited</p>
                     @endif
         </div>
         <div class="comment_container">
             <div class="content_top_container">
-                <div class="content_left_container">
+                <div class="content_left_container float-left"> 
                     <a href="{{ route('member.show', $comment->author) }}">
                       <div class="content_user_profile_photo">
                       @php
@@ -208,17 +205,18 @@ use App\Models\UserFollowQuestion;
                     <p><b>{{$comment->author->username }}</b></p>
                 </div>
                 
-                <div class="content_text_container">
+                <div class="content_text_container custom-margin-left pl-5">
                     <p>
                         <h4>Comment : {{ $comment->content_text }}</h4>
                     </p>
                     <p>
-                        <strong>Created at: </strong>{{$comment->content_creation_date}}
+                        <strong>Created at: </strong>{{\Carbon\Carbon::parse($comment->content_creation_date)->format('Y-m-d H:i')}}
                     </p>
                 </div>
 
                 @if(Auth::check() && Auth::id()===$comment->content_author) 
                     <div class="content_right_container"> 
+                     <div class="mt-2 d-flex justify-content-start gap-2" style="margin-left:10rem">
                         <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                             @csrf
                             @method('DELETE')
@@ -229,10 +227,11 @@ use App\Models\UserFollowQuestion;
                             <button> 
                                 Edit
                             </button>
-                    </form> 
+                     </form> 
                     </div>  
+                    </div>
                     @elseif (Auth::check())
-                    <div>
+                    <div style="margin-left:10rem" class="d-flex align-items-start gap-2">
                         <button class="button_report" id="showReportCommentForm"> 
                             Report
                         </button>
@@ -253,36 +252,41 @@ use App\Models\UserFollowQuestion;
                             </div>
                             <button type="submit" class="button_report_answer" onclick="showNotificationComment()">Submit Report</button>
                         </form>
-                    </div>
-                    @endif
 
                    
                 @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <form action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                    <form class="ml-5" action="{{ route('comments.delete', [$question->question_id, $answer->answer_id, $comment->comment_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit">Delete</button>
                     </form>
                     @endif  
+                </div>
+                @endif
                    
-                    <div>
-                        <form id="voteForm" method="POST">
+                    <div class="text-center p-2 position-absolute top-0 end-0">
+                        <form id="voteForm" method="POST" class="d-flex flex-column align-items-center">
                             @csrf
                             @php $userVote = $comment->userVote; @endphp
-                            <button type="submit" data-vote="up" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="submit" data-vote="down" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            <button type="submit" data-vote="up" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment p-2 rounded-top-5 btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">
+                                <i class="bi bi-caret-up-fill"></i> <!--like-->
+                            </button>
+                            <p class="mt-3"><b id ="voteCountComment{{ $comment->comment_id }}">{{$comment->vote_count}}</b></p>
+                            <button type="submit" data-vote="down" data-answer-id="{{$comment->answer_id}}" data-comment-id="{{$comment->comment_id}}" class="vote-btn-comment p-2 rounded-bottom-5 btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">
+                            <i class="bi bi-caret-down-fill"></i> <!--dislike-->
+                            </button>
                         </form>
                     </div>
-                    <p><b id ="voteCountComment{{ $comment->comment_id }}">{{$comment->vote_count}}</b></p>
                 </div>
             </div>
         </div>
-        </div>
+
         @endif
         @endforeach
-        <hr>
+        <hr class="custom-hr">
         @endif
-        @endforeach    
+        @endforeach 
+        </div>   
     </div>
     @else
      <?php abort(404); ?>

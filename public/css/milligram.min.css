@@ -286,6 +286,29 @@
     max-height: 130px; /* Keep your max-height if you want to limit the image size */
 }
 
+.custom-hr {
+    height: 3px;
+    background-color: black;
+    color:black;
+    border: none; 
+    width:100%; 
+    margin-top: 100px;
+    margin-bottom: 100px;/* Remove default border */
+}
+
+.content_text_container {
+    position: relative;
+    /* other styles */
+}
+
+.edited-indicator {
+    position: absolute;
+    text-decoration: yellow;
+    top: 0;
+    right: 50;
+    /* other styles if needed */
+}
+
 
 
 
