@@ -20,7 +20,7 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                <tr>
+                <tr id="user_{{ $user->user_id }}">
                     <td>{{ $user->username }}</td>
                     <td>                            
                         <form class="unblock-form" method="POST" action="{{ route('user.unblock', ['user_id' => $user->user_id]) }}">
@@ -44,6 +44,7 @@
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const formData = new FormData(this);
+                const userRow = this.closest('tr'); 
 
                 fetch(this.action, {
                     method: 'POST',
@@ -53,10 +54,10 @@
                     if (response.ok) {
                         successMessage.textContent = `User unblocked.`;
                         successMessage.style.display = 'block';
+                        userRow.remove(); 
                         setTimeout(() => {
                             successMessage.style.display = 'none';
-                            location.reload(); // Reload the page after displaying the success message for a short delay
-                        }, 3000); // Display the success message for 3 seconds
+                        }, 3000);
                     }
                 })
                 .catch(error => {
@@ -68,3 +69,4 @@
 </script>
 
 @endsection
+

@@ -27,6 +27,8 @@ error_reporting(E_ALL); //TODO
         <link href="{{ url('css/tags.css') }}" rel="stylesheet">
         <link href="{{ url('css/notification.css') }}" rel="stylesheet">
         <link href="{{ url('css/recover-password.css') }}" rel="stylesheet">	
+        <link href="{{ url('css/blocked_users.css') }}" rel="stylesheet">
+
 
         <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
