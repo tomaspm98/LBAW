@@ -40,7 +40,7 @@ use App\Models\UserFollowQuestion;
         <!--__________Question__________-->
         @include ('partials.question-info')
         
-
+            <div>
             <!--__________ANSWER FORM__________-->
             @if (Auth::check() && Auth::id()!=$question->content_author)
             <div class="container mt-4 p-4">
@@ -56,31 +56,13 @@ use App\Models\UserFollowQuestion;
             </div>
             @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         @if($question->answer_count !== 1)
         <br><h3>{{ $question->answer_count }} Answers: </h3>
         @else
         <br><h3>{{ $question->answer_count }} Answer: </h3>
         @endif
         @foreach ($question->answers as $answer)
-        <div id="answerContainer{{ $answer->answer_id }}">
+        <div class="container position-relative" id="answerContainer{{ $answer->answer_id }}">
         @if ($answer->content_is_visible)
         <div class="content_text_container">
                     @if($answer->content_is_edited)
@@ -90,7 +72,7 @@ use App\Models\UserFollowQuestion;
         <div class="content_container">
             <div class="content_top_container">
 
-                <div class="content_left_container">
+                <div class="content_left_container float-left">
                     <a href="{{ route('member.show', $answer->author) }}">
                         <div class="content_user_profile_photo">
                         @php
@@ -103,17 +85,18 @@ use App\Models\UserFollowQuestion;
                     <p><b>{{$answer->author->username }}</b></p>
                 </div>
                 
-                <div class="content_text_container">
+                <div class="content_text_container custom-margin-left pl-5">
                     <p>
                         <h3>{{ $answer->content_text }}</h3>
                     </p>
                     <p>
-                        <strong>Created at: </strong>{{$answer->content_creation_date}}
+                        <strong>Created at: </strong>{{\Carbon\Carbon::parse($answer->content_creation_date)->format('Y-m-d H:i')}}
                     </p>
                 </div>
 
                 @if(Auth::check() && Auth::id()===$answer->content_author) 
                 <div class="content_right_container"> 
+                 <div class="mt-2 d-flex justify-content-start gap-2" style="margin-left:10rem">
                     <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
                         @csrf
                         @method('DELETE')
@@ -125,14 +108,15 @@ use App\Models\UserFollowQuestion;
                             Edit
                         </button>
                     </form> 
+                 </div>
                     @elseif (Auth::check())
                     {{-- Verificar se a tag da pergunta é diferente da tag pela qual o moderator é responsavel --}}
                     {{-- @if (Moderator::where('user_id', Auth::user()->user_id)->exists() && $question->tag->tag_name !== Auth::user()->moderator->tag->tag_name) --}}
-                    <div>
+                    <div style="margin-left:10rem">
                         <button class="button_report" id="showReportAnswerForm"> 
                             Report
                         </button>
-                        <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none">
+                        <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}" style="display: none; width:750px">
                             <div class="form-group"> 
                                 @csrf
                                 <select name="report_reason" id="report_reason_answer" required>
@@ -173,15 +157,19 @@ use App\Models\UserFollowQuestion;
                     </div>
                     @endif
       
-                    <div>
-                        <form id="voteForm" method="POST">
+                    <div class="text-center p-2 position-absolute top-0 end-0">
+                        <form id="voteForm" method="POST" class="d-flex flex-column align-items-center">
                             @csrf
                             @php $userVote = $answer->userVote; @endphp
-                            <button type="button" data-vote="up" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">Like</button>
-                            <button type="button" data-vote="down" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">Dislike</button>
+                            <button type="button" data-vote="up" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer p-2 rounded-top-5 btn {{ $userVote && $userVote->upvote == 'up' ? 'btn-success' : 'btn-primary' }}">
+                                <i class="bi bi-caret-up-fill"></i> <!--like-->
+                            </button>
+                            <p class="mt-3"><b id="voteCountAnswer{{$answer->answer_id}}">{{$answer->vote_count}}</b></p>
+                            <button type="button" data-vote="down" data-answer-id="{{$answer->answer_id}}" class="vote-btn-answer p-2 rounded-bottom-5 btn {{ $userVote && $userVote->upvote == 'down' ? 'btn-danger' : 'btn-primary' }}">
+                                <i class="bi bi-caret-down-fill"></i> <!--dislike-->
+                            </button>
                         </form>
                     </div>
-                <p><b id="voteCountAnswer{{$answer->answer_id}}">{{$answer->vote_count}}</b></p>
                 </div>
             </div>
         </div>
@@ -199,7 +187,7 @@ use App\Models\UserFollowQuestion;
         </div> 
         @endif   
         @foreach ($answer->comments as $comment)
-        <div id="commentContainer{{ $comment->comment_id }}">
+        <div class ="container" id="commentContainer{{ $comment->comment_id }}">
         @if ($comment->content_is_visible)
         <div class="content_text_container">
                     @if($comment->content_is_edited)
