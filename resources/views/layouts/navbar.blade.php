@@ -15,6 +15,7 @@ use App\Models\Member;
     @if(\Request::route()->getName() !== "search")
         <div class="nav_search_container align-items-center hover-container-down" >
             <form class="form-inline my-2 my-lg-0 align-items-center m-0" action="{{ route('search') }}" method="GET">
+                <label class="mb-2" for="search">Search:</label>
                 <input class="form-control mr-sm-2 h-50" style="min-width: 150px" name="search" value="{{ request('search') }}" type="search" placeholder="Search..." aria-label="Search">
                 <button class="btn btn-outline-success text-dark p-2 rounded-5" type="submit"><i class="bi bi-search p-1"></i></button>
                 <div class="icon-container">
