@@ -75,11 +75,7 @@ use App\Models\UserFollowQuestion;
                 <div class="content_left_container float-left">
                     <a href="{{ route('member.show', $answer->author) }}">
                         <div class="content_user_profile_photo">
-                        @php
-                            $authorPicturePath = 'public/pictures/' . $answer->author->username . '/profile_picture.png';
-                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $answer->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                        @endphp
-                        <img src="{{ $authorPicture }}" alt="Profile Photo">
+                        <img src="{{ $answer->author->getProfileImage() }}" alt="Profile Photo">
                         </div>
                     </a>
                     <p><b>{{$answer->author->username }}</b></p>
@@ -196,11 +192,7 @@ use App\Models\UserFollowQuestion;
                 <div class="content_left_container float-left"> 
                     <a href="{{ route('member.show', $comment->author) }}">
                       <div class="content_user_profile_photo">
-                      @php
-                            $authorPicturePath = 'public/pictures/' . $comment->author->username . '/profile_picture.png';
-                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $comment->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                      @endphp
-                    <img src="{{ $authorPicture }}" alt="Profile Photo">                        </div>
+                        <img src="{{ $comment->author->getProfileImage() }}" alt="Profile Photo">                        </div>
                     </a>
                     <p><b>{{$comment->author->username }}</b></p>
                 </div>

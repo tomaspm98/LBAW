@@ -766,26 +766,26 @@ VALUES ('Bronze', 'Bronze-level badge'), -- Assigned when you gained 10 points
 
 INSERT INTO member (user_id, username, user_email, password, picture, user_birthdate, user_score)
 --VALUES (-1, 'deleted', 'deleted@example.com', 'pass', '/picture/avatar1.jpg', '1990-01-15', 0 );
-VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/pictures/default/profile_picture.png', '1990-01-15', 0);
+VALUES (-1, 'deleted', 'deleted@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'public/default_profile.png', '1990-01-15', 0);
 
 INSERT INTO member (username, user_email, password, picture, user_birthdate, user_score)
-VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15', 0),
-       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator3', 'moderator3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator4', 'moderator4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator5', 'moderator5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator6', 'moderator6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator7', 'moderator7@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator8', 'moderator8@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator9', 'moderator9@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('moderator10', 'moderator10@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1990-01-15',  0),
-       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1999-04-10', 0),
-       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1989-05-23', 0),
-       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '1993-12-01', 0),
-       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2005-10-23', 0),
-       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2000-08-24', 0),
-       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'pictures/default/profile_picture.png', '2003-08-19', 0);
+VALUES ('admin', 'admin@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15', 0),
+       ('moderator', 'moderator@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator2', 'moderator2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator3', 'moderator3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator4', 'moderator4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator5', 'moderator5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator6', 'moderator6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator7', 'moderator7@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator8', 'moderator8@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator9', 'moderator9@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('moderator10', 'moderator10@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1990-01-15',  0),
+       ('member1', 'member1@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1999-04-10', 0),
+       ('member2', 'member2@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1989-05-23', 0),
+       ('member3', 'member3@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '1993-12-01', 0),
+       ('member4', 'member4@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '2005-10-23', 0),
+       ('member5', 'member5@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '2000-08-24', 0),
+       ('member6', 'member6@example.com', '$2y$10$KwpGjvc/KlEieFZjHD4AKe1Lj16ue9zUaQf6GLrfOXsN6.Kra/iPS', 'default_profile.png', '2003-08-19', 0);
 
 -- All paswords are 'pass'
 
