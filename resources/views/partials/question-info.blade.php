@@ -105,12 +105,9 @@ use App\Models\UserFollowQuestion;
 
                 @if(Auth::check() && Auth::id()===$question->content_author) <!-- TODO: restrict access only for owner -->
                 <li>
-                    <form action="{{ route('questions.delete', $question->question_id) }} " 
-                    method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn dropdown-item text-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                    </form>
+                <button type="button" class="btn dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteQModal">
+                    delete
+                </button>
                 </li>
                 <li>
                     <form method="GET" action="{{ route('questions.edit', $question->question_id) }}" class="m-0">
@@ -123,14 +120,9 @@ use App\Models\UserFollowQuestion;
 
                 @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
                 <li>
-                    <form action="{{ route('questions.delete', $question->question_id) }}" 
-                    method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')" class="m-0">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn dropdown-item text-danger" type="submit" onclick="return confirm('Are you sure you want to delete this question?')">
-                            Delete
-                        </button>
-                    </form>
+                    <button type="button" class="btn dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteQModal">
+                        delete
+                    </button>
                 </li>
                 <li class="btn-group text-danger">
                     <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#QuestionModal" data-bs-whatever="@mdo">
@@ -193,4 +185,33 @@ use App\Models\UserFollowQuestion;
         </div>
         @endif
     </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="deleteQModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Question</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this question?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="{{ route('questions.delete', $question->question_id) }}" 
+        method="POST" class="m-0">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger" type="submit">
+                Delete
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

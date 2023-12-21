@@ -29,7 +29,9 @@ error_reporting(E_ALL); //TODO
 
         <script src="https://kit.fontawesome.com/03bf23ebdb.js" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+         rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+         crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <!-- jQuery, Popper.js and Bootstrap scripts-->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -78,7 +80,7 @@ error_reporting(E_ALL); //TODO
                 @yield('content')
             </section>
         </main>
-        <footer class="bg-dark text-light py-4 fixed-bottom ">
+        <footer class="bg-dark text-light py-4 ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">

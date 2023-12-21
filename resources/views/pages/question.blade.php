@@ -351,14 +351,13 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', function() {
         console.log('clicked');
         const voteType = this.getAttribute('data-vote');
-        console.log(voteType);
         const answerId = this.getAttribute('data-answer-id');
         const questionId = {{ $question->question_id }};
         const answerContainerId = 'answerContainer' + answerId;
         const allButtons = document.querySelectorAll(`#${answerContainerId} .vote-btn-answer`);
         const isUnvoting = this.classList.contains('btn-success') && voteType === 'up' || 
                                this.classList.contains('btn-danger') && voteType === 'down';
-
+                               
                                if (isUnvoting) {
                 allButtons.forEach(btn => {
                     btn.classList.remove('btn-success', 'btn-danger');

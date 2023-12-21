@@ -3,7 +3,7 @@ use App\Models\Moderator;
 
 ?>
 
-<div id="answer-{{$answer->answer_id}}" class="my-4 d-flex "> <!--answer-->
+<div id="answerContainer{{$answer->answer_id}}" class="my-4 d-flex "> <!--answer-->
     <div id="action_buttons" class="text-center p-2">
         <div class="text-center">
             <a href="{{ route('member.show', $answer->author) }}">
@@ -30,51 +30,10 @@ use App\Models\Moderator;
             </button>
         </form>
             
-        @if(Auth::check() && Auth::id()===$answer->content_author) 
-        <div class="content_right_container"> 
-            <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-outline-danger"  type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-            </form>
-            <form method="GET" action="{{ route('answers.edit', [$question->question_id, $answer->answer_id]) }}">
-                @csrf
-                @method('GET')
-                <button class="btn btn-outline-warning"> Edit </button>
-            </form>    
-            @elseif (Auth::check())
-            {{-- Verificar se a tag da pergunta é diferente da tag pela qual o moderator é responsavel --}}
-            {{-- @if (Moderator::where('user_id', Auth::user()->user_id)->exists() && $question->tag->tag_name !== Auth::user()->moderator->tag->tag_name) --}}
         </div>
         
-        @elseif (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-        <div class="content_right_container"> 
-            <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-outline-danger" type="submit">Delete</button>
-            </form>
-        </div> 
-        
-        @else 
-        <div> 
-            <form id="reportAnswerForm" method="POST" action="{{ route('report.answer', ['answer_id' => $answer->answer_id]) }}#answer-{{$answer->answer_id}}">
-                @csrf
-                <select name="report_reason" id="report_reason_answer" required>
-                    <option value="" disabled selected>Select reason</option>
-                    <option value="spam">Spam</option>
-                    <option value="offensive">Offensive</option>
-                    <option value="Rules Violation">Rules Violation</option>
-                    <option value="Inappropriate tag">Inappropriate tag</option>
-                </select>
-                <label for="report_text">Answer Content</label>
-                <textarea name="report_text" placeholder="Additional text (optional)"></textarea>
-                <button type="submit" class="button_report btn btn-danger_answer" onclick="showNotificationAnswer()">Submit Report</button>
-            </form>
-        </div>
-        @endif
 
-        <div class="position-relative bg-light border-bottom rounded-2 m-2 w-100">
+        <div class="position-relative bg-light border-bottom rounded-2 w-100">
             <div class="answer_container p-2">
                 <p>
                     <strong>Created at: </strong>{{\Carbon\Carbon::parse($answer->content_creation_date)->format('Y-m-d')}}
@@ -94,9 +53,9 @@ use App\Models\Moderator;
             </div>
 
             @if (Auth::check())
-            <div class="dropleft position-absolute top-0 end-0 m-2" >
+            <div class="dropleft position-absolute top-0 end-0" >
                 <button class="btn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                    <i class="bi bi-three-dots fs-5"></i>
+                    <i class="bi bi-three-dots"></i>
                 </button>
 
                 <ul class="dropdown-menu">
@@ -113,7 +72,7 @@ use App\Models\Moderator;
                     </li>
                     @endif
 
-                    @if(Auth::check() && Auth::id()===$answer->content_author) 
+                    @if(Auth::check() && Auth::id()===$answer->content_author || (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists()) ) 
                     <li> 
                         <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
                             @csrf
@@ -138,15 +97,6 @@ use App\Models\Moderator;
                     </li> 
                     @endif
 
-                    @if (Auth::check() && Moderator::where('user_id', Auth::user()->user_id)->exists())
-                    <li class="content_right_container"> 
-                        <form action="{{ route('answers.delete', [$question->question_id, $answer->answer_id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this answer?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="dropdown-item text-danger" type="submit">Delete</button>
-                        </form>
-                    </li> 
-                    @endif 
                 </ul>
             </div>
         </div>
