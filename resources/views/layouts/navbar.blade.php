@@ -30,7 +30,7 @@ use App\Models\Member;
         </div>
     @endif
         @if (Auth::check())
-        <ul style="width:fit-content; margin:auto;">
+        <ul style="width:fit-content;">
         @include('partials.notifications')
         </ul>
         @endif
