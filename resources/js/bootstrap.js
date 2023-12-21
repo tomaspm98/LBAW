@@ -20,7 +20,7 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
- 
+/*
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -29,8 +29,15 @@ window.Echo = new Echo({
     encrypted: true,
     debug: false,
 });
-
+*/
+/*
 Echo.private(`notifications.${window.user.id}`)
     .listen('.notifications.updated.count', (e) => {
         console.log(e); 
+    });*/
+
+    const pusher = new Pusher(pusherAppKey, {
+        cluster: pusherCluster,
+        encrypted: true
     });
+    
