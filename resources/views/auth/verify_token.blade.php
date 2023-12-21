@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+<div id="recover-password" class="align-items-center justify-content-center mt-5">
+
 <form method="POST" action="{{ route('token-verification-post') }}">
     {{ csrf_field() }}
     <input type="hidden" name="user_email" value="{{ $user_email }}">
     <input type="hidden" name="session_token" value="{{ $session_token }}">
 
-    <h1>Verify Token</h1>
-    <p>We have sent you an email with a token.</p>
-    <p>Enter the token you received in your email.</p>
-    <p>If you did not receive the email, click the resend button below.</p>
-    <p>Your email: {{ $user_email }}</p>
+    <h1 class="mb-3">Verify Token</h1>
+    <p class="explanation-recover">We have sent you an email with a token.</p>
+    <p class="explanation-recover">Enter the token you received in your email.</p>
+    <p class="explanation-recover">If you did not receive the email, click the resend button below.</p>
+    <p class="explanation-recover" style="font-size: 1.5em;"><strong>Your email:</strong> <span class="styled-email">{{ $user_email }}<span></p>
     <label for="token">Token</label>
     <input id="token" type="text" name="token" value="{{ old('token') }}" required autofocus>
     <div class="alert alert-success mt-3" style="display: none;"></div>
@@ -32,11 +34,10 @@
         <div class="message">{{ session('status') }}</div>
         <div class="info">Please check your email for the token.</div>
     @endif
-    <button type="submit">
+    <button type="submit" class="btn btn-primary">
         Verify token
     </button> 
-    <p>Didn't receive the token?</p>
-    <button type="button" id="resend-email">
+    <button type="button" id="resend-email" class="btn btn-primary">
         <span id="resend-spinner" style="display: none;">Processing...</span>
         Resend email
     </button>
@@ -86,4 +87,5 @@
         }
     </script>
 </form>
+</div>
 @endsection

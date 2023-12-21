@@ -5,9 +5,9 @@
     <form method="POST" action="{{ route('account-recovery') }}">
         {{ csrf_field() }}
 
-        <p  id="explanation-recover">Forgot your account’s password? Enter your email address and we'll send you a recovery link.</p>
+        <p  class="explanation-recover">Forgot your account’s password? Enter your email address and we'll send you a recovery link.</p>
         <label for="email">E-mail</label>
-        <input id="email" type="email" name="user_email" value="{{ old('email') }}" required autofocus placeholder="Your account's email">
+        <input id="email" type="email" name="user_email" value="{{ old('email') }}" required autofocus placeholder="Your account's email" class="custom-placeholder">
 
         <button type="submit" class=" btn btn-primary">
             Send recovery email
