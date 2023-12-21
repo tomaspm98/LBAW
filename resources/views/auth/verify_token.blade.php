@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="recover-password" class="align-items-center justify-content-center mt-5">
+<div id="recover-password" class="align-items-center">
 
 <form method="POST" action="{{ route('token-verification-post') }}">
     {{ csrf_field() }}

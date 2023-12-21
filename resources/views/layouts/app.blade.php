@@ -79,7 +79,7 @@ error_reporting(E_ALL); //TODO
                 @yield('content')
             </section>
         </main>
-        <footer class="bg-dark text-light py-4 fixed-bottom ">
+        <footer class="bg-dark text-light py-4 ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
