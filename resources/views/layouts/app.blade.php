@@ -40,13 +40,10 @@ error_reporting(E_ALL); //TODO
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="text/javascript">
-            // Fix for Firefox autofocus CSS bug
-            // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-        </script>   
-        <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
+  
+        <script src={{ url('js/app.js') }} defer></script>
         @if (Auth::check())
-        <script type="text/javascript" src={{ url('js/notification.js') }} defer></script>
+        <script src={{ url('js/notification.js') }} defer></script>
         @endif
         <script>
             document.addEventListener('DOMContentLoaded', function () {

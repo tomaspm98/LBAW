@@ -28,6 +28,7 @@ use App\Models\Member;
 
     <div class="collapse navbar-collapse nav_buttons" id="navbarSupportedContent">
 
+        @include('partials.notifications')
         <ul class="navbar-nav">
 
             @if (Auth::guest())
@@ -42,7 +43,7 @@ use App\Models\Member;
             @if (Auth::check())
             <li class="nav-item active">
             </li>
-            @include('partials.notifications')
+            
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -78,7 +79,7 @@ use App\Models\Member;
                     <div class="dropdown-divider"></div>
                     <form class="m-0" action="{{ url('/logout') }}" method="post">
                         @csrf
-                        <button class="dropdown-item text-danger" type="submit" class="button">Logout</button>
+                        <button class="dropdown-item text-danger" type="submit">Logout</button>
                     </form>
                 
                 </div>
@@ -89,15 +90,5 @@ use App\Models\Member;
 
     </div>
 </nav>
-
-
-
-    <div class="nav_buttons_container">
-     <div class="header-buttons">
-
-
-
-    </div>
-
 
 
