@@ -16,7 +16,7 @@ use App\Models\Moderator;
 
         <div class="row my-4">
             <div class="col-md-2 w-1">
-                <img class="profile-picture img-fluid"  src="{{$profilePicture}}" alt="Profile Photo">
+                <img class="profile-picture img-fluid" src="{{ $member->getProfileImage() }}" alt="Profile Photo">
             </div>
             <div class="col-md-9">
                 <h3 class="mb-3 p-1">
@@ -50,16 +50,13 @@ use App\Models\Moderator;
             <h3><b>Badges:</b></h3>
             <div class="badge-grid">
             @foreach ($member->badges as $badge)
-            @php
-                $badgePicturePath = asset('storage/badges/badge_' . $badge->badge_id . '.jpg');
-            @endphp
                 <div class="badge-unique" >
                 <div class="badge-content">
                     <b>{{ $badge->badge_name }}</b><br>
                     <b>Description: </b>{{ $badge->badge_description }}
                     </div>
                 <div class="badge-picture">
-                    <p><img class="badge-picture" src="{{ $badgePicturePath }}" style="width: 150px; height: 150px;" alt="Badge picture"></p>
+                    <p><img class="badge-picture" src="{{ $badge->getBadgeImage() }}" style="width: 150px; height: 150px;" alt="Badge picture"></p>
                 </div>
             </div>
                 

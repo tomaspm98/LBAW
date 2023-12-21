@@ -49,11 +49,7 @@ use App\Models\Member;
 
             <div class="custom-dropdown">
                 <button class="dropdown-toggle" id="customDropdown" style="color: black;">
-                    @php
-                        $authorPicturePath = 'public/pictures/' . Auth::user()->username . '/profile_picture.png';
-                        $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . Auth::user()->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                    @endphp
-                    <img class="nav-profile-photo" src="{{ $authorPicture }}" alt="Profile Photo">
+                    <img class="nav-profile-photo" src="{{ Auth::user()->getProfileImage() }}" alt="Profile Photo">
                 </button>
                 <div class="dropdown-menu dropdown_user_menu" aria-labelledby="navbarDropdown" style="padding: 0.5em;">
                     <div class="header-container">

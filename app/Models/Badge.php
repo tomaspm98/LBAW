@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Http\Controllers\FileController;
+
 class Badge extends Model
 {
     use HasFactory;
@@ -18,4 +20,8 @@ class Badge extends Model
         'badge_name',
         'badge_description'
     ];
+
+    public function getBadgeImage() {
+        return FileController::get('badge', $this->badge_id);
+    }
 }

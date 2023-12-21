@@ -15,6 +15,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Http\Controllers\FileController;
+
+
 
 class Member extends Authenticatable 
 {
@@ -103,6 +106,10 @@ class Member extends Authenticatable
     public function follows(){
         return $this->hasMany(UserFollowQuestion::class, 'user_id')->where('follow', true);
     }
-
+    
+    public function getProfileImage() {
+        return FileController::get('profile', $this->user_id);
+    }
+    
 }
 

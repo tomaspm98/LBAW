@@ -10,11 +10,7 @@ use App\Models\UserFollowQuestion;
         <div class="text-center">
             <a href="{{ route('member.show', $question->author) }}"> 
                 <div class="content_user_profile_photo">
-                    @php
-                        $authorPicturePath = 'public/pictures/' . $question->author->username . '/profile_picture.png';
-                        $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $question->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                    @endphp
-                    <img src="{{ $authorPicture }}" alt="Profile Photo">
+                <img src="{{ $question->author->getProfileImage() }}" alt="Profile Photo">
                 </div>
             </a>
             <p><b>{{ $question->author->username }}</b></p>
