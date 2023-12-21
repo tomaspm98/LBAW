@@ -63,7 +63,22 @@ class FileController extends Controller
         // Not found: returns default asset
         return self::defaultAsset($type);
     }
-    
 
+    function upload(Request $request) {
+
+        $file = $request->file('picture');
+        $id = $request->id;
+        $extension = $file->getClientOriginalExtension();
+        
+        $username = $request->username;
+        // Hashing
+        $fileName = 'profile_' . $username . '.' . $extension; // generate a random unique id
+        $type = 'profile';
+
+        // Save in correct folder and disk
+        $request->picture->storeAs($type, $fileName, self::$diskName);
+        return redirect()->back();
+    }
+    
     
 }

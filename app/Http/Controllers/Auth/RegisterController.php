@@ -19,6 +19,8 @@ use Illuminate\View\View;
 use App\Models\Member;
 use Illuminate\Validation\ValidationException;
 
+use App\Http\Controllers\FileController;
+
 class RegisterController extends Controller
 {
     /**
@@ -74,14 +76,12 @@ class RegisterController extends Controller
         if ($request->hasFile('picture')) {
 
             $username = $request->input('username');
-            $filename = 'profile_picture.png';
+            $filename = 'profile_' . $username . '.png';
 
-            $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
-
-            // Save the image to a storage disk within a folder named after the username
-            $request->merge(['picture' => $path]);
+            $fileController = new FileController();
+            $fileController->upload($request);
         } else {
-            $profilePicture = 'pictures/default/profile_picture.png';
+            $profilePicture = 'default_profile.png';
             $request->merge(['picture' => $profilePicture]);
         }
     
@@ -89,7 +89,7 @@ class RegisterController extends Controller
             'username' => $request->username,
             'user_email' => $request->user_email,
             'password' => Hash::make($request->password),
-            'picture' => $request->picture,
+            'picture' => $filename,
             'user_birthdate' => Carbon::parse($request->user_birthdate)->toDateTimeString()
         ]);
 

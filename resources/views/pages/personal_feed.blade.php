@@ -14,11 +14,7 @@
             <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
                 <a href="{{ route('member.show', $question->author) }}"> 
                     <div class="question_user_photo">
-                        @php
-                            $authorPicturePath = 'public/pictures/' . $question->author->username . '/profile_picture.png';
-                            $authorPicture = Storage::exists($authorPicturePath) ? asset('storage/pictures/' . $question->author->username . '/profile_picture.png') : asset('storage/pictures/default/profile_picture.png');
-                        @endphp
-                        <img src="{{ $authorPicture }}" alt="Profile Photo">
+                        <img src="{{ $question->author->getProfileImage() }}" alt="Profile Photo">
                     </div>
                 </a>
                 <div class="mt-2">

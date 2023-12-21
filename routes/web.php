@@ -55,6 +55,8 @@ Route::controller(PasswordRecovery::class)->group(function () {
     Route::post('/password-reset', 'resetPassword')->name('password-reset-post');
 });
 
+Route::post('/file/upload', [FileController::class, 'upload']);
+
 Route::post('/send', [MailController::class, 'send']);
 
 Route::controller(NotificationController::class) ->group(function(){
