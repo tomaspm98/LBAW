@@ -1,4 +1,4 @@
-
+@if (count($questions_followed) != 0)
 <div class="container">   
     <div class="hover-container">
         <div class="header-container">
@@ -8,6 +8,7 @@
         </div>
     </div>
     <ul>
+
         @foreach ($questions_followed as $question)
          @if($question->content_is_visible)
             <li class="question_card">
@@ -45,3 +46,4 @@
     </ul>
 
 </div>
+@endif
