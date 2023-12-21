@@ -102,14 +102,14 @@
 .hover-text-down {
     display: none;
     position: absolute;
-    right: 100%;
+    right:100%;
     top: 100%; /* Just below 'Top Questions' */
     background-color: #f9f9f9; /* Light grey background */
     border: 1px solid #ddd; /* Grey border */
     padding: 5px;
     margin-top: 5px; /* Slight space between 'Top Questions' and the box */
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Optional: Adds a shadow effect */
-    z-index: 1; /* Ensures the box appears above other content */
+    z-index: 2000; /* Ensures the box appears above other content */
     width: 250px;
     height: 120px;
     text-align: left;
@@ -136,7 +136,7 @@
 }
 
 .header-container i {
-    margin-right: 10px; /* Adjust space between icon and text */
+    margin-right: 10px; 
 }
 
 .faq-section {
@@ -233,6 +233,30 @@
     background-color: #0056b3; /* Darker blue on hover */
 }
 
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* This will space out the navbar brand and search container */
+    align-items: center; /* This will vertically center the children */
+  }
+  
+  .nav_search_container {
+    /* The width can be auto or a fixed value, depending on your design */
+    flex-grow: 1; /* Allows the search container to grow as needed */
+    display: flex;
+    justify-content: center; /* Center the form within the search container */
+  }
+  
+  /* You may want to adjust the form's internal alignment if needed */
+  .form-inline {
+    display: flex;
+    justify-content: center;
+    width: 100%; /* Make the form take up the full width of its parent */
+  }
+
+  .custom-margin-left {
+    margin-left: 10rem; /* or any value that suits your layout */
+}
+  
 .badge-grid {
     display: flex;
     flex-wrap: wrap;
@@ -260,6 +284,29 @@
 .badge-picture {
     max-width: 100%;
     max-height: 130px; /* Keep your max-height if you want to limit the image size */
+}
+
+.custom-hr {
+    height: 3px;
+    background-color: black;
+    color:black;
+    border: none; 
+    width:100%; 
+    margin-top: 100px;
+    margin-bottom: 100px;/* Remove default border */
+}
+
+.content_text_container {
+    position: relative;
+    /* other styles */
+}
+
+.edited-indicator {
+    position: absolute;
+    text-decoration: yellow;
+    top: 0;
+    right: 50;
+    /* other styles if needed */
 }
 
 
