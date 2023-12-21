@@ -81,8 +81,7 @@ class RegisterController extends Controller
             $fileController = new FileController();
             $fileController->upload($request);
         } else {
-            $profilePicture = 'default_profile.png';
-            $request->merge(['picture' => $profilePicture]);
+            $filename = 'default_profile.png';
         }
     
         Member::create([

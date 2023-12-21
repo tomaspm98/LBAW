@@ -73,8 +73,7 @@
                 <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
                     <a href="{{ route('member.show', $question->author) }}">
                         <div class="question_user_photo">
-                            <img src="{{ Storage::url($question->author->picture) ?? asset('storage/pictures/default/profile_picture.png') }}" alt="Profile Photo">
-                        </div>
+                            <img src="{{ $question->author->getProfileImage() }}" alt="Profile Photo">                        </div>
                         <div class="mt-2">
                             <p class="mb-0"><b>{{ $question->author->username ?? 'Unknown' }}</b></p>
                         </div>
