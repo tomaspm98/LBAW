@@ -19,12 +19,12 @@
 
         <div class="mb-3">
             <label for="question_title" class="form-label">Question Title</label>
-            <input type="text" class="form-control" id="question_title" name="question_title" required>
+            <input type="text" class="form-control" id="question_title" name="question_title" required  placeholder="Your Question">
         </div>
 
         <div class="mb-3">
             <label for="content_text" class="form-label">Question Content</label>
-            <textarea class="form-control fixed-height" style="min-height:47vh;" id="content_text" name="content_text" required></textarea>
+            <textarea class="form-control fixed-height" style="min-height:47vh;" id="content_text" name="content_text" required  placeholder="Write your question's information here. Try to be descriptive to get better help"></textarea>
         </div>
 
         <div class="mb-3">

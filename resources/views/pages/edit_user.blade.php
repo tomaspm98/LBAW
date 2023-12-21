@@ -50,13 +50,15 @@
                 </ul>
             </div>
           @endif
+        <div class="button-container d-flex justify-content-around" >
             <button type="submit" class="btn btn-primary">Update Profile</button>
+            <form action="{{ route('user.delete', $member->user_id) }}" method="post">
+                @csrf
+                @method('delete')
+                <button class="btn btn-primary" style="background-color: #cc0033; border-color:#cc0033;" type="submit" onclick="return confirm('Are you sure you want to delete your profile?')">Delete Profile</button>
+            </form>
+        </div>
         </form>
-        <form action="{{ route('user.delete', $member->user_id) }}" method="post">
-            @csrf
-            @method('delete')
         
-            <button type="submit" onclick="return confirm('Are you sure you want to delete your profile?')">Delete Profile</button>
-        </form>
     </div>
 @endsection

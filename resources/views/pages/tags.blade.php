@@ -23,14 +23,14 @@
             @csrf
             <div class="mb-3">
                 <label for="tagName">Tag Name:</label>
-                <input type="text" id="tagName" name="tag_name" required>
+                <input type="text" id="tagName" name="tag_name" required  placeholder="Generic tag name here">
                 @error('tag_name')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="mb-3">
                 <label for="tagDescription">Tag Description:</label>
-                <textarea id="tagDescription" name="tag_description" rows="4" required></textarea>
+                <textarea id="tagDescription" name="tag_description" rows="4" required  placeholder="Try to explain the topics available on the tag for the users"></textarea>
                 @error('tag_description')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
