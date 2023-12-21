@@ -1,14 +1,14 @@
 # QueryStack - Q&A Website
 > Project developed  by:
-> GROUP 2311 _(lbaw2311)_, 26/09/2023
+> GROUP 2311 _(lbaw2311)_, 21/12/2023
 
 ## Description 
 QueryStack is a platform for technology enthusiasts, professionals, and learners to share their knowledge and solve their problems. QueryStack allows users to ask, answer, vote, comment, and edit questions and answers related to various topics in technology, such as programming languages, frameworks, tools, algorithms, data structures, design patterns, etc. QueryStack also provides features such as tags, badges, reputation points, and leaderboards to categorize, reward, and rank the users and their contributions.
 ## Project Artifacts
-* [ER: Requirements Specification]
-* [EBD: Database Specification]
-* [EAP: Architecture Specification and Prototype]
-* [PA: Product and Presentation] 
+* [ER: Requirements Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311/-/wikis/er)
+* [EBD: Database Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311/-/wikis/EBD)
+* [EAP: Architecture Specification and Prototype](https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311/-/wikis/EAP)
+* [PA: Product and Presentation](https://git.fe.up.pt/lbaw/lbaw2324/lbaw2311/-/wikis/pa)
 
 ## Local Setup
 The project can be modified and tested locally.
@@ -125,4 +125,4 @@ The project is finished and published on the live server. Everyone, with a vpn, 
 * António José Salazar Correia, up201804832@up.pt
 * Gonçalo Nuno Leitão Pinho da Costa, up202103336@up.pt
 * Tomás Pereira Maciel, up202006845@up.pt
-* Ricardo Miguel Matos Oliveira Peralta, up2206392@up.pt
+* Ricardo Miguel Matos Oliveira Peralta, up202206392@up.pt
