@@ -171,7 +171,7 @@ use App\Models\UserFollowQuestion;
                 </div>
             </div>
         </div>
-        @if (!$question->question_closed)
+        @if (!$question->question_closed && Auth::check())
         <div class="comment_form_container mt-3">
         <form action="{{ route('comments.create', ['answer_id' => $answer->answer_id, 'question_id' => $question->question_id]) }}" method="POST">
                 @csrf
