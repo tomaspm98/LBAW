@@ -105,13 +105,16 @@ class UserController extends Controller
 
                 $username = $member->username;
 
-                $filename = 'profile_picture.png';
+                if ($request->username == null) {
+                    $request ->merge(['username' => $username]);
+                }
 
-                $path = $request->file('picture')->storeAs("public/pictures/{$username}", $filename);
+                $filename = 'profile_' . $username . '.png';;
 
-                $request->merge(['picture' => $path]);
+                $fileController = new FileController();
+                $fileController->upload($request);
 
-                $attributes['picture'] = $path;
+                $attributes['picture'] = $filename;
             }
             
             if (array_key_exists('username', $attributes)) {
